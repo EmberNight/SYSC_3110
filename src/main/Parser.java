@@ -3,6 +3,7 @@
 
     public class Parser
     {
+
         private CommandWords commands;
         private Scanner reader;
 
