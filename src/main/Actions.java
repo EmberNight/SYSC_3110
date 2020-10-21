@@ -20,7 +20,7 @@ public class Actions {
         String attacker = attack.nextLine();
         if(!gameBoard.getRuler(attacker))
         {
-            System.out.println("You do not own this territory");
+            System.out.println("You don't own this territory");
         }
 
         System.out.println("How many dice would you like to attack with?");
