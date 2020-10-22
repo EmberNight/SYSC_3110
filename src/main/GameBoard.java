@@ -108,6 +108,14 @@ public class GameBoard {
     public Territory getTerritory(String territoryName){
         return territoryMap.get(territoryName);
     }
+    public boolean isAdjacentTerritory(Territory compareTo, Territory compare){
+        for (String i : compareTo.getAdjacentTerritories().keySet()){
+            if (compare.getAdjacentTerritories().get(i).equals(compareTo)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int getArmy(Territory territory){
         return territory.getArmy();
@@ -139,8 +147,8 @@ public class GameBoard {
     }
 
     public boolean isPlayerEliminated(String name){
-        for (String i : continentMap.keySet()){
-            if (continentMap.get(i).getRuler().equals(name)){
+        for (String i : territoryMap.keySet()){
+            if (territoryMap.get(i).getRuler().equals(name)){
                 return false;
             }
         }
