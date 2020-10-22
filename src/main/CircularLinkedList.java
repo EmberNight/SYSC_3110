@@ -33,19 +33,31 @@ public class CircularLinkedList {
         }
     }
 
-    public boolean hasNode(String searchValue){
+    public boolean hasNode(String searchValue) {
         Node currentNode = head;
-        if(head == null)
-        {
+        if (head == null) {
             return false;
-        }
-        else{
-            do{
-                if(currentNode.getValue().equals(searchValue)){
+        } else {
+            do {
+                if (currentNode.getValue().equals(searchValue)) {
                     return true;
                 }
-            }while(currentNode!= head);
+            } while (currentNode != head);
             return false;
         }
     }
-}
+
+        public String returnNextNode(String searchValue){
+            Node currentNode = head;
+            do {
+                if (currentNode.getValue().equals(searchValue)) {
+                    return currentNode.getNextNode().getValue();
+                }
+            } while (currentNode != head);
+            return "";
+        }
+        public String returnHeadNode(){
+            return head.getValue();
+        }
+    }
+

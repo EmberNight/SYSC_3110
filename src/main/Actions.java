@@ -27,7 +27,7 @@ public class Actions {
         Scanner diceSizeAttack = new Scanner(System.in);
         int diceAmountAttack = diceSizeAttack.nextInt();
 
-        if(!gameBoard.getArmies(attacker) > diceAmountAttack + 1);
+        if(!(gameBoard.getArmies(attacker) > diceAmountAttack + 1));
         {
             System.out.println("You do not have enough armies");
         }
@@ -35,7 +35,7 @@ public class Actions {
 
         Scanner diceSizeDefend = new Scanner(System.in);
         int diceAmountDefend = diceSizeDefend.nextInt();
-        if(!gameBoard.getArmies(territory) >= diceAmountAttack);
+        if(!(gameBoard.getArmies(territory) >= diceAmountAttack));
         {
             System.out.println("You do not have enough armies");
         }
@@ -68,7 +68,7 @@ public class Actions {
 
     }
 
-    public int rollDie(int attack, int defend) {
+    private int rollDie(int attack, int defend) {
         int currentAttack;
         int largestAttack = 0;
         int secondLargestAttack = 0;
@@ -114,11 +114,12 @@ public class Actions {
         return result;
     }
 
-    public void pass() {
-
+    private void pass() {
+        activePlayer = players.returnNextNode(activePlayer);
     }
 
     public void status() {
+
     }
 
     public void playGame() {
@@ -130,7 +131,7 @@ public class Actions {
 
     }
 
-    public boolean process(Command command) {
+    private boolean process(Command command) {
         boolean quit = false;
         if (command.isUnknown()) {
 
@@ -140,9 +141,9 @@ public class Actions {
             else System.out.println("Attack who?");
         }
         if (command.equals("pass")) pass();
+
         return quit;
     }
-
 
 
 }
