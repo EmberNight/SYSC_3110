@@ -1,17 +1,17 @@
 import java.util.*;
 public class Territory {
 
+    private final String continentName;
+    private final String name;
+    private final Map<String, Territory> adjacentTerritories;
     private String ruler;
-    private String continentName;
-    private String name;
     private int army;
-    private Map<String, Territory> adjacentTerritories;
 
     public Territory(String name, String continentName){
         this.name = name;
         this.continentName = continentName;
         army = 0;
-        String ruler = "No one";
+        ruler = "No Ruler";
         adjacentTerritories = new HashMap<>();
     }
 
@@ -44,7 +44,11 @@ public class Territory {
     }
 
     public void setArmy(int army){
-        this.army = army;
+        if (army < 0) {
+            this.army = 0;
+        } else {
+            this.army = army;
+        }
     }
 
     public void printStatus(){

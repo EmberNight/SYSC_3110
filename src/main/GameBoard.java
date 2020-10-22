@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 
 public class GameBoard {
+    private final ArrayList<Continent> continents;
+    private final int numOfPlayers;
 
-
-    private Parser parser;
-    private ArrayList<Continent> continents;
-    private int numOfPlayers;
     public GameBoard(int numOfPlayers){
         continents = new ArrayList<>();
         createBoard();
