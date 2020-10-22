@@ -32,6 +32,7 @@ public class Actions {
         if(!gameBoard.isAdjacent(territory, attacker))
         {
             System.out.println("Those territories are not adjacent");
+            return;
         }
 
         //scans for input of attacker, stating dice amount
@@ -128,7 +129,8 @@ public class Actions {
             else if(secondLargestAttack < secondLargestDefense || secondLargestAttack == secondLargestDefense) result = result - 1;
 
         }
-
+        //return result (positive integers = num of attacking wins. Negative integers = num of defending wins.
+        // 0 = one defending win, one attacking win)
         return result;
     }
 
