@@ -14,22 +14,36 @@ public class Actions {
 
     private void attack(String territory)
     {
+
         System.out.println("Which territory would you like to attack from?");
 
+        //asks for and processes the input for attacking territory
         Scanner attack = new Scanner(System.in);
         String attacker = attack.nextLine();
+
+        //checks if attacker actually owns this territory
         if(!gameBoard.getRuler(attacker))
         {
             System.out.println("You don't own this territory");
+            return;
         }
 
+        //checks if attacking territory is adjacent to defending territory
+        if(!gameBoard.isAdjacent(territory, attacker))
+        {
+            System.out.println("Those territories are not adjacent");
+        }
+
+        //scans for input of attacker, stating dice amount
         System.out.println("How many dice would you like to attack with?");
         Scanner diceSizeAttack = new Scanner(System.in);
         int diceAmountAttack = diceSizeAttack.nextInt();
 
+        //confirms if attacker has sufficient armies to use amount of dice
         if(!(gameBoard.getArmies(attacker) > diceAmountAttack + 1));
         {
             System.out.println("You do not have enough armies");
+            return;
         }
         System.out.println("How many dice would the defender like to use");
 
@@ -38,9 +52,11 @@ public class Actions {
         if(!(gameBoard.getArmies(territory) >= diceAmountAttack));
         {
             System.out.println("You do not have enough armies");
+            return;
         }
 
         int result = rollDie(diceAmountAttack, diceAmountDefend); //stores result of dice roll
+
         //case where defender's win, eliminating attacker's armies
         if(result < 0)
         {
@@ -120,9 +136,6 @@ public class Actions {
         activePlayer = players.returnNextNode(activePlayer);
     }
 
-    public void status() {
-
-    }
 
     public void playGame() {
         boolean finished = false;
