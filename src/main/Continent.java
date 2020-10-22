@@ -2,9 +2,9 @@ import java.util.*;
 
 public class Continent {
 
-    private ArrayList<Territory> territories;
-    private String name;
-    private int value;
+    private final ArrayList<Territory> territories;
+    private final String name;
+    private final int value;
     private String ruler;
 
     // can pass constructor no territories or arrayList of territories
@@ -29,7 +29,7 @@ public class Continent {
         return ruler;
     }
 
-    public void setRuler(String name){
+    public void setRuler(String ruler){
         this.ruler = ruler;
     }
 
