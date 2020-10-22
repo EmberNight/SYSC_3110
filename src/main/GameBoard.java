@@ -4,11 +4,11 @@ import java.util.Map;
 
 public class GameBoard {
 
-
     private Parser parser;
     private Map<String, Continent> continentMap;
     private Map<String, Territory> territoryMap;
     private int numOfPlayers;
+
     public GameBoard(int numOfPlayers){
         continentMap = new HashMap<>();
         createBoard();
