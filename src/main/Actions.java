@@ -53,6 +53,7 @@ public class Actions {
             //sets new ruler if defender has no armies left
             if(gameBoard.getArmies(territory) == 0){
                 gameBoard.setTerritoryRuler(territory, activePlayer);
+                System.out.println(activePlayer + "has taken control of the territory");
             }
         }
         //Case where both sides lose one army.
@@ -63,6 +64,7 @@ public class Actions {
             //sets new ruler if defender has no armies left
             if(gameBoard.getArmies(territory) == 0){
                 gameBoard.setTerritoryRuler(territory, activePlayer);
+                System.out.println(activePlayer + "has taken control of the territory");
             }
         }
 
@@ -130,6 +132,10 @@ public class Actions {
         }
 
     }
+    private void printStatus()
+    {
+            gameBoard.printBoardStatus();
+    }
 
     private boolean process(Command command) {
         boolean quit = false;
@@ -141,9 +147,8 @@ public class Actions {
             else System.out.println("Attack who?");
         }
         if (command.equals("pass")) pass();
-
+        if (command.equals("status")) printStatus();
         return quit;
     }
-
 
 }
