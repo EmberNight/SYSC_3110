@@ -23,8 +23,8 @@ public class Territory {
         adjacentTerritories.put(key, territory);
     }
 
-    public Territory getAdjacentTerritory(String direction){
-        return adjacentTerritories.get(direction);
+    public Map<String, Territory> getAdjacentTerritories(){
+        return adjacentTerritories;
     }
 
     public String getName(){
