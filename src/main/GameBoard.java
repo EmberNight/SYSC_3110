@@ -204,24 +204,24 @@ public class GameBoard {
 
     }
 
-    public int getArmy(Territory territory){
-        return territory.getArmy();
+    public int getArmy(String territoryName){
+        return getTerritory(territoryName).getArmy();
     }
 
-    public Player getTerritoryRuler(Territory territory){
-        return territory.getRuler();
+    public Player getTerritoryRuler(String territoryName){
+        return getTerritory(territoryName).getRuler();
     }
 
-    public void setTerritoryRuler(Territory territory, Player ruler){
-        territory.setRuler(ruler);
+    public void setTerritoryRuler(String territoryName , Player ruler){
+        getTerritory(territoryName).setRuler(ruler);
     }
 
-    public void addTerritoryArmy(Territory territory, int army){
-        territory.setArmy(army);
+    public void addTerritoryArmy(String territoryName, int army){
+        getTerritory(territoryName).setArmy(army);
     }
 
-    public void removeTerritoryArmy(Territory territory){
-        territory.setArmy(0);
+    public void removeTerritoryArmy(String territoryName){
+        getTerritory(territoryName).setArmy(0);
     }
 
     public boolean setContinentRuler(Continent continent, String ruler){
