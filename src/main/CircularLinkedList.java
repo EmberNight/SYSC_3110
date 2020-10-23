@@ -1,7 +1,13 @@
 public class CircularLinkedList {
 
-    private Node head = null;
-    private Node tail = null;
+    private Node head;
+    private Node tail;
+
+    public CircularLinkedList() {
+        this.head = null;
+        this.tail = null;
+    }
+
 
     public void addNode(String value){
         Node newNode = new Node(value);

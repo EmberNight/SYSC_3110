@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+//group 16 actions class
 public class Actions {
     private GameBoard gameBoard;
     private CircularLinkedList players;
@@ -16,20 +16,20 @@ public class Actions {
     {
 
         System.out.println("Which territory would you like to attack from?");
-
+        gameBoard.getTerritory().getStatus();
         //asks for and processes the input for attacking territory
         Scanner attack = new Scanner(System.in);
         String attacker = attack.nextLine();
 
         //checks if attacker actually owns this territory
-        if(!gameBoard.getRuler(attacker))
+        if(!gameBoard.getTerritory(attacker).getRuler() = activePlayer)
         {
             System.out.println("You don't own this territory");
             return;
         }
 
         //checks if attacking territory is adjacent to defending territory
-        if(!gameBoard.isAdjacent(territory, attacker))
+        if(!gameBoard.isAdjacentTerritory(gameBoard.getTerritory(attacker), gameBoard.getTerritory(territory)))
         {
             System.out.println("Those territories are not adjacent");
             return;
@@ -41,7 +41,7 @@ public class Actions {
         int diceAmountAttack = diceSizeAttack.nextInt();
 
         //confirms if attacker has sufficient armies to use amount of dice
-        if(!(gameBoard.getArmies(attacker) > diceAmountAttack + 1));
+        if(!(gameBoard.getTerritory(attacker) > diceAmountAttack + 1));
         {
             System.out.println("You do not have enough armies");
             return;
@@ -50,7 +50,7 @@ public class Actions {
 
         Scanner diceSizeDefend = new Scanner(System.in);
         int diceAmountDefend = diceSizeDefend.nextInt();
-        if(!(gameBoard.getArmies(territory) >= diceAmountAttack));
+        if(!(gameBoard.getTerritory(territory).getArmy() >= diceAmountAttack));
         {
             System.out.println("You do not have enough armies");
             return;
@@ -61,26 +61,25 @@ public class Actions {
         //case where defender's win, eliminating attacker's armies
         if(result < 0)
         {
-            gameBoard.addTerritoryArmy(attacker, gameBoard.getArmies(attacker) + result);
+            gameBoard.getTerritory(attacker).setArmy(gameBoard.getArmy(attacker) + result);
         }
         //Case where attacker wins, eliminating defender's armies
         else if(result > 0)
         {
-            gameBoard.addTerritoryArmy(territory, gameBoard.getArmies(territory) - result);
+            gameBoard.getTerritory(territory).addArmy(gameBoard.getArmies(territory) - result);
             //sets new ruler if defender has no armies left
-            if(gameBoard.getArmies(territory) == 0){
-                gameBoard.setTerritoryRuler(territory, activePlayer);
+            if(gameBoard.getTerritory(territory).getArmy() == 0){
+                gameBoard.getTerritory(territory).setRuler(territory, activePlayer);
                 System.out.println(activePlayer + "has taken control of the territory");
             }
         }
         //Case where both sides lose one army.
         else if(result == 0)
         {
-            gameBoard.addTerritoryArmy(territory, gameBoard.getArmies(territory) - 1;
-            gameBoard.addTerritoryArmy(territory, gameBoard.getArmies(territory) - 1);
+            gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - 1);
             //sets new ruler if defender has no armies left
-            if(gameBoard.getArmies(territory) == 0){
-                gameBoard.setTerritoryRuler(territory, activePlayer);
+            if(gameBoard.getTerritory(territory).getArmy() == 0){
+                gameBoard.getTerritory(territory).setRuler(territory, activePlayer));
                 System.out.println(activePlayer + "has taken control of the territory");
             }
         }
@@ -155,7 +154,7 @@ public class Actions {
     private boolean process(Command command) {
         boolean quit = false;
         if (command.isUnknown()) {
-
+            System.out.println("What?");
         }
         if (command.equals("attack")) {
             if (command.hasSecondWord()) attack(command.getSecondWord());
