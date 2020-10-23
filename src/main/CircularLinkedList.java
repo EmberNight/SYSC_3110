@@ -9,7 +9,7 @@ public class CircularLinkedList {
     }
 
 
-    public void addNode(String value) {
+    public void addNode(Player value) {
         Node newNode = new Node(value);
         if (head == null) {
             head = newNode;
@@ -43,7 +43,7 @@ public class CircularLinkedList {
             return false;
         } else {
             do {
-                if (currentNode.getValue().equals(searchValue)) {
+                if (currentNode.getValue().getName().equals(searchValue.getName())) {
                     return true;
                 }
             } while (currentNode != head);
@@ -51,17 +51,17 @@ public class CircularLinkedList {
         }
     }
 
-    public String returnNextNode(String searchValue) {
+    public Player returnNextNode(Player searchValue) {
         Node currentNode = head;
         do {
-            if (currentNode.getValue().equals(searchValue)) {
+            if (currentNode.getValue().getName().equals(searchValue.getName())) {
                 return currentNode.getNextNode().getValue();
             }
         } while (currentNode != head);
-        return "";
+        return null;
     }
 
-    public String returnHeadNode() {
+    public Player getHead() {
         return head.getValue();
     }
 
