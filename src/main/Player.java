@@ -1,21 +1,34 @@
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Emmitt Luhning
+ */
 public class Player {
 
     private String name;
     private int numOfSoldiers;
     private int numOfTerritories;
-    private List<Territory> ruledTerriries;
+    private ArrayList<Territory> ruledTerritories;
 
-    public Players(String name) {
+    public Player(String name, ArrayList<Territory> ruledTerritories) {
+        this.ruledTerritories = ruledTerritories;
         this.name = name;
     }
 
     public void addRuledTerritory(Territory territory) {
         ruledTerritories.add(territory);
     }
+    public void removeRuledTerritory(Territory territory) {
+        for(int i = 0; i < ruledTerritories.size(); i++)
+        {
+            if(ruledTerritories.get(i) == territory){
+                    ruledTerritories.remove(i);
+             }
+        }
 
-    public List returnTerritories() {
+    }
+    public ArrayList getRuledTerritories() {
         return ruledTerritories;
     }
 
@@ -27,7 +40,7 @@ public class Player {
         return numOfSoldiers;
     }
 
-    public void setNumOfSoliders(int num) {
+    public void setNumOfSoldiers(int num) {
         numOfSoldiers = num;
     }
 
