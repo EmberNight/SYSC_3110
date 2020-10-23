@@ -121,12 +121,13 @@ public class GameBoard {
 
     public void allocateArmies(){
 
+
         if(players.getSize() == 2){
             Player player = players.getHead();
             for (int i = 0; i < players.getSize(); i++){
                 player.setNumOfSoldiers(40);
                 player.setNumOfTerritories(21);
-                player = player.returnNextNode();
+                player = players.returnNextNode(player);
             }
 
         }
@@ -135,7 +136,7 @@ public class GameBoard {
             for (int i = 0; i < players.getSize(); i++){
                 player.setNumOfSoldiers(35);
                 player.setNumOfTerritories(14);
-                player = player.returnNextNode();
+                player = players.returnNextNode(player);
             }
 
         }
@@ -149,7 +150,7 @@ public class GameBoard {
                 else {
                     player.setNumOfTerritories(10);
                 }
-                player = player.returnNextNode();
+                player = players.returnNextNode(player);
             }
 
         }
@@ -163,7 +164,7 @@ public class GameBoard {
                 else{
                     player.setNumOfTerritories(8);
                 }
-                player = player.returnNextNode();
+                player = players.returnNextNode(player);
             }
 
         }
@@ -172,19 +173,19 @@ public class GameBoard {
             for (int i = 0; i < players.getSize(); i++){
                 player.setNumOfSoldiers(20);
                 player.setNumOfTerritories(7);
-                player = player.returnNextNode();
+                player = players.returnNextNode(player);
             }
 
         }
 
         int max = (int)Math.random() * 6;
-        player = players.getHead();
+        Player player = players.getHead();
         for(String i : territoryMap.keySet()){
             if (territoryMap.get(i).getRuler().equals(null)){
                 for (int j = 0; j < max; j ++){
-                    player = player.returnNextNode();
+                    player = players.returnNextNode(player);
                 }
-                territoryMap.get(i).setRuler(player.getName());
+                territoryMap.get(i).setRuler(player);
                 player.addRuledTerritory(territoryMap.get(i));
                 territoryMap.get(i).setArmy(1);
                 player.setNumOfSoldiers(player.getNumOfSoldiers() - 1);
@@ -195,8 +196,8 @@ public class GameBoard {
         player = players.getHead();
         for (int i = 0; i < players.getSize(); i++){
             while(player.getNumOfSoldiers() > 0){
-                int randomTerritoryIndex = (int)Math.random() *  player.getRuledTerritories.getSize();
-                player.getRuledTerritories(randomTerritoryIndex).setArmy(player.getRuledTerritories(randomTerritoryIndex) + 1);
+                int randomTerritoryIndex = (int)Math.random() *  player.getRuledTerritories().size();
+                player.getRuledTerritories().get(randomTerritoryIndex).setArmy((player.getRuledTerritories().get(randomTerritoryIndex)).getArmy() + 1);
                 player.setNumOfSoldiers(player.getNumOfSoldiers() - 1);
             }
         }
@@ -207,11 +208,11 @@ public class GameBoard {
         return territory.getArmy();
     }
 
-    public String getTerritoryRuler(Territory territory){
+    public Player getTerritoryRuler(Territory territory){
         return territory.getRuler();
     }
 
-    public void setTerritoryRuler(Territory territory, String ruler){
+    public void setTerritoryRuler(Territory territory, Player ruler){
         territory.setRuler(ruler);
     }
 
@@ -225,7 +226,7 @@ public class GameBoard {
 
     public boolean setContinentRuler(Continent continent, String ruler){
         for (int i = 0; i < continent.getTerritories().size(); i++){
-            if (!continent.getTerritories().get(i).getRuler().equals(ruler)){
+            if (!continent.getTerritories().get(i).getRuler().getName().equals(ruler)){
                 return false;
             }
         }
@@ -234,7 +235,7 @@ public class GameBoard {
 
     public boolean isPlayerEliminated(String name){
         for (String i : territoryMap.keySet()){
-            if (territoryMap.get(i).getRuler().equals(name)){
+            if (territoryMap.get(i).getRuler().getName().equals(name)){
                 return false;
             }
         }
