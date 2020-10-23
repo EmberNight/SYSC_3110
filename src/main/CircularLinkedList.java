@@ -21,7 +21,7 @@ public class CircularLinkedList {
         tail.setNextNode(head);
     }
 
-    public void deleteNode(String value) {
+    public void deleteNode(Player value) {
         Node currentNode = head;
         if (currentNode.getValue().equals(value)) {
             head = head.getNextNode();
@@ -37,7 +37,7 @@ public class CircularLinkedList {
         }
     }
 
-    public boolean hasNode(String searchValue) {
+    public boolean hasNode(Player searchValue) {
         Node currentNode = head;
         if (head == null) {
             return false;

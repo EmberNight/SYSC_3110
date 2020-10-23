@@ -72,7 +72,9 @@ public class Actions {
             gameBoard.getTerritory(territory).addArmy(gameBoard.getArmies(territory) - result);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(territory, activePlayer.getName());
+                gameBoard.getTerritory(territory).setRuler(activePlayer);
+                gameBoard.getTerritory(territory).getRuler().removeRuledTerritory(gameBoard.getTerritory(territory));
+                activePlayer.addRuledTerritory(gameBoard.getTerritory(territory));
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
@@ -82,7 +84,9 @@ public class Actions {
             gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - 1);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(territory, activePlayer);
+                gameBoard.getTerritory(territory).setRuler(activePlayer);
+                gameBoard.getTerritory(territory).getRuler().removeRuledTerritory(gameBoard.getTerritory(territory));
+                activePlayer.addRuledTerritory(gameBoard.getTerritory(territory));
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
