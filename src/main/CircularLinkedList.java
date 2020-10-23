@@ -9,9 +9,9 @@ public class CircularLinkedList {
     }
 
 
-    public void addNode(String value){
+    public void addNode(Player value) {
         Node newNode = new Node(value);
-        if(head == null) {
+        if (head == null) {
             head = newNode;
         } else {
             tail.setNextNode(newNode);
@@ -20,32 +20,30 @@ public class CircularLinkedList {
         tail = newNode;
         tail.setNextNode(head);
     }
-    public void deleteNode(String value)
-    {
+
+    public void deleteNode(Player value) {
         Node currentNode = head;
-        if(currentNode.getValue().equals(value)){
+        if (currentNode.getValue().equals(value)) {
             head = head.getNextNode();
             tail.setNextNode(head);
-        }
-        else{
+        } else {
             do {
                 Node nextNode = currentNode.getNextNode();
-                if(nextNode.getValue().equals(value))
-                {
+                if (nextNode.getValue().equals(value)) {
                     currentNode.setNextNode(nextNode.getNextNode());
                     break;
                 }
-            }while(currentNode!= head);
+            } while (currentNode != head);
         }
     }
 
-    public boolean hasNode(String searchValue) {
+    public boolean hasNode(Player searchValue) {
         Node currentNode = head;
         if (head == null) {
             return false;
         } else {
             do {
-                if (currentNode.getValue().equals(searchValue)) {
+                if (currentNode.getValue().getName().equals(searchValue.getName())) {
                     return true;
                 }
             } while (currentNode != head);
@@ -53,17 +51,34 @@ public class CircularLinkedList {
         }
     }
 
-        public String returnNextNode(String searchValue){
-            Node currentNode = head;
+    public Player returnNextNode(Player searchValue) {
+        Node currentNode = head;
+        do {
+            if (currentNode.getValue().getName().equals(searchValue.getName())) {
+                return currentNode.getNextNode().getValue();
+            }
+        } while (currentNode != head);
+        return null;
+    }
+
+    public Player getHead() {
+        return head.getValue();
+    }
+
+    public int getSize() {
+        Node currentNode = head;
+        int count = 1;
+        if (head == null) {
+            return 0;
+        } else {
             do {
-                if (currentNode.getValue().equals(searchValue)) {
-                    return currentNode.getNextNode().getValue();
-                }
+                currentNode = currentNode.getNextNode();
+                count = count + 1;
+
             } while (currentNode != head);
-            return "";
-        }
-        public String returnHeadNode(){
-            return head.getValue();
+            return count;
         }
     }
+}
+
 
