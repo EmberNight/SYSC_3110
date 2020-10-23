@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameBoard {
@@ -7,12 +8,13 @@ public class GameBoard {
     private Parser parser;
     private Map<String, Continent> continentMap;
     private Map<String, Territory> territoryMap;
-    private int numOfPlayers;
+    private CircularLinkedList players;
+    private final static int numOfTerritories = 12;
 
-    public GameBoard(int numOfPlayers){
+    public GameBoard(CircularLinkedList players){
         continentMap = new HashMap<>();
         createBoard();
-        this.numOfPlayers = numOfPlayers;
+        this.players = players;
 
     }
 
@@ -115,6 +117,90 @@ public class GameBoard {
             }
         }
         return false;
+    }
+
+    public void allocateArmies(){
+
+        if(players.getSize() == 2){
+            Player player = players.getHead();
+            for (int i = 0; i < players.getSize(); i++){
+                player.setNumOfSoldiers(40);
+                player.setNumOfTerritories(21);
+                player = player.returnNextNode();
+            }
+
+        }
+        if(players.getSize() == 3){
+            Player player = players.getHead();
+            for (int i = 0; i < players.getSize(); i++){
+                player.setNumOfSoldiers(35);
+                player.setNumOfTerritories(14);
+                player = player.returnNextNode();
+            }
+
+        }
+        if(players.getSize() == 4){
+            Player player = players.getHead();
+            for (int i = 0; i < players.getSize(); i++){
+                player.setNumOfSoldiers(30);
+                if (i == 0 || i == 1){
+                    player.setNumOfTerritories(11);
+                }
+                else {
+                    player.setNumOfTerritories(10);
+                }
+                player = player.returnNextNode();
+            }
+
+        }
+        if(players.getSize() == 5){
+            Player player = players.getHead();
+            for (int i = 0; i < players.getSize(); i++){
+                player.setNumOfSoldiers(25);
+                if (i == 0 || i == 1){
+                    player.setNumOfTerritories(9);
+                }
+                else{
+                    player.setNumOfTerritories(8);
+                }
+                player = player.returnNextNode();
+            }
+
+        }
+        if(players.getSize() == 6){
+            Player player = players.getHead();
+            for (int i = 0; i < players.getSize(); i++){
+                player.setNumOfSoldiers(20);
+                player.setNumOfTerritories(7);
+                player = player.returnNextNode();
+            }
+
+        }
+
+        int max = (int)Math.random() * 6;
+        player = players.getHead();
+        for(String i : territoryMap.keySet()){
+            if (territoryMap.get(i).getRuler().equals(null)){
+                for (int j = 0; j < max; j ++){
+                    player = player.returnNextNode();
+                }
+                territoryMap.get(i).setRuler(player.getName());
+                player.addRuledTerritory(territoryMap.get(i));
+                territoryMap.get(i).setArmy(1);
+                player.setNumOfSoldiers(player.getNumOfSoldiers() - 1);
+                player.setNumOfTerritories(player.getNumOfTerritories() - 1);
+            }
+        }
+
+        player = players.getHead();
+        for (int i = 0; i < players.getSize(); i++){
+            while(player.getNumOfSoldiers() > 0){
+                int randomTerritoryIndex = (int)Math.random() *  player.getRuledTerritories.getSize();
+                player.getRuledTerritories(randomTerritoryIndex).setArmy(player.getRuledTerritories(randomTerritoryIndex) + 1);
+                player.setNumOfSoldiers(player.getNumOfSoldiers() - 1);
+            }
+        }
+
     }
 
     public int getArmy(Territory territory){
