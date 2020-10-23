@@ -11,8 +11,8 @@ public class Player {
     private int numOfTerritories;
     private ArrayList<Territory> ruledTerritories;
 
-    public Player(String name, ArrayList<Territory> ruledTerritories) {
-        this.ruledTerritories = ruledTerritories;
+    public Player(String name) {
+        ruledTerritories = new ArrayList<Territory>();
         this.name = name;
     }
 
@@ -28,7 +28,7 @@ public class Player {
         }
 
     }
-    public ArrayList getRuledTerritories() {
+    public ArrayList<Territory> getRuledTerritories() {
         return ruledTerritories;
     }
 

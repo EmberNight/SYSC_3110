@@ -19,7 +19,7 @@ public class Actions {
     {
 
         System.out.println("Which territory would you like to attack from?");
-        gameBoard.getTerritory().getStatus();
+        gameBoard.getTerritory(territory).printStatus();
         //asks for and processes the input for attacking territory
         Scanner attack = new Scanner(System.in);
         String attacker = attack.nextLine();
@@ -44,10 +44,9 @@ public class Actions {
         int diceAmountAttack = diceSizeAttack.nextInt();
 
         //confirms if attacker has sufficient armies to use amount of dice
-        if(!(gameBoard.getTerritory(attacker) > diceAmountAttack + 1));
+        if(!(gameBoard.getTerritory(attacker).getArmy() > diceAmountAttack + 1));
         {
             System.out.println("You do not have enough armies");
-            return;
         }
         System.out.println("How many dice would the defender like to use");
 
@@ -56,7 +55,6 @@ public class Actions {
         if(!(gameBoard.getTerritory(territory).getArmy() >= diceAmountAttack));
         {
             System.out.println("You do not have enough armies");
-            return;
         }
 
         int result = rollDie(diceAmountAttack, diceAmountDefend); //stores result of dice roll
@@ -64,12 +62,12 @@ public class Actions {
         //case where defender's win, eliminating attacker's armies
         if(result < 0)
         {
-            gameBoard.getTerritory(attacker).setArmy(gameBoard.getArmy(attacker) + result);
+            gameBoard.getTerritory(attacker).setArmy(gameBoard.getTerritory(territory).getArmy() + result);
         }
         //Case where attacker wins, eliminating defender's armies
         else if(result > 0)
         {
-            gameBoard.getTerritory(territory).addArmy(gameBoard.getArmies(territory) - result);
+            gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - result);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
                 gameBoard.getTerritory(territory).setRuler(activePlayer);
