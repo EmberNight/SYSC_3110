@@ -1,0 +1,69 @@
+public class CircularLinkedList {
+
+    private Node head;
+    private Node tail;
+
+    public CircularLinkedList() {
+        this.head = null;
+        this.tail = null;
+    }
+
+
+    public void addNode(String value){
+        Node newNode = new Node(value);
+        if(head == null) {
+            head = newNode;
+        } else {
+            tail.setNextNode(newNode);
+        }
+
+        tail = newNode;
+        tail.setNextNode(head);
+    }
+    public void deleteNode(String value)
+    {
+        Node currentNode = head;
+        if(currentNode.getValue().equals(value)){
+            head = head.getNextNode();
+            tail.setNextNode(head);
+        }
+        else{
+            do {
+                Node nextNode = currentNode.getNextNode();
+                if(nextNode.getValue().equals(value))
+                {
+                    currentNode.setNextNode(nextNode.getNextNode());
+                    break;
+                }
+            }while(currentNode!= head);
+        }
+    }
+
+    public boolean hasNode(String searchValue) {
+        Node currentNode = head;
+        if (head == null) {
+            return false;
+        } else {
+            do {
+                if (currentNode.getValue().equals(searchValue)) {
+                    return true;
+                }
+            } while (currentNode != head);
+            return false;
+        }
+    }
+
+        public String returnNextNode(String searchValue){
+            Node currentNode = head;
+            do {
+                if (currentNode.getValue().equals(searchValue)) {
+                    return currentNode.getNextNode().getValue();
+                }
+            } while (currentNode != head);
+            return "";
+        }
+        public String returnHeadNode(){
+            return head.getValue();
+        }
+    }
+
