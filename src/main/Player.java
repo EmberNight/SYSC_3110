@@ -22,7 +22,7 @@ public class Player {
     public void removeRuledTerritory(Territory territory) {
         for(int i = 0; i < ruledTerritories.size(); i++)
         {
-            if(ruledTerritories.get(i) == territory){
+            if(ruledTerritories.get(i).equals(territory)){
                     ruledTerritories.remove(i);
              }
         }
