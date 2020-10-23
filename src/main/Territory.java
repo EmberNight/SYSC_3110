@@ -4,14 +4,14 @@ public class Territory {
     private final String continentName;
     private final String name;
     private final Map<String, Territory> adjacentTerritories;
-    private String ruler;
+    private Player ruler;
     private int army;
 
     public Territory(String name, String continentName){
         this.name = name;
         this.continentName = continentName;
         army = 0;
-        ruler = "No Ruler";
+        ruler = null;
         adjacentTerritories = new HashMap<>();
     }
 
@@ -35,11 +35,11 @@ public class Territory {
         return army;
     }
 
-    public String getRuler(){
+    public Player getRuler(){
         return ruler;
     }
 
-    public void setRuler(String newRuler){
+    public void setRuler(Player newRuler){
         ruler = newRuler;
     }
 
