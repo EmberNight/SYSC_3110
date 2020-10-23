@@ -1,9 +1,9 @@
 public class Node {
 
-    private String value;
+    private Player value;
     private Node nextNode;
 
-    public Node(String value) {
+    public Node(Player value) {
         this.value = value;
     }
     public Node getNextNode() {
@@ -13,7 +13,7 @@ public class Node {
     {
         nextNode = newNode;
     }
-    public String getValue() {
+    public Player getValue() {
         return value;
     }
 

@@ -1,10 +1,13 @@
 import java.util.Scanner;
-//group 16 actions class
+/**
+ * @author Emmitt Luhning
+ * @group 16
+ */
 public class Actions {
     private GameBoard gameBoard;
     private CircularLinkedList players;
     private Parser parser;
-    private String activePlayer;
+    private Player activePlayer;
 
     private Actions(CircularLinkedList players, GameBoard gameBoard) {
         this.players = players;
@@ -22,7 +25,7 @@ public class Actions {
         String attacker = attack.nextLine();
 
         //checks if attacker actually owns this territory
-        if(!gameBoard.getTerritory(attacker).getRuler() = activePlayer)
+        if(!gameBoard.getTerritory(attacker).getRuler().equals(activePlayer.getName()))
         {
             System.out.println("You don't own this territory");
             return;
@@ -69,8 +72,8 @@ public class Actions {
             gameBoard.getTerritory(territory).addArmy(gameBoard.getArmies(territory) - result);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(territory, activePlayer);
-                System.out.println(activePlayer + "has taken control of the territory");
+                gameBoard.getTerritory(territory).setRuler(territory, activePlayer.getName());
+                System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
         //Case where both sides lose one army.
@@ -79,8 +82,8 @@ public class Actions {
             gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - 1);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(territory, activePlayer));
-                System.out.println(activePlayer + "has taken control of the territory");
+                gameBoard.getTerritory(territory).setRuler(territory, activePlayer);
+                System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
 
