@@ -22,6 +22,10 @@ public class Player {
     }
     public int removeArmies(int num) {
         armies -= num;
+
+        if (armies < 0) {
+            return 0;
+        }
         return num;
     }
 }
