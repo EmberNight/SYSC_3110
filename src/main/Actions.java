@@ -1,18 +1,104 @@
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 /**
  * @author Emmitt Luhning
  * @group 16
  */
 public class Actions {
-    private GameBoard gameBoard;
-    private CircularLinkedList players;
-    private Parser parser;
+    private final GameBoard gameBoard;
+    private final ArrayList<Player> players;
+    private final Parser parser;
     private Player activePlayer;
+    private int activePlayerIndex;
 
-    private Actions(CircularLinkedList players, GameBoard gameBoard) {
+    private Actions(ArrayList<Player> players, GameBoard gameBoard) {
         this.players = players;
         this.parser = new Parser();
         this.gameBoard = gameBoard;
+        this.activePlayerIndex = 0;
+        this.activePlayer = players.get(activePlayerIndex);
+
+        initialArmyAllocation();
+        initialArmyPlacement();
+    }
+
+    private void initialArmyAllocation() {
+        int armies = 0;
+
+        switch (players.size()){
+            case 2:
+                armies = 50;
+                break;
+            case 3:
+                armies = 35;
+                break;
+            case 4:
+                armies = 30;
+                break;
+            case 5:
+                armies = 25;
+                break;
+            case 6:
+                armies = 20;
+                break;
+            default:
+                break;
+        }
+
+        for(Player p : players) {
+            p.setArmies(armies);
+        }
+    }
+
+    private void initialArmyPlacement() {
+        ArrayList<ArrayList<String>> assignedTerritories = new ArrayList<>();
+        String territory;
+        int numPlayers = players.size();
+
+        // Creates array list to temporarily store territories
+        for (Player ignored : players) {
+            assignedTerritories.add(new ArrayList<>());
+        }
+
+        // Randomly give players territories and allot initial armies.
+        for (int i = 0; i < numPlayers; i++){
+            territory = gameBoard.getUnallocatedTerritory();
+
+            // If there are no territories left to assign quit
+            if (territory == null) {
+                break;
+            }
+
+            Player player = players.get(i);
+
+            gameBoard.setTerritoryRuler(territory, player.getName());
+            gameBoard.addTerritoryArmy(territory, player.removeArmies(1));
+            assignedTerritories.get(i).add(territory);
+
+            // If it is the las player reset it back to the start
+            if (i == numPlayers - 1) {
+                i = 0;
+            }
+        }
+
+        Random ran = new Random();
+        for (int i = 0; i < numPlayers; i++) {
+            Player player = players.get(i);
+            ArrayList<String> playersTerritories = assignedTerritories.get(i);
+            territory = playersTerritories.get(ran.nextInt(playersTerritories.size())); // Gets a random territory
+
+            gameBoard.addTerritoryArmy(territory, player.removeArmies(1));
+
+            // If it is the las player reset it back to the start
+            if (i == numPlayers - 1) {
+                // If the last player has no armies we are done
+                if (player.getArmies() == 0){
+                    break;
+                }
+                i = 0;
+            }
+        }
     }
 
     private void attack(String territory)
@@ -32,7 +118,7 @@ public class Actions {
         }
 
         //checks if attacking territory is adjacent to defending territory
-        if(!gameBoard.isAdjacentTerritory(gameBoard.getTerritory(attacker), gameBoard.getTerritory(territory)))
+        if(!gameBoard.isAdjacentTerritory(attacker, territory))
         {
             System.out.println("Those territories are not adjacent");
             return;
@@ -44,7 +130,7 @@ public class Actions {
         int diceAmountAttack = diceSizeAttack.nextInt();
 
         //confirms if attacker has sufficient armies to use amount of dice
-        if(!(gameBoard.getTerritory(attacker).getArmy() > diceAmountAttack + 1));
+        if(!(gameBoard.getTerritory(attacker).getArmy() > diceAmountAttack + 1))
         {
             System.out.println("You do not have enough armies");
         }
@@ -70,9 +156,7 @@ public class Actions {
             gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - result);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(activePlayer);
-                gameBoard.getTerritory(territory).getRuler().removeRuledTerritory(gameBoard.getTerritory(territory));
-                activePlayer.addRuledTerritory(gameBoard.getTerritory(territory));
+                gameBoard.getTerritory(territory).setRuler(activePlayer.getName());
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
@@ -82,9 +166,7 @@ public class Actions {
             gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - 1);
             //sets new ruler if defender has no armies left
             if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(activePlayer);
-                gameBoard.getTerritory(territory).getRuler().removeRuledTerritory(gameBoard.getTerritory(territory));
-                activePlayer.addRuledTerritory(gameBoard.getTerritory(territory));
+                gameBoard.getTerritory(territory).setRuler(activePlayer.getName());
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
@@ -139,9 +221,14 @@ public class Actions {
     }
 
     private void pass() {
-        activePlayer = players.returnNextNode(activePlayer);
-    }
+        activePlayerIndex++;
 
+        if (activePlayerIndex >= players.size()) {
+            activePlayerIndex = 0;
+        }
+
+        activePlayer = players.get(activePlayerIndex);
+    }
 
     public void playGame() {
         boolean finished = false;
