@@ -27,6 +27,10 @@ public class Territory {
         return adjacentTerritories.get(key);
     }
 
+    public Set<String> getAdjacentTerritories(){
+        return adjacentTerritories.keySet();
+    }
+
     public boolean isAdjacent(String adjacent) {
         return adjacentTerritories.get(adjacent) != null;
     }
@@ -53,6 +57,11 @@ public class Territory {
 
     public void addArmy(int army){
         this.army += Math.abs(army);
+    }
+
+    public void removeArmy(int army){
+        this.army -= Math.abs(army);
+        this.army = Math.max(this.army, 0);
     }
 
     public void printStatus(){

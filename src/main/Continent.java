@@ -35,11 +35,16 @@ public class Continent {
         territories.add(territory);
     }
 
+    public int getValue() {
+        return value;
+    }
+
     public void printStatus(){
         System.out.println("Continent: " + getName());
+        System.out.println("Ruler: " + getRuler());
         System.out.println("Territories: ");
-        for (int i = 0; i < territories.size(); i++){
-            territories.get(i).printStatus();
+        for (Territory territory : territories) {
+            territory.printStatus();
         }
     }
 }
