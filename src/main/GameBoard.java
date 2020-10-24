@@ -8,12 +8,11 @@ public class GameBoard {
     private CircularLinkedList players;
     private List<String> randomTerritories;
 
-    public GameBoard(CircularLinkedList players){
+    public GameBoard(){
         continentMap = new HashMap<>();
         createBoard();
         this.players = players;
         randomTerritories = new ArrayList<>();
-
     }
 
     public void createBoard(){
@@ -467,12 +466,13 @@ public class GameBoard {
 
     public void printBoardStatus(){
         for (String i : continentMap.keySet()){
-            continentMap.get(i).printStatus();;
+            continentMap.get(i).printStatus();
         }
     }
     public Territory getTerritory(String territoryName){
         return territoryMap.get(territoryName);
     }
+
     public boolean isAdjacentTerritory(Territory compareTo, Territory compare){
         for (String i : compareTo.getAdjacentTerritories().keySet()){
             if (compare.getAdjacentTerritories().get(i).equals(compareTo)){
@@ -498,11 +498,11 @@ public class GameBoard {
         return getTerritory(territoryName).getArmy();
     }
 
-    public Player getTerritoryRuler(String territoryName){
+    public String getTerritoryRuler(String territoryName){
         return getTerritory(territoryName).getRuler();
     }
 
-    public void setTerritoryRuler(String territoryName , Player ruler){
+    public void setTerritoryRuler(String territoryName , String ruler){
         getTerritory(territoryName).setRuler(ruler);
     }
 
@@ -516,7 +516,7 @@ public class GameBoard {
 
     public boolean setContinentRuler(Continent continent, String ruler){
         for (int i = 0; i < continent.getTerritories().size(); i++){
-            if (!continent.getTerritories().get(i).getRuler().getName().equals(ruler)){
+            if (!continent.getTerritories().get(i).getRuler().equals(ruler)){
                 return false;
             }
         }
@@ -525,11 +525,10 @@ public class GameBoard {
 
     public boolean isPlayerEliminated(String name){
         for (String i : territoryMap.keySet()){
-            if (territoryMap.get(i).getRuler().getName().equals(name)){
+            if (territoryMap.get(i).getRuler().equals(name)){
                 return false;
             }
         }
         return true;
     }
-
 }

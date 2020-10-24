@@ -35,7 +35,7 @@ public class ContinentTest {
     @Test
     public void setRuler_GetRuler() {
         // Before Ruler is set
-        assertEquals("No Ruler", north_america.getRuler());
+        assertEquals("", north_america.getRuler());
         assertNotEquals("Canada", north_america.getRuler());
 
         // Set Ruler
