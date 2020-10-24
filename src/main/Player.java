@@ -5,51 +5,29 @@ import java.util.List;
  * @author Emmitt Luhning
  */
 public class Player {
-
     private String name;
-    private int numOfSoldiers;
-    private int numOfTerritories;
-    private ArrayList<Territory> ruledTerritories;
+    private int Armies;
 
     public Player(String name) {
-        ruledTerritories = new ArrayList<Territory>();
         this.name = name;
-    }
-
-    public void addRuledTerritory(Territory territory) {
-        ruledTerritories.add(territory);
-    }
-    public void removeRuledTerritory(Territory territory) {
-        for(int i = 0; i < ruledTerritories.size(); i++)
-        {
-            if(ruledTerritories.get(i).equals(territory)){
-                    ruledTerritories.remove(i);
-             }
-        }
-
-    }
-    public ArrayList<Territory> getRuledTerritories() {
-        return ruledTerritories;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getNumOfSoldiers() {
-        return numOfSoldiers;
+    public int getArmies() {
+        return Armies;
     }
-
-    public void setNumOfSoldiers(int num) {
-        numOfSoldiers = num;
+    public void setArmies(int num) {
+        Armies = num;
     }
-
-    public void setNumOfTerritories(int num) {
-        numOfTerritories = num;
+    public void addArmies(int num) {
+        Armies += num;
     }
-
-    public int getNumOfTerritories(){
-        return numOfTerritories;
+    public int removeArmies(int num) {
+        Armies -= num;
+        return num;
     }
 }
 

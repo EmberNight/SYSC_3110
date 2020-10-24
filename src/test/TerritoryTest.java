@@ -38,7 +38,7 @@ public class TerritoryTest {
     @Test
     public void setRuler_GetRuler() {
         // Before Ruler is set
-        assertEquals("No Ruler", canada.getRuler());
+        assertEquals("", canada.getRuler());
         assertNotEquals("Canada", canada.getRuler());
 
         // Set Ruler

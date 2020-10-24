@@ -11,13 +11,7 @@ public class Continent {
     public Continent(String name, int value){
         territories = new ArrayList<>();
         this.value = value;
-        ruler = "No Ruler";
-        this.name = name;
-    }
-    public Continent(ArrayList<Territory>territories, String name, int value){
-        this.territories = territories;
-        this.value = value;
-        ruler = "No Ruler";
+        ruler = "";
         this.name = name;
     }
 
