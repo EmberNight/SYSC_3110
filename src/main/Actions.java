@@ -118,7 +118,7 @@ public class Actions {
         }
 
         //checks if attacking territory is adjacent to defending territory
-        if(!gameBoard.isAdjacentTerritory(attacker, territory))
+        if(!gameBoard.isAdjacentTerritory(gameBoard.getTerritory(attacker), gameBoard.getTerritory(territory)))
         {
             System.out.println("Those territories are not adjacent");
             return;
@@ -130,7 +130,7 @@ public class Actions {
         int diceAmountAttack = diceSizeAttack.nextInt();
 
         //confirms if attacker has sufficient armies to use amount of dice
-        if(!(gameBoard.getTerritory(attacker).getArmy() > diceAmountAttack + 1))
+        if(!(gameBoard.getArmy(attacker) > diceAmountAttack + 1))
         {
             System.out.println("You do not have enough armies");
         }
@@ -138,7 +138,7 @@ public class Actions {
 
         Scanner diceSizeDefend = new Scanner(System.in);
         int diceAmountDefend = diceSizeDefend.nextInt();
-        if(!(gameBoard.getTerritory(territory).getArmy() >= diceAmountAttack));
+        if(!(gameBoard.getArmy(territory) >= diceAmountAttack));
         {
             System.out.println("You do not have enough armies");
         }
@@ -148,25 +148,26 @@ public class Actions {
         //case where defender's win, eliminating attacker's armies
         if(result < 0)
         {
-            gameBoard.getTerritory(attacker).setArmy(gameBoard.getTerritory(territory).getArmy() + result);
+            gameBoard.addTerritoryArmy(attacker, gameBoard.getArmy(attacker) + result);
         }
         //Case where attacker wins, eliminating defender's armies
         else if(result > 0)
         {
-            gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - result);
+            gameBoard.addTerritoryArmy(territory, gameBoard.getTerritory(territory).getArmy() - result);
             //sets new ruler if defender has no armies left
-            if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(activePlayer.getName());
+            if(gameBoard.getArmy(territory) == 0){
+                gameBoard.setTerritoryRuler(territory, activePlayer.getName());
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
         //Case where both sides lose one army.
         else if(result == 0)
         {
-            gameBoard.getTerritory(territory).setArmy(gameBoard.getTerritory(territory).getArmy() - 1);
+            gameBoard.addTerritoryArmy(territory, gameBoard.getArmy(territory) - 1);
+            gameBoard.addTerritoryArmy(attacker, gameBoard.getArmy(attacker) - 1);
             //sets new ruler if defender has no armies left
-            if(gameBoard.getTerritory(territory).getArmy() == 0){
-                gameBoard.getTerritory(territory).setRuler(activePlayer.getName());
+            if(gameBoard.getArmy(territory) == 0){
+                gameBoard.setTerritoryRuler(territory, activePlayer.getName());
                 System.out.println(activePlayer.getName() + "has taken control of the territory");
             }
         }
