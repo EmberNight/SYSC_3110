@@ -4,8 +4,8 @@
     public class Parser
     {
 
-        private CommandWords commands;
-        private Scanner reader;
+        private final CommandWords commands;
+        private final Scanner reader;
 
 
         public Parser()
@@ -24,6 +24,8 @@
             System.out.print("> ");
 
             inputLine = reader.nextLine();
+            inputLine = inputLine.toLowerCase();
+
             Scanner wordScanner = new Scanner(inputLine);
             if(wordScanner.hasNext()) {
                 word1 = wordScanner.next();
@@ -41,6 +43,9 @@
             }
         }
 
+        public void printCommands() {
+            new CommandWords().printCommands();
+        }
     }
 
 

@@ -27,6 +27,10 @@ public class Territory {
         return adjacentTerritories.get(key);
     }
 
+    public boolean isAdjacent(String adjacent) {
+        return adjacentTerritories.get(adjacent) != null;
+    }
+
     public String getName(){
         return name;
     }
@@ -44,21 +48,23 @@ public class Territory {
     }
 
     public void setArmy(int army){
-        if (army < 0) {
-            this.army = 0;
-        } else {
-            this.army = army;
-        }
+        this.army = Math.max(army, 0); // Set whatever is higher army or 0
+    }
+
+    public void addArmy(int army){
+        this.army += Math.abs(army);
     }
 
     public void printStatus(){
         System.out.println("    Territory: " + getName());
         System.out.println("        Army Count: " + getArmy());
         System.out.println("        Ruler: " + getRuler());
-        System.out.println("      AdjacentTerritories: ");
+        System.out.println("        AdjacentTerritories: ");
+        System.out.print("            ");
         for (String i : adjacentTerritories.keySet()){
-            System.out.println("          " + i + " " + adjacentTerritories.get(i).getName());
+            System.out.print(adjacentTerritories.get(i).getName() + ", ");
         }
+        System.out.println();
     }
 }
 

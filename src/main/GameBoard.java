@@ -1,22 +1,21 @@
-import javax.management.remote.rmi.RMIConnectionImpl;
 import java.util.*;
 
 public class GameBoard {
 
-    private Map<String, Continent> continentMap;
-    private Map<String, Territory> territoryMap;
-    private CircularLinkedList players;
-    private List<String> randomTerritories;
+    private final Map<String, Continent> continentMap;
+    private final Map<String, Territory> territoryMap;
+    private final List<String> randomTerritories;
 
     public GameBoard(){
         continentMap = new HashMap<>();
-        createBoard();
-        this.players = players;
+        territoryMap = new HashMap<>();
         randomTerritories = new ArrayList<>();
+        createTestBoard(); // Must be changed for submission TODO
+        populateTerritoryMap();
+        populateUnallocatedTerritories();
     }
 
     public void createBoard(){
-
         // create continents
         Continent northAmerica = new Continent("North America", 5);
         Continent southAmerica = new Continent("South America", 2);
@@ -55,7 +54,7 @@ public class GameBoard {
         Territory westernUnitedStates = new Territory("Western United States", "North America");
         northAmerica.addTerritory(westernUnitedStates);
 
-        Territory easternUnitedStates = new Territory("Eastern United Staes", "North America");
+        Territory easternUnitedStates = new Territory("Eastern United States", "North America");
         northAmerica.addTerritory(easternUnitedStates);
 
         Territory centralAmerica = new Territory("Central America", "North America");
@@ -87,13 +86,13 @@ public class GameBoard {
         Territory greatBritain = new Territory("Great Britain", "Europe");
         europe.addTerritory(greatBritain);
 
-        Territory northernEurope = new Territory("Northern Europ", "Europe");
+        Territory northernEurope = new Territory("Northern Europe", "Europe");
         europe.addTerritory(northernEurope);
 
         Territory westernEurope = new Territory("Western Europe", "Europe");
         europe.addTerritory(westernEurope);
 
-        Territory southernEurope = new Territory("Souther Europe", "Europe");
+        Territory southernEurope = new Territory("Southern Europe", "Europe");
         europe.addTerritory(southernEurope);
 
         // creates Africa Territories
@@ -106,7 +105,7 @@ public class GameBoard {
         Territory eastAfrica = new Territory("East Africa", "Africa");
         africa.addTerritory(eastAfrica);
 
-        Territory centralAfrica = new Territory("Cental Africa", "Africa");
+        Territory centralAfrica = new Territory("Central Africa", "Africa");
         africa.addTerritory(centralAfrica);
 
         Territory southAfrica = new Territory("South Africa", "Africa");
@@ -166,7 +165,7 @@ public class GameBoard {
         Territory easternAustralia = new Territory("Eastern Australia", "Australia");
         australia.addTerritory(easternAustralia);
 
-        // set adjacencies for North America Territories
+        // set adjacency for North America Territories
         alaska.setAdjacentTerritory(northwestTerritories, "Northwest Territories");
         alaska.setAdjacentTerritory(alberta, "Alberta");
 
@@ -210,7 +209,7 @@ public class GameBoard {
         centralAmerica.setAdjacentTerritory(easternUnitedStates, "Eastern United States");
         centralAmerica.setAdjacentTerritory(venezuela, "Venezuela");
 
-        // set adjacencies for South America Territories
+        // set adjacency for South America Territories
         venezuela.setAdjacentTerritory(centralAmerica,"Central America");
         venezuela.setAdjacentTerritory(brazil, "Brazil");
         venezuela.setAdjacentTerritory(peru, "Peru");
@@ -227,7 +226,7 @@ public class GameBoard {
         brazil.setAdjacentTerritory(argentina, "Argentina");
         brazil.setAdjacentTerritory(northAfrica, "North Africa");
 
-        //set adjacencies for Africa Territories
+        //set adjacency for Africa Territories
         northAfrica.setAdjacentTerritory(brazil, "Brazil");
         northAfrica.setAdjacentTerritory(westernEurope, "Western Europe");
         northAfrica.setAdjacentTerritory(southernEurope, "Southern Europe");
@@ -258,7 +257,7 @@ public class GameBoard {
         madagascar.setAdjacentTerritory(eastAfrica, "East Africa");
         madagascar.setAdjacentTerritory(southAfrica, "South Africa");
 
-        // set adjacencies for Europe Territories
+        // set adjacency for Europe Territories
         iceland.setAdjacentTerritory(greenland, "Greenland");
         iceland.setAdjacentTerritory(greatBritain, "Great Britain");
         iceland.setAdjacentTerritory(scandinavia, "Scandinavia");
@@ -298,7 +297,7 @@ public class GameBoard {
         russia.setAdjacentTerritory(afghanistan, "Afghanistan");
         russia.setAdjacentTerritory(ural, "Ural");
 
-        // create adjacencies for Asia Territories
+        // create adjacency for Asia Territories
         middleEast.setAdjacentTerritory(eastAfrica, "East Africa");
         middleEast.setAdjacentTerritory(egypt, "Egypt");
         middleEast.setAdjacentTerritory(southernEurope, "Southern Europe");
@@ -362,7 +361,7 @@ public class GameBoard {
         southeastAsia.setAdjacentTerritory(china, "China");
         southeastAsia.setAdjacentTerritory(indonesia, "Indonesia");
 
-        // set adjacencies for Australia Territories
+        // set adjacency for Australia Territories
         indonesia.setAdjacentTerritory(southeastAsia, "Southeast Asia");
         indonesia.setAdjacentTerritory(newGuinea, "New Guinea");
         indonesia.setAdjacentTerritory(westernAustralia, "Western Australia");
@@ -381,87 +380,33 @@ public class GameBoard {
 
     public void createTestBoard(){
         Continent north_america = new Continent("North America", 3);
-        Continent south_america = new Continent("South America", 4);
-        Continent africa = new Continent("Africa", 5);
-        Continent asia = new Continent("Asia", 4);
 
         continentMap.put("North America", north_america);
-        continentMap.put("South America", south_america);
-        continentMap.put("Africa", africa);
-        continentMap.put("Asia", asia);
 
-        Territory canada = new Territory("Canada", "North America");
-        Territory usa = new Territory("United States", "North America");
-        Territory mexico = new Territory("Mexico", "North America");
-
-        Territory brazil = new Territory("Brazil", "South America");
-        Territory argentina = new Territory("Argentina" , "South America");
-        Territory peru = new Territory("Peru", "South America");
-
-        Territory kenya = new Territory("Kenya", "Africa");
-        Territory egypt = new Territory("Egypt", "Africa");
-        Territory zimbabwe = new Territory("Zimbabwe", "Africa");
-
-        Territory japan = new Territory("Japan", "Asia");
-        Territory china = new Territory("China", "Asia");
-        Territory russia = new Territory("Russia", "Asia");
+        Territory canada = new Territory("canada", "North America");
+        Territory usa = new Territory("usa", "North America");
+        Territory mexico = new Territory("mexico", "North America");
 
         north_america.addTerritory(canada);
         north_america.addTerritory(usa);
         north_america.addTerritory(mexico);
 
-        south_america.addTerritory(brazil);
-        south_america.addTerritory(argentina);
-        south_america.addTerritory(peru);
+        canada.setAdjacentTerritory(usa, "usa");
+        canada.setAdjacentTerritory(mexico, "mexico");
 
-        africa.addTerritory(kenya);
-        africa.addTerritory(egypt);
-        africa.addTerritory(zimbabwe);
+        usa.setAdjacentTerritory(canada, "canada");
+        usa.setAdjacentTerritory(mexico, "mexico");
 
-        asia.addTerritory(japan);
-        asia.addTerritory(china);
-        asia.addTerritory(russia);
+        mexico.setAdjacentTerritory(usa, "usa");
+        mexico.setAdjacentTerritory(canada, "canada");
+    }
 
-        canada.setAdjacentTerritory(usa, "USA");
-        canada.setAdjacentTerritory(mexico, "Mexico");
-
-        usa.setAdjacentTerritory(canada, "Canada");
-        usa.setAdjacentTerritory(mexico, "Mexico");
-
-        mexico.setAdjacentTerritory(usa, "USA");
-        mexico.setAdjacentTerritory(canada, "Canada");
-        mexico.setAdjacentTerritory(zimbabwe, "Zimbabwe");
-
-        zimbabwe.setAdjacentTerritory(egypt, "Egypt");
-        zimbabwe.setAdjacentTerritory(china, "China");
-        zimbabwe.setAdjacentTerritory(kenya, "Kenya");
-        zimbabwe.setAdjacentTerritory(mexico, "Mexico");
-
-        kenya.setAdjacentTerritory(zimbabwe, "Zimbabwe");
-        kenya.setAdjacentTerritory(russia, "Russia");
-        kenya.setAdjacentTerritory(brazil, "Brazil");
-
-        brazil.setAdjacentTerritory(peru, "Peru");
-        brazil.setAdjacentTerritory(kenya, "Kenya");
-        brazil.setAdjacentTerritory(argentina, "Argentina");
-
-        peru.setAdjacentTerritory(egypt, "Egypt");
-        peru.setAdjacentTerritory(brazil, "Brazil");
-
-        argentina.setAdjacentTerritory(brazil, "Brazil");
-
-        egypt.setAdjacentTerritory(zimbabwe, "Zimbabwe");
-        egypt.setAdjacentTerritory(peru, "Peru");
-
-        china.setAdjacentTerritory(zimbabwe, "Zimbabwe");
-        china.setAdjacentTerritory(japan, "Japan");
-        china.setAdjacentTerritory(russia, "Russia");
-
-        japan.setAdjacentTerritory(china, "China");
-
-        russia.setAdjacentTerritory(china, "China");
-        russia.setAdjacentTerritory(kenya, "Kenya");
-
+    public void populateTerritoryMap() {
+        for (String i : continentMap.keySet()){
+            for (Territory t : continentMap.get(i).getTerritories()) {
+                territoryMap.put(t.getName(), t);
+            }
+        }
     }
 
     public void printBoardStatus(){
@@ -473,25 +418,19 @@ public class GameBoard {
         return territoryMap.get(territoryName);
     }
 
-    public boolean isAdjacentTerritory(Territory compareTo, Territory compare){
-        for (String i : compareTo.getAdjacentTerritories().keySet()){
-            if (compare.getAdjacentTerritories().get(i).equals(compareTo)){
-                return true;
-            }
-        }
-        return false;
+    public boolean isAdjacentTerritory(String territory, String adjacent){
+        return getTerritory(territory).isAdjacent(adjacent);
     }
 
-    private List<String> populateUnallocatedTerritories(){
-        for (String i : territoryMap.keySet()){
-            randomTerritories.add(i);
-        }
+    private void populateUnallocatedTerritories(){
+        randomTerritories.addAll(territoryMap.keySet());
         Collections.shuffle(randomTerritories);
-        return randomTerritories;
     }
 
     public String getUnallocatedTerritory(){
-        return randomTerritories.remove(0);
+        String territory = null;
+        if (!randomTerritories.isEmpty()) territory = randomTerritories.remove(0);
+        return territory;
     }
 
     public int getArmy(String territoryName){
@@ -507,7 +446,7 @@ public class GameBoard {
     }
 
     public void addTerritoryArmy(String territoryName, int army){
-        getTerritory(territoryName).setArmy(army);
+        getTerritory(territoryName).addArmy(army);
     }
 
     public void removeTerritoryArmy(String territoryName){
