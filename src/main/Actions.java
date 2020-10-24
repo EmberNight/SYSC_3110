@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+
 /**
  * @author Emmitt Luhning
  */
@@ -20,6 +19,7 @@ public class Actions {
 
         initialArmyAllocation();
         initialArmyPlacement();
+        gameBoard.initializeContinentRulers();
     }
 
     private void initialArmyAllocation() {
@@ -27,7 +27,7 @@ public class Actions {
 
         switch (players.size()){
             case 2:
-                armies = 50;
+                armies = 5;
                 break;
             case 3:
                 armies = 35;
@@ -89,7 +89,7 @@ public class Actions {
 
             gameBoard.addTerritoryArmy(territory, player.removeArmies(1));
 
-            // If it is the las player reset it back to the start
+            // If it is the last player reset it back to the start
             if (i == numPlayers - 1) {
                 // If the last player has no armies we are done
                 if (player.getArmies() == 0){
@@ -100,123 +100,191 @@ public class Actions {
         }
     }
 
-    private void attack(String territory)
+    private void attack(String defenderTerritory)
     {
+        Scanner input = new Scanner(System.in);
+        String currPlayer = activePlayer.getName();
+        String attackerTerritory;
+
+        // Checks if you own the territory if you do return.
+        if (gameBoard.getTerritoryRuler(defenderTerritory).equals(currPlayer)) {
+            System.out.println("You cannot attack your own territory.");
+            return;
+        }
 
         System.out.println("Which territory would you like to attack from?");
-        gameBoard.getTerritory(territory).printStatus();
+
+        // If you have no adjacent territories return.
+        Set<String> adjacentTerritories = gameBoard.getAdjacentTerritories(defenderTerritory);
+        boolean unownedTerritory = false;
+        for (String s : adjacentTerritories) {
+            if (gameBoard.getTerritoryRuler(s).equals(currPlayer)) {
+                gameBoard.printTerritoryStatus(s);
+                unownedTerritory = true;
+            }
+        }
+
+        if (!unownedTerritory) {
+            System.out.println("You don't own any adjacent territories to attack from");
+            return;
+        }
+
         //asks for and processes the input for attacking territory
-        Scanner attack = new Scanner(System.in);
-        String attacker = attack.nextLine();
+        System.out.print("> ");
+        attackerTerritory = input.nextLine();
 
         //checks if attacker actually owns this territory
-        if(!gameBoard.getTerritory(attacker).getRuler().equals(activePlayer.getName()))
+        if(!gameBoard.getTerritory(attackerTerritory).getRuler().equals(activePlayer.getName()))
         {
             System.out.println("You don't own this territory");
             return;
         }
 
         //checks if attacking territory is adjacent to defending territory
-        if(!gameBoard.isAdjacentTerritory(attacker, territory))
+        if(!gameBoard.isAdjacentTerritory(attackerTerritory, defenderTerritory))
         {
             System.out.println("Those territories are not adjacent");
             return;
         }
 
         //scans for input of attacker, stating dice amount
-        System.out.println("How many dice would you like to attack with?");
-        Scanner diceSizeAttack = new Scanner(System.in);
-        int diceAmountAttack = diceSizeAttack.nextInt();
+        System.out.println("How many dice would you like to attack with (1 to 3)?");
+
+        int diceAttacker = 0;
+        while (true) {
+            try {
+                System.out.print("> ");
+                diceAttacker = input.nextInt();
+            } catch (Exception e) {
+                System.out.println("Number of dice must be a number.");
+            }
+
+            if (diceAttacker >= 1 && diceAttacker <= 3) {
+                break;
+            }
+            System.out.println("Attacker must have 1 to 3 dice");
+        }
 
         //confirms if attacker has sufficient armies to use amount of dice
-        if(!(gameBoard.getArmy(attacker) > diceAmountAttack + 1))
+        if(!(gameBoard.getArmy(attackerTerritory) >= diceAttacker + 1))
         {
-            System.out.println("You do not have enough armies");
-        }
-        System.out.println("How many dice would the defender like to use");
-
-        Scanner diceSizeDefend = new Scanner(System.in);
-        int diceAmountDefend = diceSizeDefend.nextInt();
-        if(gameBoard.getArmy(territory) >= diceAmountAttack) {
-            System.out.println("You do not have enough armies");
+            System.out.println("The attacker's territory does not have enough armies to use " + diceAttacker + " dice");
+            return;
         }
 
-        int result = rollDie(diceAmountAttack, diceAmountDefend); //stores result of dice roll
+        System.out.println("How many dice would the defender like to use (1 to 2)?");
 
-        //case where defender's win, eliminating attacker's armies
-        if(result < 0)
-        {
-            gameBoard.addTerritoryArmy(attacker, gameBoard.getArmy(attacker) + result);
-        }
-        //Case where attacker wins, eliminating defender's armies
-        else if(result > 0)
-        {
-            gameBoard.addTerritoryArmy(territory, gameBoard.getTerritory(territory).getArmy() - result);
-            //sets new ruler if defender has no armies left
-            if(gameBoard.getArmy(territory) == 0){
-                gameBoard.setTerritoryRuler(territory, activePlayer.getName());
-                System.out.println(activePlayer.getName() + "has taken control of the territory");
+        int diceDefender = 0;
+        while (true) {
+            try {
+                System.out.print("> ");
+                diceDefender = input.nextInt();
+            } catch (Exception e) {
+                System.out.println("Number of dice must be a number.");
             }
-        }
-        //Case where both sides lose one army.
-        else if(result == 0)
-        {
-            gameBoard.addTerritoryArmy(territory, gameBoard.getArmy(territory) - 1);
-            gameBoard.addTerritoryArmy(attacker, gameBoard.getArmy(attacker) - 1);
-            //sets new ruler if defender has no armies left
-            if(gameBoard.getArmy(territory) == 0){
-                gameBoard.setTerritoryRuler(territory, activePlayer.getName());
-                System.out.println(activePlayer.getName() + "has taken control of the territory");
+
+            if (diceDefender >= 1 && diceDefender <= 2) {
+                break;
             }
+            System.out.println("Defender must have 1 to 2 dice");
         }
 
+        if(!(gameBoard.getArmy(defenderTerritory) >= diceDefender)) {
+            System.out.println("The defender's territory does not have enough armies to use " + diceDefender + " dice");
+            return;
+        }
+
+        ArrayList<Integer> result = rollDie(diceAttacker, diceDefender); //stores result of dice roll
+        int attackerLosses = result.get(0);
+        int defenderLosses = result.get(1);
+
+        gameBoard.removeTerritoryArmy(attackerTerritory, attackerLosses);
+        gameBoard.removeTerritoryArmy(defenderTerritory, defenderLosses);
+
+        if (gameBoard.getArmy(defenderTerritory) == 0) {
+            System.out.println(currPlayer + " has claimed " + defenderTerritory + " as their own!");
+            String defender = gameBoard.getTerritoryRuler(defenderTerritory);
+            gameBoard.removeTerritoryArmy(attackerTerritory, 1);
+            gameBoard.addTerritoryArmy(defenderTerritory, 1);
+            gameBoard.setTerritoryRuler(defenderTerritory, currPlayer);
+            gameBoard.setContinentRuler(defenderTerritory, currPlayer);
+            removeEliminatedPlayer(defender);
+        }
+
+        if (players.size() == 1) {
+            System.out.println(players.get(0).getName() + " Wins!");
+            System.exit(0);
+        }
     }
 
-    private int rollDie(int attack, int defend) {
-        int currentAttack;
-        int largestAttack = 0;
-        int secondLargestAttack = 0;
+    private ArrayList<Integer> rollDie(int numAttackDie, int numDefendDie) {
+        ArrayList<Integer> result = new ArrayList<>();
+        ArrayList<Integer> attackerRolls = new ArrayList<>();
+        ArrayList<Integer> defenderRolls = new ArrayList<>();
+        Random ran = new Random();
+        int attackerLosses = 0;
+        int defenderLosses = 0;
 
-        int result = 0;
+        System.out.print("Attacker Rolled: ");
+        for(int i = 0; i < numAttackDie; i++) {
+            int roll = ran.nextInt(6) + 1;
+            attackerRolls.add(roll);
+            System.out.print(roll + " ");
+        }
+        System.out.println();
 
-        int currentDefense;
-        int largestDefense = 0;
-        int secondLargestDefense = 0;
+        System.out.print("Defender Rolled: ");
+        for(int i = 0; i < numDefendDie; i++) {
+            int roll = ran.nextInt(6) + 1;
+            defenderRolls.add(roll);
+            System.out.print(roll + " ");
+        }
+        System.out.println();
 
-        for (int i = 0; i < attack; i++)
-        {
-            currentAttack = (int) (Math.random() * 6 + 1);
-            if (currentAttack > largestAttack) {
-                secondLargestAttack = largestAttack;
-                largestAttack = currentAttack;
-            }
-            else if (currentAttack < largestAttack && currentAttack > secondLargestAttack) {
-                secondLargestAttack = currentAttack;
+        Collections.sort(attackerRolls);
+        Collections.sort(defenderRolls);
+
+        Collections.reverse(attackerRolls);
+        Collections.reverse(defenderRolls);
+
+        int diceToCheck = numAttackDie;
+        int diceLoss = numAttackDie - numDefendDie;
+
+        if (diceLoss < 0) {
+            attackerLosses = Math.abs(diceLoss);
+            diceToCheck = numAttackDie;
+        } else if (diceLoss > 0) {
+            defenderLosses = diceLoss;
+            diceToCheck = numDefendDie;
+        }
+
+        for (int i = 0; i < diceToCheck; i++) {
+            if (attackerRolls.get(i) > defenderRolls.get(i)) {
+                defenderLosses++;
+            } else {
+                attackerLosses++;
             }
         }
-        for (int j = 0; j < defend; j++)
-        {
-            currentDefense = (int) (Math.random() * 6 + 1);
-            if (currentDefense > largestDefense) {
-                secondLargestDefense = largestDefense;
-                largestDefense = currentDefense;
-            }
-            else if (currentDefense < largestDefense) {
-                secondLargestDefense = currentDefense;
-            }
-        }
 
-        if (largestAttack > largestDefense)  result = result + 1;
-        else if(largestAttack < largestDefense || largestAttack == largestDefense) result = result - 1;
-        if(attack>1 && defend > 1)
-        {
-            if (secondLargestAttack > secondLargestDefense) result = result + 1;
-            else if(secondLargestAttack < secondLargestDefense || secondLargestAttack == secondLargestDefense) result = result - 1;
+        result.add(attackerLosses);
+        result.add(defenderLosses);
 
-        }
-        //return result (positive integers = num of attacking wins. Negative integers = num of defending wins.
-        // 0 = one defending win, one attacking win)
+        System.out.println("The attacker had " + result.get(0) + " loss(es).");
+        System.out.println("The defender had " + result.get(1) + " loss(es).");
+
         return result;
+    }
+
+    private void removeEliminatedPlayer(String player) {
+        if (gameBoard.isPlayerEliminated(player)) {
+            for(int i = 0; i < players.size(); i++) {
+                if(players.get(i).getName().equals(player)) {
+                    System.out.println(player + " was eliminated from the game.");
+                    players.remove(i);
+                    break;
+                }
+            }
+        }
     }
 
     private void pass() {

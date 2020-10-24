@@ -418,8 +418,20 @@ public class GameBoard {
         return territoryMap.get(territoryName);
     }
 
+    public Continent getContinent(String continentName){
+        return continentMap.get(continentName);
+    }
+
     public boolean isAdjacentTerritory(String territory, String adjacent){
         return getTerritory(territory).isAdjacent(adjacent);
+    }
+
+    public Set<String> getAdjacentTerritories(String territory){
+        return getTerritory(territory).getAdjacentTerritories();
+    }
+
+    public void printTerritoryStatus(String territory){
+        getTerritory(territory).printStatus();
     }
 
     private void populateUnallocatedTerritories(){
@@ -449,17 +461,42 @@ public class GameBoard {
         getTerritory(territoryName).addArmy(army);
     }
 
-    public void removeTerritoryArmy(String territoryName){
-        getTerritory(territoryName).setArmy(0);
+    public void removeTerritoryArmy(String territoryName, int armies){
+        getTerritory(territoryName).removeArmy(armies);
     }
 
-    public boolean setContinentRuler(Continent continent, String ruler){
-        for (int i = 0; i < continent.getTerritories().size(); i++){
-            if (!continent.getTerritories().get(i).getRuler().equals(ruler)){
-                return false;
+    public void setContinentRuler(String territory, String ruler){
+        Continent continent = continentMap.get(getTerritory(territory).getContinentName());
+        ArrayList<Territory> territories = continent.getTerritories();
+
+        for (Territory t : territories) {
+            if (!t.getRuler().equals(ruler)) {
+                return; // Don't update the ruler
             }
         }
-        return true;
+
+        continent.setRuler(ruler);
+    }
+
+    public void initializeContinentRulers() {
+        for (String c : continentMap.keySet()) {
+            Continent continent = getContinent(c);
+            ArrayList<Territory> territories = continent.getTerritories();
+            String ruler = territories.get(0).getRuler();
+            int rulerCount = 0;
+
+            for (Territory t : territories) {
+                if (t.getRuler().equals(ruler)) {
+                    rulerCount++;
+                } else {
+                    if (rulerCount > 0) {
+                        break;
+                    } else {
+                        ruler = t.getRuler();
+                    }
+                }
+            }
+        }
     }
 
     public boolean isPlayerEliminated(String name){
