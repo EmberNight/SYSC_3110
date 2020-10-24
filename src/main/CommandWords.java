@@ -1,6 +1,6 @@
 public class CommandWords {
 
-    private final String[] validCommands = {"attack", "pass", "status", "start"}; //Contains all valid command words
+    private final String[] validCommands = {"attack", "pass", "status", "quit"}; //Contains all valid command words
 
     /**
      * Constructor - initialise the command words.
@@ -16,5 +16,13 @@ public class CommandWords {
             if (command.equals(aString)) return true;
         }
         return false; //Invalid command
+    }
+
+    public void printCommands() {
+        System.out.print("Valid commands: ");
+        for (String s : validCommands) {
+            System.out.print(s + " ");
+        }
+        System.out.println();
     }
 }

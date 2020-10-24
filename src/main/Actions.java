@@ -3,7 +3,6 @@ import java.util.Random;
 import java.util.Scanner;
 /**
  * @author Emmitt Luhning
- * @group 16
  */
 public class Actions {
     private final GameBoard gameBoard;
@@ -12,7 +11,7 @@ public class Actions {
     private Player activePlayer;
     private int activePlayerIndex;
 
-    private Actions(ArrayList<Player> players, GameBoard gameBoard) {
+    public Actions(ArrayList<Player> players, GameBoard gameBoard) {
         this.players = players;
         this.parser = new Parser();
         this.gameBoard = gameBoard;
@@ -78,7 +77,7 @@ public class Actions {
 
             // If it is the las player reset it back to the start
             if (i == numPlayers - 1) {
-                i = 0;
+                i = -1; // Must be -1 because the for loop will increase it by one
             }
         }
 
@@ -96,7 +95,7 @@ public class Actions {
                 if (player.getArmies() == 0){
                     break;
                 }
-                i = 0;
+                i = -1; // Must be -1 because the for loop will increase it by one
             }
         }
     }
@@ -118,7 +117,7 @@ public class Actions {
         }
 
         //checks if attacking territory is adjacent to defending territory
-        if(!gameBoard.isAdjacentTerritory(gameBoard.getTerritory(attacker), gameBoard.getTerritory(territory)))
+        if(!gameBoard.isAdjacentTerritory(attacker, territory))
         {
             System.out.println("Those territories are not adjacent");
             return;
@@ -138,8 +137,7 @@ public class Actions {
 
         Scanner diceSizeDefend = new Scanner(System.in);
         int diceAmountDefend = diceSizeDefend.nextInt();
-        if(!(gameBoard.getArmy(territory) >= diceAmountAttack));
-        {
+        if(gameBoard.getArmy(territory) >= diceAmountAttack) {
             System.out.println("You do not have enough armies");
         }
 
@@ -229,16 +227,22 @@ public class Actions {
         }
 
         activePlayer = players.get(activePlayerIndex);
+        printCurrentPlayer();
+    }
+
+    private void printCurrentPlayer() {
+        System.out.println(activePlayer.getName() + "'s Turn!");
     }
 
     public void playGame() {
+        printCurrentPlayer();
         boolean finished = false;
         while (!finished) {
             Command command = parser.getCommand();
             finished = process(command);
         }
-
     }
+
     private void printStatus()
     {
             gameBoard.printBoardStatus();
@@ -247,15 +251,16 @@ public class Actions {
     private boolean process(Command command) {
         boolean quit = false;
         if (command.isUnknown()) {
-            System.out.println("What?");
+            parser.printCommands();
+        } else {
+            if (command.getCommandWord().equals("attack")) {
+                if (command.hasSecondWord()) attack(command.getSecondWord());
+                else System.out.println("Attack who?");
+            }
+            if (command.getCommandWord().equals("pass")) pass();
+            if (command.getCommandWord().equals("status")) printStatus();
+            if (command.getCommandWord().equals("quit")) quit = true;
         }
-        if (command.equals("attack")) {
-            if (command.hasSecondWord()) attack(command.getSecondWord());
-            else System.out.println("Attack who?");
-        }
-        if (command.equals("pass")) pass();
-        if (command.equals("status")) printStatus();
         return quit;
     }
-
 }

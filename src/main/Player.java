@@ -1,15 +1,13 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Emmitt Luhning
  */
 public class Player {
-    private String name;
-    private int Armies;
+    private final String name;
+    private int armies;
 
     public Player(String name) {
         this.name = name;
+        this.armies = 0;
     }
 
     public String getName() {
@@ -17,16 +15,13 @@ public class Player {
     }
 
     public int getArmies() {
-        return Armies;
+        return armies;
     }
     public void setArmies(int num) {
-        Armies = num;
-    }
-    public void addArmies(int num) {
-        Armies += num;
+        armies = num;
     }
     public int removeArmies(int num) {
-        Armies -= num;
+        armies -= num;
         return num;
     }
 }
