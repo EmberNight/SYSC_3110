@@ -85,7 +85,14 @@ public class Actions {
         for (int i = 0; i < numPlayers; i++) {
             Player player = players.get(i);
             ArrayList<String> playersTerritories = assignedTerritories.get(i);
-            territory = playersTerritories.get(ran.nextInt(playersTerritories.size())); // Gets a random territory
+
+            try {
+                territory = playersTerritories.get(ran.nextInt(playersTerritories.size())); // Gets a random territory
+            } catch (Exception e) {
+                System.out.println("The map isn't big enough for " + players.size() + " players. (Unallocated player)");
+                System.exit(-2);
+                return;
+            }
 
             gameBoard.addTerritoryArmy(territory, player.removeArmies(1));
 
