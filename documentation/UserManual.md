@@ -17,8 +17,8 @@ Author: Tanner Trautrim
 
 ## Commands
 
-* Attack <Territory>
-  *  Chooses are territory to attack and prompts your for further action.
+* Attack
+  *  Attack and prompts your for further action.
 * Quit
   * Quits the game
 * Status
