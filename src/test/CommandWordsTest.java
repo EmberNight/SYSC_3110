@@ -1,11 +1,16 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit test for CommandWords
+ *
+ * @author trautrim
+ */
 public class CommandWordsTest {
     @Test
     public void isCommandTrue() {
         CommandWords cw = new CommandWords();
-        String[] commands = {"attack", "pass", "status", "start"};
+        String[] commands = {"attack", "pass", "status", "quit"};
         for (String s : commands) {
             assertTrue(cw.isCommand(s));
         }

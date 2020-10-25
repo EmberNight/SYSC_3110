@@ -1,8 +1,9 @@
-/**
- * An implementation of the continents used during the game of Risk
- */
 import java.util.*;
 
+/**
+ * An implementation of the continents used during the game of Risk
+ * @author Jordan Peterkin
+ */
 public class Continent {
 
     private final ArrayList<Territory> territories;

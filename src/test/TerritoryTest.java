@@ -7,6 +7,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * Unit test for Territory
+ *
+ * @author trautrim
+ */
 public class TerritoryTest {
     private final Territory canada = new Territory("Canada", "North America");
     private final Territory usa = new Territory("United States", "North America");
