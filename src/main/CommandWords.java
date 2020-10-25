@@ -1,9 +1,15 @@
+/**
+ * @author Ashwin Stoparczyk
+ * @group 16
+ *
+ * Provides a list of recognized command words
+ */
 public class CommandWords {
 
     private final String[] validCommands = {"attack", "pass", "status", "quit"}; //Contains all valid command words
 
     /**
-     * Constructor - initialise the command words.
+     * Constructor for CommandWords objects
      */
     public CommandWords(){}
 
@@ -18,6 +24,9 @@ public class CommandWords {
         return false; //Invalid command
     }
 
+    /**
+     * Prints a textual representation of all valid command words to the terminal
+     */
     public void printCommands() {
         System.out.print("Valid commands: ");
         for (String s : validCommands) {

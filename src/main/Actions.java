@@ -1,8 +1,11 @@
-import java.util.*;
-
 /**
  * @author Emmitt Luhning
+ * @group 16
+ *
+ * Provides methods for manipulating the GameBoard class during runtime
  */
+import java.util.*;
+
 public class Actions {
     private final GameBoard gameBoard;
     private final ArrayList<Player> players;
@@ -10,6 +13,12 @@ public class Actions {
     private Player activePlayer;
     private int activePlayerIndex;
 
+    /**
+     * Constructor for Actions objects
+     *
+     * @param players A list of players who will be playing the game
+     * @param gameBoard The digital game board that will be used to play the game
+     */
     public Actions(ArrayList<Player> players, GameBoard gameBoard) {
         this.players = players;
         this.parser = new Parser();
@@ -22,6 +31,9 @@ public class Actions {
         gameBoard.initializeContinentRulers();
     }
 
+    /**
+     * Calculates and distributes the initial amount of armies to all players
+     */
     private void initialArmyAllocation() {
         int armies = 0;
 
@@ -50,6 +62,9 @@ public class Actions {
         }
     }
 
+    /**
+     * Allocates each territory an amount of armies from Players based on the number of players in the game
+     */
     private void initialArmyPlacement() {
         ArrayList<ArrayList<String>> assignedTerritories = new ArrayList<>();
         String territory;
@@ -107,6 +122,10 @@ public class Actions {
         }
     }
 
+    /**
+     * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
+     * @param defenderTerritory The territory being attacked
+     */
     private void attack(String defenderTerritory)
     {
         Scanner input = new Scanner(System.in);
@@ -224,6 +243,12 @@ public class Actions {
         }
     }
 
+    /**
+     * Calculates the combat strength of an attacker and defender, and determines the outcome of the battle
+     * @param numAttackDie The amount of dice the attacker is fighting with
+     * @param numDefendDie The amount of dice the defender is fighting with
+     * @return The outcome of the battle: < 0 for defensive victory, > 0 for offensive victory and 0 for tie
+     */
     private ArrayList<Integer> rollDie(int numAttackDie, int numDefendDie) {
         ArrayList<Integer> result = new ArrayList<>();
         ArrayList<Integer> attackerRolls = new ArrayList<>();
@@ -282,6 +307,10 @@ public class Actions {
         return result;
     }
 
+    /**
+     * Checks if the given Player should be eliminated from the game, then eliminates them if they should
+     * @param player The Player to be possibly eliminated
+     */
     private void removeEliminatedPlayer(String player) {
         if (gameBoard.isPlayerEliminated(player)) {
             for(int i = 0; i < players.size(); i++) {
@@ -294,6 +323,9 @@ public class Actions {
         }
     }
 
+    /**
+     * Passes the turn on from the current player to the next
+     */
     private void pass() {
         activePlayerIndex++;
 
@@ -305,10 +337,16 @@ public class Actions {
         printCurrentPlayer();
     }
 
+    /**
+     * Prints a textual representation of the current Player to the terminal
+     */
     private void printCurrentPlayer() {
         System.out.println(activePlayer.getName() + "'s Turn!");
     }
 
+    /**
+     * Main play loop of the game. Terminates when there is only one player left
+     */
     public void playGame() {
         printCurrentPlayer();
         boolean finished = false;
@@ -318,11 +356,20 @@ public class Actions {
         }
     }
 
+    /**
+     * Prints a textual representation of the board state to the terminal
+     */
     private void printStatus()
     {
             gameBoard.printBoardStatus();
     }
 
+    /**
+     * Processes a given command and executes the corresponding action
+     *
+     * @param command The command to be executed
+     * @return true if the game should be closed, false if the game should not be closed
+     */
     private boolean process(Command command) {
         boolean quit = false;
         if (command.isUnknown()) {
