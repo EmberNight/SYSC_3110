@@ -1,3 +1,6 @@
+/**
+ * An implementation of the game board used in the game of Risk
+ */
 import java.util.*;
 
 public class GameBoard {
@@ -6,6 +9,9 @@ public class GameBoard {
     private final Map<String, Territory> territoryMap;
     private final List<String> randomTerritories;
 
+    /**
+     * Constructor for GameBoard objects
+     */
     public GameBoard(){
         continentMap = new HashMap<>();
         territoryMap = new HashMap<>();
@@ -15,6 +21,110 @@ public class GameBoard {
         populateUnallocatedTerritories();
     }
 
+
+    /**
+     * Returns the Territory specified by a given string
+     * @param territoryName The name of the Territory to be returned
+     * @return The Territory specified by the given string
+     */
+    public Territory getTerritory(String territoryName){
+        return territoryMap.get(territoryName);
+    }
+
+    /**
+     * Returns the Continent specified by a given string
+     * @param continentName The name of the Territory to be returned
+     * @return The Continent specified by the given string
+     */
+    public Continent getContinent(String continentName){
+        return continentMap.get(continentName);
+    }
+
+    /**
+     * Returns all territories adjacent to the given territory
+     * @param territory The territory to be assessed
+     * @return A set<String> of all territories adjacent to the given territory
+     */
+    public Set<String> getAdjacentTerritories(String territory){
+        return getTerritory(territory).getAdjacentTerritories();
+    }
+
+    /**
+     * Returns the next territory to be populated with armies during the initial distribution of armies
+     * @return The name of the next territory to be populated with armies
+     */
+    public String getUnallocatedTerritory(){
+        String territory = null;
+        if (!randomTerritories.isEmpty()) territory = randomTerritories.remove(0);
+        return territory;
+    }
+
+    /**
+     * Returns the strength of the army currently occupying the given territory
+     * @param territoryName The name of the territory to be assessed
+     * @return The strength of the army currently occupying the given territory
+     */
+    public int getArmy(String territoryName){
+        return getTerritory(territoryName).getArmy();
+    }
+
+    /**
+     * Returns the Player currently occupying the given territory
+     * @param territoryName The name of the territory to be assessed
+     * @return The Player currently occupying the given territory
+     */
+    public String getTerritoryRuler(String territoryName){
+        return getTerritory(territoryName).getRuler();
+    }
+
+    /**
+     * Sets the given territory's ruler to the given Player
+     * @param territoryName The name of the territory to have its ruler changed
+     * @param ruler The new ruler of the territory
+     */
+    public void setTerritoryRuler(String territoryName , String ruler){
+        getTerritory(territoryName).setRuler(ruler);
+    }
+
+    /**
+     * Checks if the ruler of the given Territory's Continent should be the given Player
+     * @param territory The Territory to be assessed
+     * @param ruler The name of the Player who will be determined to be the rightful ruler or not
+     * @return true if the continent's ruler should be the given Player, false if the continent's ruler should not be the given Player
+     */
+    public void setContinentRuler(String territory, String ruler){
+        Continent continent = continentMap.get(getTerritory(territory).getContinentName());
+        ArrayList<Territory> territories = continent.getTerritories();
+
+        for (Territory t : territories) {
+            if (!t.getRuler().equals(ruler)) {
+                return; // Don't update the ruler
+            }
+        }
+
+        continent.setRuler(ruler);
+    }
+
+    /**
+     * Sets the the strength of the given territory to a given value
+     * @param territoryName The name of the territory to have its army strength changed
+     * @param army The new strength of the army
+     */
+    public void addTerritoryArmy(String territoryName, int army){
+        getTerritory(territoryName).addArmy(army);
+    }
+
+    /**
+     * Removes all strength of the army occupying the given territory
+     * @param territoryName The name of the territory to have its army strength set to 0
+     */
+    public void removeTerritoryArmy(String territoryName, int armies){
+        getTerritory(territoryName).removeArmy(armies);
+    }
+
+    /**
+     * Creates a new default board state
+     */
     public void createBoard(){
         // create continents
         Continent northAmerica = new Continent("North America", 5);
@@ -378,6 +488,9 @@ public class GameBoard {
         easternAustralia.setAdjacentTerritory(westernAustralia, "Western Australia");
     }
 
+    /**
+     * Creates a smaller, testable default board state
+     */
     public void createTestBoard(){
         Continent north_america = new Continent("North America", 3);
 
@@ -401,6 +514,9 @@ public class GameBoard {
         mexico.setAdjacentTerritory(canada, "canada");
     }
 
+    /**
+     * Fills the GameBoard's map of territories with all territories in the game
+     */
     public void populateTerritoryMap() {
         for (String i : continentMap.keySet()){
             for (Territory t : continentMap.get(i).getTerritories()) {
@@ -409,75 +525,45 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Determines if two territories are adjacent
+     * @param territory One of the territories to be compared
+     * @param adjacent The other territory to be compared
+     * @return true if the territories are adjacent, false if they are not adjacent
+     */
+    public boolean isAdjacentTerritory(String territory, String adjacent){
+        return getTerritory(territory).isAdjacent(adjacent);
+    }
+
+    /**
+     * Prints a textual representation of the board state to the terminal
+     */
     public void printBoardStatus(){
         for (String i : continentMap.keySet()){
             continentMap.get(i).printStatus();
         }
     }
-    public Territory getTerritory(String territoryName){
-        return territoryMap.get(territoryName);
-    }
 
-    public Continent getContinent(String continentName){
-        return continentMap.get(continentName);
-    }
-
-    public boolean isAdjacentTerritory(String territory, String adjacent){
-        return getTerritory(territory).isAdjacent(adjacent);
-    }
-
-    public Set<String> getAdjacentTerritories(String territory){
-        return getTerritory(territory).getAdjacentTerritories();
-    }
-
+    /**
+     * Prints a textual representation of the given territory to the terminal
+     * @param territory
+     */
     public void printTerritoryStatus(String territory){
         getTerritory(territory).printStatus();
     }
 
+    /**
+     * Fills a map with all territories in a random permutation
+     * For use with the initial distribution of armies
+     */
     private void populateUnallocatedTerritories(){
         randomTerritories.addAll(territoryMap.keySet());
         Collections.shuffle(randomTerritories);
     }
 
-    public String getUnallocatedTerritory(){
-        String territory = null;
-        if (!randomTerritories.isEmpty()) territory = randomTerritories.remove(0);
-        return territory;
-    }
-
-    public int getArmy(String territoryName){
-        return getTerritory(territoryName).getArmy();
-    }
-
-    public String getTerritoryRuler(String territoryName){
-        return getTerritory(territoryName).getRuler();
-    }
-
-    public void setTerritoryRuler(String territoryName , String ruler){
-        getTerritory(territoryName).setRuler(ruler);
-    }
-
-    public void addTerritoryArmy(String territoryName, int army){
-        getTerritory(territoryName).addArmy(army);
-    }
-
-    public void removeTerritoryArmy(String territoryName, int armies){
-        getTerritory(territoryName).removeArmy(armies);
-    }
-
-    public void setContinentRuler(String territory, String ruler){
-        Continent continent = continentMap.get(getTerritory(territory).getContinentName());
-        ArrayList<Territory> territories = continent.getTerritories();
-
-        for (Territory t : territories) {
-            if (!t.getRuler().equals(ruler)) {
-                return; // Don't update the ruler
-            }
-        }
-
-        continent.setRuler(ruler);
-    }
-
+    /**
+     * Checks if there should be a new ruler for each Continent and makes appropriate changes to the Continents
+     */
     public void initializeContinentRulers() {
         for (String c : continentMap.keySet()) {
             Continent continent = getContinent(c);
@@ -499,6 +585,11 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Determines if the given Player should be eliminated from the game
+     * @param name The name of the Player to be assessed
+     * @return true if the Player should be eliminated
+     */
     public boolean isPlayerEliminated(String name){
         for (String i : territoryMap.keySet()){
             if (territoryMap.get(i).getRuler().equals(name)){
