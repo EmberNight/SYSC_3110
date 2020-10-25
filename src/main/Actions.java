@@ -127,17 +127,28 @@ public class Actions {
 
     /**
      * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
-     * @param defenderTerritory The territory being attacked
      * @author trautrim
      */
-    private void attack(String defenderTerritory)
+    private void attack()
     {
         Scanner input = new Scanner(System.in);
         String currPlayer = activePlayer.getName();
         String attackerTerritory;
+        String defenderTerritory;
+
+        //asks for and processes the input for defending territory
+        System.out.println("Select a territory to attack.");
+        System.out.print("> ");
+        defenderTerritory = input.nextLine();
 
         // Checks if you own the territory if you do return.
-        if (gameBoard.getTerritoryRuler(defenderTerritory).equals(currPlayer)) {
+        String defenderRuler = gameBoard.getTerritoryRuler(defenderTerritory);
+        if (defenderRuler == null) {
+            System.out.println("That territory does not exist.");
+            return;
+        }
+
+        if (defenderRuler.equals(currPlayer)) {
             System.out.println("You cannot attack your own territory.");
             return;
         }
@@ -160,11 +171,18 @@ public class Actions {
         }
 
         //asks for and processes the input for attacking territory
+        System.out.println("Select a territory to attack from.");
         System.out.print("> ");
         attackerTerritory = input.nextLine();
 
+        String attackerRuler = gameBoard.getTerritoryRuler(attackerTerritory);
+        if (attackerRuler == null) {
+            System.out.println("That territory does not exist.");
+            return;
+        }
+
         //checks if attacker actually owns this territory
-        if(!gameBoard.getTerritory(attackerTerritory).getRuler().equals(activePlayer.getName()))
+        if(!attackerRuler.equals(currPlayer))
         {
             System.out.println("You don't own this territory");
             return;
@@ -377,10 +395,7 @@ public class Actions {
         if (command.isUnknown()) {
             parser.printCommands();
         } else {
-            if (command.getCommandWord().equals("attack")) {
-                if (command.hasSecondWord()) attack(command.getSecondWord());
-                else System.out.println("Attack who?");
-            }
+            if (command.getCommandWord().equals("attack")) attack();
             if (command.getCommandWord().equals("pass")) pass();
             if (command.getCommandWord().equals("status")) printStatus();
             if (command.getCommandWord().equals("quit")) quit = true;

@@ -29,7 +29,10 @@ public class GameBoard {
      * @param territoryName The name of the Territory to be returned
      * @return The Territory specified by the given string
      */
-    public Territory getTerritory(String territoryName){
+    private Territory getTerritory(String territoryName){
+        if (territoryMap.get(territoryName) == null){
+            return null;
+        }
         return territoryMap.get(territoryName);
     }
 
@@ -48,7 +51,7 @@ public class GameBoard {
      * @return A set<String> of all territories adjacent to the given territory
      */
     public Set<String> getAdjacentTerritories(String territory){
-        return getTerritory(territory).getAdjacentTerritories();
+        return Objects.requireNonNull(getTerritory(territory)).getAdjacentTerritories();
     }
 
     /**
@@ -67,7 +70,7 @@ public class GameBoard {
      * @return The strength of the army currently occupying the given territory
      */
     public int getArmy(String territoryName){
-        return getTerritory(territoryName).getArmy();
+        return Objects.requireNonNull(getTerritory(territoryName)).getArmy();
     }
 
     /**
@@ -76,7 +79,12 @@ public class GameBoard {
      * @return The Player currently occupying the given territory
      */
     public String getTerritoryRuler(String territoryName){
-        return getTerritory(territoryName).getRuler();
+        Territory t = getTerritory(territoryName);
+        if (t == null) {
+            return null;
+        }
+
+        return t.getRuler();
     }
 
     /**
@@ -85,7 +93,7 @@ public class GameBoard {
      * @param ruler The new ruler of the territory
      */
     public void setTerritoryRuler(String territoryName , String ruler){
-        getTerritory(territoryName).setRuler(ruler);
+        Objects.requireNonNull(getTerritory(territoryName)).setRuler(ruler);
     }
 
     /**
@@ -94,7 +102,7 @@ public class GameBoard {
      * @param ruler The name of the Player who will be determined to be the rightful ruler or not
      */
     public void setContinentRuler(String territory, String ruler){
-        Continent continent = continentMap.get(getTerritory(territory).getContinentName());
+        Continent continent = continentMap.get(Objects.requireNonNull(getTerritory(territory)).getContinentName());
         ArrayList<Territory> territories = continent.getTerritories();
 
         for (Territory t : territories) {
@@ -112,7 +120,7 @@ public class GameBoard {
      * @param army The new strength of the army
      */
     public void addTerritoryArmy(String territoryName, int army){
-        getTerritory(territoryName).addArmy(army);
+        Objects.requireNonNull(getTerritory(territoryName)).addArmy(army);
     }
 
     /**
@@ -120,7 +128,7 @@ public class GameBoard {
      * @param territoryName The name of the territory to have its army strength set to 0
      */
     public void removeTerritoryArmy(String territoryName, int armies){
-        getTerritory(territoryName).removeArmy(armies);
+        Objects.requireNonNull(getTerritory(territoryName)).removeArmy(armies);
     }
 
     /**
@@ -507,7 +515,7 @@ public class GameBoard {
      * @return true if the territories are adjacent, false if they are not adjacent
      */
     public boolean isAdjacentTerritory(String territory, String adjacent){
-        return getTerritory(territory).isAdjacent(adjacent);
+        return Objects.requireNonNull(getTerritory(territory)).isAdjacent(adjacent);
     }
 
     /**
@@ -524,7 +532,7 @@ public class GameBoard {
      * @param territory territory to print status of
      */
     public void printTerritoryStatus(String territory){
-        getTerritory(territory).printStatus();
+        Objects.requireNonNull(getTerritory(territory)).printStatus();
     }
 
     /**
