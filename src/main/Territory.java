@@ -19,7 +19,7 @@ public class Territory {
      * @param continentName The name of the continent the territory is encompassed by
      */
     public Territory(String name, String continentName){
-        this.name = name;
+        this.name = name.toLowerCase();
         this.continentName = continentName;
         army = 0;
         ruler = "";
@@ -81,7 +81,7 @@ public class Territory {
      * @param key The key of the territory to be added to the map of the Territory's adjacent territories
      */
     public void setAdjacentTerritory(Territory territory, String key){
-        adjacentTerritories.put(key, territory);
+        adjacentTerritories.put(key.toLowerCase(), territory);
     }
 
 
