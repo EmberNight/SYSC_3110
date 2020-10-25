@@ -1,9 +1,11 @@
-/**
- * Initializes the game of Risk
- */
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Initializes the game of Risk
+ *
+ * @author trautrim
+ */
 public class InitializeGame {
 
     /**
