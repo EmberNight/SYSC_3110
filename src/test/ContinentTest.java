@@ -3,6 +3,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
+/**
+ * Unit test for Continent
+ *
+ * @author trautrim
+ */
 public class ContinentTest {
     private final Continent north_america = new Continent("North America", 3);
 

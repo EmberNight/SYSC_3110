@@ -1,7 +1,6 @@
 /**
  * Helper class for use with Parser
  */
-
 public class Command
 {
 

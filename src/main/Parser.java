@@ -1,8 +1,10 @@
-/**
- * Reads and parses command words
- */
+
 import java.util.Scanner;
 
+/**
+ * Reads and parses command words
+ * @author Emmitt Luhning
+ */
 public class Parser
 {
 
