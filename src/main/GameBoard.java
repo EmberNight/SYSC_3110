@@ -1,8 +1,10 @@
-/**
- * An implementation of the game board used in the game of Risk
- */
 import java.util.*;
 
+/**
+ * An implementation of the game board used in the game of Risk
+ *
+ * @author Jordan Peterkin
+ */
 public class GameBoard {
 
     private final Map<String, Continent> continentMap;
@@ -16,7 +18,7 @@ public class GameBoard {
         continentMap = new HashMap<>();
         territoryMap = new HashMap<>();
         randomTerritories = new ArrayList<>();
-        createTestBoard(); // Must be changed for submission TODO
+        createBoard();
         populateTerritoryMap();
         populateUnallocatedTerritories();
     }
@@ -90,7 +92,6 @@ public class GameBoard {
      * Checks if the ruler of the given Territory's Continent should be the given Player
      * @param territory The Territory to be assessed
      * @param ruler The name of the Player who will be determined to be the rightful ruler or not
-     * @return true if the continent's ruler should be the given Player, false if the continent's ruler should not be the given Player
      */
     public void setContinentRuler(String territory, String ruler){
         Continent continent = continentMap.get(getTerritory(territory).getContinentName());
@@ -489,32 +490,6 @@ public class GameBoard {
     }
 
     /**
-     * Creates a smaller, testable default board state
-     */
-    public void createTestBoard(){
-        Continent north_america = new Continent("North America", 3);
-
-        continentMap.put("North America", north_america);
-
-        Territory canada = new Territory("canada", "North America");
-        Territory usa = new Territory("usa", "North America");
-        Territory mexico = new Territory("mexico", "North America");
-
-        north_america.addTerritory(canada);
-        north_america.addTerritory(usa);
-        north_america.addTerritory(mexico);
-
-        canada.setAdjacentTerritory(usa, "usa");
-        canada.setAdjacentTerritory(mexico, "mexico");
-
-        usa.setAdjacentTerritory(canada, "canada");
-        usa.setAdjacentTerritory(mexico, "mexico");
-
-        mexico.setAdjacentTerritory(usa, "usa");
-        mexico.setAdjacentTerritory(canada, "canada");
-    }
-
-    /**
      * Fills the GameBoard's map of territories with all territories in the game
      */
     public void populateTerritoryMap() {
@@ -546,7 +521,7 @@ public class GameBoard {
 
     /**
      * Prints a textual representation of the given territory to the terminal
-     * @param territory
+     * @param territory territory to print status of
      */
     public void printTerritoryStatus(String territory){
         getTerritory(territory).printStatus();

@@ -2,18 +2,28 @@
 
 SYSC 3110 - Software Development Project - Term Project
 
-## Deliverable Locations
+Author: Tanner Trautrim
+
+## Deliverables
+
+Located in the documentation folder:
+
+* milestone1_seq_attack.png
+  * Sequence diagram of the attack sequence
+* milestone1_seq_status.png
+  * Sequence diagram of the printStatus sequence
+* milestone1_uml.png
+  * Class UML diagram
+* JavaDocs
+  * Located are in the JavaDoc folder
+* UserManual
+  * How to use the program
 
 ## Important notes
 
 Github Repository: <https://github.com/EmberNight/SYSC_3110>
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your
-local machine for development and testing purposes.
-
-### Prerequisites
+## Prerequisites
 
 Required software:
 
@@ -24,13 +34,9 @@ Addition software for test suite:
 
 * JUnit5.4
 
-### Installing
+## Road Map
 
-### Testing
-
-#### Running the Project using cmd or powershell
-
-#### Running the project with Intellij
+Implement GUI
 
 ## Authors
 

@@ -1,8 +1,10 @@
-/**
- * An implementation of the territories used during the game of Risk
- */
+
 import java.util.*;
 
+/**
+ * An implementation of the territories used during the game of Risk
+ * @author Jordan Peterkin
+ */
 public class Territory {
 
     private final String continentName;

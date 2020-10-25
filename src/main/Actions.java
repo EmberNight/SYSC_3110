@@ -1,11 +1,12 @@
+import java.util.*;
+
 /**
  * @author Emmitt Luhning
+ * @co-author Trautrim
  * @group 16
  *
  * Provides methods for manipulating the GameBoard class during runtime
  */
-import java.util.*;
-
 public class Actions {
     private final GameBoard gameBoard;
     private final ArrayList<Player> players;
@@ -33,13 +34,14 @@ public class Actions {
 
     /**
      * Calculates and distributes the initial amount of armies to all players
+     * @author trautrim
      */
     private void initialArmyAllocation() {
         int armies = 0;
 
         switch (players.size()){
             case 2:
-                armies = 5;
+                armies = 50;
                 break;
             case 3:
                 armies = 35;
@@ -64,6 +66,7 @@ public class Actions {
 
     /**
      * Allocates each territory an amount of armies from Players based on the number of players in the game
+     * @author trautrim
      */
     private void initialArmyPlacement() {
         ArrayList<ArrayList<String>> assignedTerritories = new ArrayList<>();
@@ -125,6 +128,7 @@ public class Actions {
     /**
      * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
      * @param defenderTerritory The territory being attacked
+     * @author trautrim
      */
     private void attack(String defenderTerritory)
     {
@@ -245,6 +249,8 @@ public class Actions {
 
     /**
      * Calculates the combat strength of an attacker and defender, and determines the outcome of the battle
+     * @author trautrim
+     *
      * @param numAttackDie The amount of dice the attacker is fighting with
      * @param numDefendDie The amount of dice the defender is fighting with
      * @return The outcome of the battle: < 0 for defensive victory, > 0 for offensive victory and 0 for tie
@@ -282,11 +288,7 @@ public class Actions {
         int diceToCheck = numAttackDie;
         int diceLoss = numAttackDie - numDefendDie;
 
-        if (diceLoss < 0) {
-            attackerLosses = Math.abs(diceLoss);
-            diceToCheck = numAttackDie;
-        } else if (diceLoss > 0) {
-            defenderLosses = diceLoss;
+        if (diceLoss > 0) {
             diceToCheck = numDefendDie;
         }
 
