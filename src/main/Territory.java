@@ -1,0 +1,146 @@
+
+import java.util.*;
+
+/**
+ * An implementation of the territories used during the game of Risk
+ * @author Jordan Peterkin
+ */
+public class Territory {
+
+    private final String continentName;
+    private final String name;
+    private final Map<String, Territory> adjacentTerritories;
+    private String ruler;
+    private int army;
+
+    /**
+     * Constructor for Territory objects
+     * @param name The name of the territory
+     * @param continentName The name of the continent the territory is encompassed by
+     */
+    public Territory(String name, String continentName){
+        this.name = name.toLowerCase();
+        this.continentName = continentName;
+        army = 0;
+        ruler = "";
+        adjacentTerritories = new HashMap<>();
+    }
+
+    /**
+     * Returns the name of the continent the territory is encompassed by
+     * @return the name of the continent the territory is encompassed by
+     */
+    public String getContinentName(){
+        return continentName;
+    }
+
+    /**
+     * Returns one of the Territory's adjacent territories specified by the given key
+     * @param key The key of the adjacent Territory to be returned
+     * @return one of the Territory's adjacent territories specified by the given key
+     */
+    public Territory getAdjacentTerritory(String key){
+        return adjacentTerritories.get(key);
+    }
+
+    /**
+     * Returns the set of the Territory's adjacent territories
+     * @return the set of the Territory's adjacent territories
+     */
+    public Set<String> getAdjacentTerritories(){
+        return adjacentTerritories.keySet();
+    }
+
+    /**
+     * Returns the name of the Territory
+     * @return the name of the Territory
+     */
+    public String getName(){
+        return name;
+    }
+
+    /**
+     * Returns the strength of the army currently occupying the Territory
+     * @return the strength of the army currently occupying the Territory
+     */
+    public int getArmy(){
+        return army;
+    }
+
+    /**
+     * Returns the current ruler of the Territory
+     * @return the current ruler of the Territory
+     */
+    public String getRuler(){
+        return ruler;
+    }
+
+    /**
+     * Adds a given territory to the map of the Territory's adjacent territories
+     * @param territory The territory to be added to the map of the Territory's adjacent territories
+     * @param key The key of the territory to be added to the map of the Territory's adjacent territories
+     */
+    public void setAdjacentTerritory(Territory territory, String key){
+        adjacentTerritories.put(key.toLowerCase(), territory);
+    }
+
+
+
+    /**
+     * Sets the ruler of the territory to the given Player
+     * @param newRuler The new ruler of the territory
+     */
+    public void setRuler(String newRuler){
+        ruler = newRuler;
+    }
+
+    /**
+     * Set the strength of the army currently occupying the Territory to the given value
+     * @param army The new strength of the army currently occupying the Territory to the given value
+     */
+    public void setArmy(int army){
+        this.army = Math.max(army, 0); // Set whatever is higher army or 0
+    }
+
+    /**
+     * Adds the strength of the given army to the army currently occupying the Territory
+     * @param army The strength of the army to be added to the army currently occupying the Territory
+     */
+    public void addArmy(int army){
+        this.army += Math.abs(army);
+    }
+
+    /**
+     * Removes the strength of the given army from the army currently occupying the Territory
+     * @param army The strength of the army to be removed from the army currently occupying the Territory
+     */
+    public void removeArmy(int army){
+        this.army -= Math.abs(army);
+        this.army = Math.max(this.army, 0);
+    }
+
+    /**
+     * Determines if the specified Territory is adjacent to the Territory
+     * @param adjacent The name of the Territory to be determined to be adjacent or not
+     * @return true if the specified Territory is adjacent to the Territory, false if the specified Territory is not adjacent to the Territory
+     */
+    public boolean isAdjacent(String adjacent) {
+        return adjacentTerritories.get(adjacent) != null;
+    }
+
+    /**
+     * Prints a textual representation of the Territory to the terminal
+     */
+    public void printStatus(){
+        System.out.println("    Territory: " + getName());
+        System.out.println("        Army Count: " + getArmy());
+        System.out.println("        Ruler: " + getRuler());
+        System.out.println("        AdjacentTerritories: ");
+        System.out.print("            ");
+        for (String i : adjacentTerritories.keySet()){
+            System.out.print(adjacentTerritories.get(i).getName() + ", ");
+        }
+        System.out.println();
+    }
+}
+
