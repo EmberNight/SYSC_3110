@@ -91,6 +91,6 @@ public class ContinentTest {
      */
     @Test
     public void printStatus() {
-        north_america.printStatus();
+        System.out.println(north_america.getStatus());
     }
 }

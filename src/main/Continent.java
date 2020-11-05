@@ -72,14 +72,17 @@ public class Continent {
     }
 
     /**
-     * Prints a textual representation of the continent to the terminal
+     * Creates and returns a textual representation of the Continent to the terminal
+     * @return A string containing a textual representation of the Continent to the terminal
      */
-    public void printStatus(){
-        System.out.println("Continent: " + getName());
-        System.out.println("Ruler: " + getRuler());
-        System.out.println("Territories: ");
+    public String getStatus(){
+        StringBuilder s = new StringBuilder("");
+        s.append("Continent: ").append(getName()).append("    Ruler: ");
+        if (this.getRuler().equals("")) s.append("no current ruler\n");
+        else s.append(this.getRuler()).append("\n");
         for (Territory territory : territories) {
-            territory.printStatus();
+            s.append("    ").append(territory.getStatus()).append("\n");
         }
+        return s.toString();
     }
 }

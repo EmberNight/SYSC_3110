@@ -522,9 +522,11 @@ public class GameBoard {
      * Prints a textual representation of the board state to the terminal
      */
     public void printBoardStatus(){
+        StringBuilder s = new StringBuilder("");
         for (String i : continentMap.keySet()){
-            continentMap.get(i).printStatus();
+            s.append(continentMap.get(i).getStatus()).append("\n");
         }
+        System.out.println(s);
     }
 
     /**
@@ -532,7 +534,7 @@ public class GameBoard {
      * @param territory territory to print status of
      */
     public void printTerritoryStatus(String territory){
-        Objects.requireNonNull(getTerritory(territory)).printStatus();
+        System.out.println(Objects.requireNonNull(getTerritory(territory)).getStatus());
     }
 
     /**

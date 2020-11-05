@@ -129,18 +129,29 @@ public class Territory {
     }
 
     /**
-     * Prints a textual representation of the Territory to the terminal
+     * Creates and returns a textual representation of the Territory to the terminal
+     * @return A string containing a textual representation of the Territory to the terminal
      */
-    public void printStatus(){
-        System.out.println("    Territory: " + getName());
-        System.out.println("        Army Count: " + getArmy());
-        System.out.println("        Ruler: " + getRuler());
-        System.out.println("        AdjacentTerritories: ");
-        System.out.print("            ");
+    public String getStatus(){
+        StringBuilder s = new StringBuilder("");
+        s.append("Territory: ").append(getName());
+        s.append("   Army Count: ").append(getArmy());
+        s.append("   Ruler: ").append(getRuler());
+        s.append("   Adjacent Territories: ");
         for (String i : adjacentTerritories.keySet()){
-            System.out.print(adjacentTerritories.get(i).getName() + ", ");
+            s.append(adjacentTerritories.get(i).getName()).append("  ");
         }
-        System.out.println();
+        s.append("\n");
+        return s.toString();
+    }
+
+    /**
+     * @override
+     * Creates and returns a short textual representation of the Territory to the terminal
+     * @return A string containing a short textual representation of the Territory to the terminal
+     */
+    public String toString(){
+        return (this.getName() + " - " + this.getRuler() + " - " + this.getArmy());
     }
 }
 
