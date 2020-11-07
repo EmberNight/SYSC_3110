@@ -145,7 +145,7 @@ public class Actions {
             removeEliminatedPlayer(defender);
         }
 
-        new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result);
+        new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result, activePlayer);
     }
 
     /**
