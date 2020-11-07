@@ -29,7 +29,7 @@ public class GameBoard {
      * @param territoryName The name of the Territory to be returned
      * @return The Territory specified by the given string
      */
-    private Territory getTerritory(String territoryName){
+    public Territory getTerritory(String territoryName){
         if (territoryMap.get(territoryName) == null){
             return null;
         }
