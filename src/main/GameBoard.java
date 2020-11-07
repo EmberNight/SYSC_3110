@@ -37,6 +37,33 @@ public class GameBoard {
     }
 
     /**
+     * Returns the List of Territories
+     * @return Territory List
+     */
+    public Territory[] getRulerTerritoryList(String ruler){
+        ArrayList<Territory> list = new ArrayList<>(territoryMap.values());
+        list.removeIf(territory -> territory.getRuler().equals(ruler));
+        Territory[] arr = new Territory[list.size()];
+        arr = list.toArray(arr);
+        return arr;
+    }
+
+    /**
+     * Returns the List of Attackable Territories
+     * @return Territory List
+     */
+    public Territory[] getAttackableTerritoryList(Territory territory){
+        ArrayList<String> list = new ArrayList<>(territory.getAdjacentTerritories());
+        Territory[] arr = new Territory[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            arr[i] = territoryMap.get(list.get(i));
+        }
+
+        return arr;
+    }
+
+    /**
      * Returns the Continent specified by a given string
      * @param continentName The name of the Territory to be returned
      * @return The Continent specified by the given string
