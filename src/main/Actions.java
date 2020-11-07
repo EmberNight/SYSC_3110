@@ -27,6 +27,37 @@
         initialArmyAllocation();
         initialArmyPlacement();
         gameBoard.initializeContinentRulers();
+    }
+
+    public String getActivePlayer() {
+        return activePlayer.getName();
+    }
+
+    /**
+     * Calculates and distributes the initial amount of armies to all players
+     * @author trautrim
+     */
+    private void initialArmyAllocation() {
+        int armies = 0;
+
+        switch (players.size()){
+            case 2:
+                armies = 50;
+                break;
+            case 3:
+                armies = 35;
+                break;
+            case 4:
+                armies = 30;
+                break;
+            case 5:
+                armies = 25;
+                break;
+            case 6:
+                armies = 20;
+                break;
+            default:
+                break;
         }
 
         /**
@@ -96,8 +127,52 @@
 
         Random ran = new Random();
         for (int i = 0; i < numPlayers; i++) {
-        Player player = players.get(i);
-        ArrayList<String> playersTerritories = assignedTerritories.get(i);
+            Player player = players.get(i);
+            ArrayList<String> playersTerritories = assignedTerritories.get(i);
+
+            try {
+                territory = playersTerritories.get(ran.nextInt(playersTerritories.size())); // Gets a random territory
+            } catch (Exception e) {
+                System.out.println("The map isn't big enough for " + players.size() + " players. (Unallocated player)");
+                System.exit(-2);
+                return;
+            }
+
+            gameBoard.addTerritoryArmy(territory, player.removeArmies(1));
+
+            // If it is the last player reset it back to the start
+            if (i == numPlayers - 1) {
+                // If the last player has no armies we are done
+                if (player.getArmies() == 0){
+                    break;
+                }
+                i = -1; // Must be -1 because the for loop will increase it by one
+            }
+        }
+    }
+
+    /**
+     * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
+     * @author trautrim
+     */
+    public void attack()
+    {
+        Scanner input = new Scanner(System.in);
+        String currPlayer = activePlayer.getName();
+        String attackerTerritory;
+        String defenderTerritory;
+
+        //asks for and processes the input for defending territory
+        System.out.println("Select a territory to attack.");
+        System.out.print("> ");
+        defenderTerritory = input.nextLine();
+
+        // Checks if you own the territory if you do return.
+        String defenderRuler = gameBoard.getTerritoryRuler(defenderTerritory);
+        if (defenderRuler == null) {
+            System.out.println("That territory does not exist.");
+            return;
+        }
 
         try {
         territory = playersTerritories.get(ran.nextInt(playersTerritories.size())); // Gets a random territory
@@ -222,11 +297,10 @@
         }
         }
         }
-
-        /**
-         * Passes the turn on from the current player to the next
-         */
-        private void pass() {
+    /**
+     * Passes the turn on from the current player to the next
+     */
+    public void pass() {
         activePlayerIndex++;
 
         if (activePlayerIndex >= players.size()) {
