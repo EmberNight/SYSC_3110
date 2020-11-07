@@ -29,6 +29,10 @@ public class InitializeGame {
             players.add(new Player(scanner.next()));
         }
 
-        new Actions(players, new GameBoard()).playGame();
+        GameBoard gameBoard = new GameBoard();
+        Actions actions = new Actions(players, gameBoard);
+
+        new Game("Risk", actions, gameBoard);
+        actions.playGame();
     }
 }
