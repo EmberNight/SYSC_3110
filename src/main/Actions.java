@@ -32,6 +32,10 @@ public class Actions {
         gameBoard.initializeContinentRulers();
     }
 
+    public String getActivePlayer() {
+        return activePlayer.getName();
+    }
+
     /**
      * Calculates and distributes the initial amount of armies to all players
      * @author trautrim
@@ -129,7 +133,7 @@ public class Actions {
      * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
      * @author trautrim
      */
-    private void attack()
+    public void attack()
     {
         Scanner input = new Scanner(System.in);
         String currPlayer = activePlayer.getName();
@@ -346,7 +350,7 @@ public class Actions {
     /**
      * Passes the turn on from the current player to the next
      */
-    private void pass() {
+    public void pass() {
         activePlayerIndex++;
 
         if (activePlayerIndex >= players.size()) {
