@@ -118,6 +118,7 @@ public class Actions {
                                 i = -1; // Must be -1 because the for loop will increase it by one
                         }
                 }
+
         }
 
         /**
@@ -223,11 +224,13 @@ public class Actions {
                 }
         }
 
+
         /**
          * Passes the turn on from the current player to the next
          */
         private void pass() {
                 activePlayerIndex++;
+
 
                 if (activePlayerIndex >= players.size()) {
                         activePlayerIndex = 0;
