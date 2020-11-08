@@ -11,6 +11,7 @@ public class Actions {
         private final ArrayList<Player> players;
         private Player activePlayer;
         private int activePlayerIndex;
+        private ActionsView actionView;
 
         /**
          * Constructor for Actions objects
@@ -148,6 +149,7 @@ public class Actions {
                 }
 
                 //new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result, activePlayer);
+                actionView.updateStatus();
         }
 
         /**
