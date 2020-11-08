@@ -3,51 +3,50 @@ import java.util.EventObject;
 
 /**
  * @author Ashwin Stoparczyk
- * @group 16
  *
  * Helper class for use with
  */
 public class ActionEvent extends EventObject {
+    public static final int ATTACK = 1;
 
-    private Territory territory;
-    private String ruler;
-    private ArrayList<Integer> result;
+    private int eventID;
+    private int attackerLosses;
+    private int defenderLosses;
+    private boolean newContinentRuler;
+    private boolean newTerritoryRuler;
 
     /**
      * Constructor for ActionEvent objects
-     * @param actions The Actions object which created the ActionEvent
-     * @param territory The defending Player's Territory
-     * @param ruler The defending Player
-     * @param result The numerical result of the attack
+     * @param attackerLosses The attacker's losses
+     * @param defenderLosses The defender's losses
+     * @param newContinentRuler If the continent's ruler has been changed
+     * @param newTerritoryRuler If the Territory's ruler has been changed
      */
-    public ActionEvent(Actions actions, Territory territory, String ruler, ArrayList<Integer> result) {
-        super(actions);
-        this.territory = territory;
-        this.ruler = ruler;
-        this.result = result;
+    public ActionEvent(int eventID, int attackerLosses, int defenderLosses, boolean newContinentRuler, boolean newTerritoryRuler) {
+        super(eventID);
+        this.attackerLosses = attackerLosses;
+        this.defenderLosses = defenderLosses;
+        this.newContinentRuler = newContinentRuler;
+        this.newTerritoryRuler = newTerritoryRuler;
     }
 
-    /**
-     * Returns the defending Player's Territory
-     * @return the defending Player's Territory
-     */
-    public Territory getTerritory() {
-        return territory;
+    public int getEventID() {
+        return eventID;
     }
 
-    /**
-     * Returns the defending Player
-     * @return the defending Player
-     */
-    public String getRuler() {
-        return ruler;
+    public int getAttackerLosses() {
+        return attackerLosses;
     }
 
-    /**
-     * Returns the numerical result of the attack
-     * @return the numerical result of the attack
-     */
-    public ArrayList<Integer> getResult() {
-        return result;
+    public int getDefenderLosses() {
+        return defenderLosses;
+    }
+
+    public boolean isNewContinentRuler() {
+        return newContinentRuler;
+    }
+
+    public boolean isNewTerritoryRuler() {
+        return newTerritoryRuler;
     }
 }

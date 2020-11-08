@@ -1,4 +1,3 @@
-
 import java.util.*;
 
 /**
@@ -47,8 +46,8 @@ public class Territory {
      * Returns the set of the Territory's adjacent territories
      * @return the set of the Territory's adjacent territories
      */
-    public Set<String> getAdjacentTerritories(){
-        return adjacentTerritories.keySet();
+    public Collection<Territory> getAdjacentTerritories(){
+        return adjacentTerritories.values();
     }
 
     /**
@@ -120,20 +119,11 @@ public class Territory {
     }
 
     /**
-     * Determines if the specified Territory is adjacent to the Territory
-     * @param adjacent The name of the Territory to be determined to be adjacent or not
-     * @return true if the specified Territory is adjacent to the Territory, false if the specified Territory is not adjacent to the Territory
-     */
-    public boolean isAdjacent(String adjacent) {
-        return adjacentTerritories.get(adjacent) != null;
-    }
-
-    /**
      * Creates and returns a textual representation of the Territory to the terminal
      * @return A string containing a textual representation of the Territory to the terminal
      */
     public String getStatus(){
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         s.append("Territory: ").append(getName());
         s.append("   Army Count: ").append(getArmy());
         s.append("   Ruler: ").append(getRuler());
@@ -146,10 +136,10 @@ public class Territory {
     }
 
     /**
-     * @override
      * Creates and returns a short textual representation of the Territory to the terminal
      * @return A string containing a short textual representation of the Territory to the terminal
      */
+    @Override
     public String toString(){
         return (this.getName() + " - " + this.getRuler() + " - " + this.getArmy());
     }

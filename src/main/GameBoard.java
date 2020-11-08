@@ -41,10 +41,18 @@ public class GameBoard {
      * @return Territory List
      */
     public Territory[] getRulerTerritoryList(String ruler){
-        ArrayList<Territory> list = new ArrayList<>(territoryMap.values());
-        list.removeIf(territory -> territory.getRuler().equals(ruler));
-        Territory[] arr = new Territory[list.size()];
-        arr = list.toArray(arr);
+        Territory[] arr;
+
+        // This ruler doesnt exist or has no territories
+        try {
+            ArrayList<Territory> list = new ArrayList<>(territoryMap.values());
+            list.removeIf(territory -> !territory.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Territory::getName));
+            arr = new Territory[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
         return arr;
     }
 
@@ -52,12 +60,18 @@ public class GameBoard {
      * Returns the List of Attackable Territories
      * @return Territory List
      */
-    public Territory[] getAttackableTerritoryList(Territory territory){
-        ArrayList<String> list = new ArrayList<>(territory.getAdjacentTerritories());
-        Territory[] arr = new Territory[list.size()];
+    public Territory[] getAttackableTerritoryList(Territory territory, String ruler){
+        Territory[] arr;
 
-        for (int i = 0; i < list.size(); i++) {
-            arr[i] = territoryMap.get(list.get(i));
+        // Used to handle a territory not having any evil adjacent territories
+        try {
+            ArrayList<Territory> list = new ArrayList<>(territory.getAdjacentTerritories());
+            list.removeIf(e -> e.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Territory::getName));
+            arr = new Territory[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
         }
 
         return arr;
@@ -70,15 +84,6 @@ public class GameBoard {
      */
     public Continent getContinent(String continentName){
         return continentMap.get(continentName);
-    }
-
-    /**
-     * Returns all territories adjacent to the given territory
-     * @param territory The territory to be assessed
-     * @return A set<String> of all territories adjacent to the given territory
-     */
-    public Set<String> getAdjacentTerritories(String territory){
-        return Objects.requireNonNull(getTerritory(territory)).getAdjacentTerritories();
     }
 
     /**
@@ -128,17 +133,18 @@ public class GameBoard {
      * @param territory The Territory to be assessed
      * @param ruler The name of the Player who will be determined to be the rightful ruler or not
      */
-    public void setContinentRuler(String territory, String ruler){
+    public boolean newContinentRuler(String territory, String ruler){
         Continent continent = continentMap.get(Objects.requireNonNull(getTerritory(territory)).getContinentName());
         ArrayList<Territory> territories = continent.getTerritories();
 
         for (Territory t : territories) {
             if (!t.getRuler().equals(ruler)) {
-                return; // Don't update the ruler
+                return false; // Don't update the ruler
             }
         }
 
         continent.setRuler(ruler);
+        return true;
     }
 
     /**
@@ -536,32 +542,14 @@ public class GameBoard {
     }
 
     /**
-     * Determines if two territories are adjacent
-     * @param territory One of the territories to be compared
-     * @param adjacent The other territory to be compared
-     * @return true if the territories are adjacent, false if they are not adjacent
-     */
-    public boolean isAdjacentTerritory(String territory, String adjacent){
-        return Objects.requireNonNull(getTerritory(territory)).isAdjacent(adjacent);
-    }
-
-    /**
      * Prints a textual representation of the board state to the terminal
      */
     public String printBoardStatus(){
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         for (String i : continentMap.keySet()){
             s.append(continentMap.get(i).getStatus()).append("\n");
         }
         return s.toString();
-    }
-
-    /**
-     * Prints a textual representation of the given territory to the terminal
-     * @param territory territory to print status of
-     */
-    public void printTerritoryStatus(String territory){
-        System.out.println(Objects.requireNonNull(getTerritory(territory)).getStatus());
     }
 
     /**
