@@ -1,10 +1,10 @@
 /**
  * @author Ashwin Stoparczyk
- * @group 16
  *
  * Functional interface for use with
  */
 public interface ActionsView {
-    void handleActionEvent(ActionEvent ae);
+    void attackUpdate(ActionEvent ae);
+    void passUpdate();
     void updateStatus();
 }

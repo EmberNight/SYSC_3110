@@ -1,6 +1,5 @@
 /**
  * @author Emmitt Luhning
- * @group 16
  *
  * An implementation of the people playing the game of Risk
  */

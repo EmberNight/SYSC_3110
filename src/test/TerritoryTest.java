@@ -63,13 +63,13 @@ public class TerritoryTest {
 
     @Test
     public void getName() {
-        assertEquals("Canada", canada.getName());
-        assertEquals("United States", usa.getName());
-        assertEquals("Mexico", mexico.getName());
+        assertEquals("canada", canada.getName());
+        assertEquals("united states", usa.getName());
+        assertEquals("mexico", mexico.getName());
 
-        assertNotEquals("Canada", usa.getName());
-        assertNotEquals("United States", mexico.getName());
-        assertNotEquals("Mexico", canada.getName());
+        assertNotEquals("canada", usa.getName());
+        assertNotEquals("united states", mexico.getName());
+        assertNotEquals("mexico", canada.getName());
     }
 
     @Test
