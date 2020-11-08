@@ -5,5 +5,6 @@
  * Functional interface for use with
  */
 public interface ActionsView {
-    void handleActionEvent();
+    void handleActionEvent(ActionEvent ae);
+    void updateStatus();
 }
