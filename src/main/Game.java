@@ -84,7 +84,7 @@ public class Game extends JFrame {
         this.add(statusScroller, BorderLayout.EAST);
 
         // Display Steps
-        this.setSize(600, 600);
+        this.setSize(1500, 800);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
