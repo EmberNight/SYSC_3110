@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Game extends JFrame {
+public class Game extends JFrame implements ActionsView{
     private GameBoard gameBoard;
     private Actions actions;
 
@@ -134,5 +134,15 @@ public class Game extends JFrame {
         menuBar.add(pass);
 
         menu.add(quit);
+    }
+
+    @Override
+    public void handleActionEvent(ActionEvent ae) {
+
+    }
+
+    @Override
+    public void updateStatus() {
+
     }
 }
