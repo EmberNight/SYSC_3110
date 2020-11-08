@@ -4,7 +4,7 @@ import java.util.Random;
 
 /**
  * @author Emmitt Luhning
- *
+ * @author Tanner Trautrim
  * Provides methods for manipulating the GameBoard class during runtime
  */
 public class GameActions {
