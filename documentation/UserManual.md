@@ -10,18 +10,20 @@ Author: Tanner Trautrim
 2. Navigate to the jar location
 3. Run the jar file (replace the contents in the quotations). ```java -jar "name of jar file"```
 4. Enter the number of players
-5. Enter player names
-6. Start playing
-7. Enter commands
-8. Play until you are the last player left.
+5. Start playing
+6. View Game Status on the right
 
-## Commands
+## Modes
 
-* Attack
-  *  Attack and prompts your for further action.
-* Quit
-  * Quits the game
-* Status
-  * Prints the status of the game board
-* Pass
-  * Ends your turn and passes it to the next player.
+### Attack
+
+1. Select a territory on the left
+2. Select a territory on the right
+3. Click the attack button
+4. Enter the number of dice for the attack
+5. Enter the number of dice for the defender
+6. View the results
+
+### Pass
+
+1. Click pass at the top to end your turn
