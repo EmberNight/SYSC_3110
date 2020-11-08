@@ -31,13 +31,14 @@ public class Actions {
 
         /**
          * Calculates and distributes the initial amount of armies to all players
+         * @author trautrim
          */
         private void initialArmyAllocation() {
                 int armies = 0;
 
-                switch (players.size()) {
+                switch (players.size()){
                         case 2:
-                                armies = 5;
+                                armies = 50;
                                 break;
                         case 3:
                                 armies = 35;
@@ -55,13 +56,14 @@ public class Actions {
                                 break;
                 }
 
-                for (Player p : players) {
+                for(Player p : players) {
                         p.setArmies(armies);
                 }
         }
 
         /**
          * Allocates each territory an amount of armies from Players based on the number of players in the game
+         * @author trautrim
          */
         private void initialArmyPlacement() {
                 ArrayList<ArrayList<String>> assignedTerritories = new ArrayList<>();
@@ -74,7 +76,7 @@ public class Actions {
                 }
 
                 // Randomly give players territories and allot initial armies.
-                for (int i = 0; i < numPlayers; i++) {
+                for (int i = 0; i < numPlayers; i++){
                         territory = gameBoard.getUnallocatedTerritory();
 
                         // If there are no territories left to assign quit
@@ -112,13 +114,12 @@ public class Actions {
                         // If it is the last player reset it back to the start
                         if (i == numPlayers - 1) {
                                 // If the last player has no armies we are done
-                                if (player.getArmies() == 0) {
+                                if (player.getArmies() == 0){
                                         break;
                                 }
                                 i = -1; // Must be -1 because the for loop will increase it by one
                         }
                 }
-
         }
 
         /**
