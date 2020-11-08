@@ -143,6 +143,6 @@ public class Game extends JFrame implements ActionsView{
 
     @Override
     public void updateStatus() {
-
+        updateStatusArea();
     }
 }
