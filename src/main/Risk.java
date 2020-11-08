@@ -2,9 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Game extends JFrame implements ActionsView{
+public class Risk extends JFrame implements RiskView {
     private final GameBoard gameBoard;
-    private final Actions actions;
+    private final GameActions gameActions;
 
     private JMenuBar menuBar;
     private JMenuItem quit, pass, startGame;
@@ -13,12 +13,12 @@ public class Game extends JFrame implements ActionsView{
     private JButton attackButton;
     private JTextArea statusText;
 
-    public Game(String label) {
+    public Risk(String label) {
         super(label);
 
         ArrayList<Player> playersList = initializeStatus();
         gameBoard = new GameBoard();
-        actions = new Actions(this, playersList, gameBoard);
+        gameActions = new GameActions(this, playersList, gameBoard);
 
         createMenus();
         createButtons();
@@ -38,7 +38,7 @@ public class Game extends JFrame implements ActionsView{
         attackerTerritories.addListSelectionListener(e -> updateDefenderTerritories());
         attackButton.addActionListener(e -> performAttack());
         quit.addActionListener(e -> System.exit(0));
-        pass.addActionListener(e -> actions.pass());
+        pass.addActionListener(e -> gameActions.pass());
         startGame.addActionListener(e -> initializeStatus());
     }
 
@@ -77,15 +77,15 @@ public class Game extends JFrame implements ActionsView{
             }
         }
 
-        actions.attack(a.getName(), d.getName(), attackDice, defendDice);
+        gameActions.attack(a.getName(), d.getName(), attackDice, defendDice);
     }
 
     private void updateDefenderTerritories() {
-        defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), actions.getActivePlayer()));
+        defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
     }
 
     private void updateAttackerTerritories() {
-        attackerTerritories.setListData(gameBoard.getRulerTerritoryList(actions.getActivePlayer()));
+        attackerTerritories.setListData(gameBoard.getRulerTerritoryList(gameActions.getActivePlayer()));
     }
 
     private void updateStatusArea() {
@@ -198,7 +198,7 @@ public class Game extends JFrame implements ActionsView{
     }
 
     @Override
-    public void attackUpdate(ActionEvent ae) {
+    public void attackUpdate(RiskEvent ae) {
         String outcome = "The attacker lost: " + ae.getAttackerLosses() + " armies\n" +
                          "The defender lost: " + ae.getDefenderLosses() + " armies\n";
 
@@ -217,7 +217,7 @@ public class Game extends JFrame implements ActionsView{
     @Override
     public void passUpdate() {
         JOptionPane.showMessageDialog(this,
-                "It is now " + actions.getActivePlayer() + " turn.",
+                "It is now " + gameActions.getActivePlayer() + " turn.",
                 "New Turn!",
                 JOptionPane.INFORMATION_MESSAGE);
         updateAttackerTerritories();

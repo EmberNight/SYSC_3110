@@ -6,7 +6,7 @@ import java.util.EventObject;
  *
  * Helper class for use with
  */
-public class ActionEvent extends EventObject {
+public class RiskEvent extends EventObject {
     public static final int ATTACK = 1;
 
     private int eventID;
@@ -22,7 +22,7 @@ public class ActionEvent extends EventObject {
      * @param newContinentRuler If the continent's ruler has been changed
      * @param newTerritoryRuler If the Territory's ruler has been changed
      */
-    public ActionEvent(int eventID, int attackerLosses, int defenderLosses, boolean newContinentRuler, boolean newTerritoryRuler) {
+    public RiskEvent(int eventID, int attackerLosses, int defenderLosses, boolean newContinentRuler, boolean newTerritoryRuler) {
         super(eventID);
         this.attackerLosses = attackerLosses;
         this.defenderLosses = defenderLosses;

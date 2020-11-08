@@ -7,12 +7,12 @@ import java.util.Random;
  *
  * Provides methods for manipulating the GameBoard class during runtime
  */
-public class Actions {
+public class GameActions {
         private final GameBoard gameBoard;
         private final ArrayList<Player> players;
         private Player activePlayer;
         private int activePlayerIndex;
-        private final ActionsView actionView;
+        private final RiskView actionView;
 
         /**
          * Constructor for Actions objects
@@ -20,7 +20,7 @@ public class Actions {
          * @param players   A list of players who will be playing the game
          * @param gameBoard The digital game board that will be used to play the game
          */
-        public Actions(ActionsView actionView, ArrayList<Player> players, GameBoard gameBoard) {
+        public GameActions(RiskView actionView, ArrayList<Player> players, GameBoard gameBoard) {
                 this.players = players;
                 this.gameBoard = gameBoard;
                 this.activePlayerIndex = 0;
@@ -153,7 +153,7 @@ public class Actions {
                         removeEliminatedPlayer(defender);
                 }
 
-                actionView.attackUpdate(new ActionEvent(ActionEvent.ATTACK, attackerLosses, defenderLosses, newContinentRuler, newTerritoryRuler));
+                actionView.attackUpdate(new RiskEvent(RiskEvent.ATTACK, attackerLosses, defenderLosses, newContinentRuler, newTerritoryRuler));
                 actionView.updateStatus();
         }
 
