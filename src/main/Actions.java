@@ -146,7 +146,7 @@ public class Actions {
                         removeEliminatedPlayer(defender);
                 }
 
-                new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result, activePlayer);
+                //new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result, activePlayer);
         }
 
         /**
@@ -228,7 +228,7 @@ public class Actions {
         /**
          * Passes the turn on from the current player to the next
          */
-        private void pass() {
+        public void pass() {
                 activePlayerIndex++;
 
 
@@ -238,4 +238,7 @@ public class Actions {
 
         }
 
+        public String getActivePlayer() {
+                return activePlayer.getName();
+        }
 }
