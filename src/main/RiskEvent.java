@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.EventObject;
 
 /**
@@ -9,11 +8,10 @@ import java.util.EventObject;
 public class RiskEvent extends EventObject {
     public static final int ATTACK = 1;
 
-    private int eventID;
-    private int attackerLosses;
-    private int defenderLosses;
-    private boolean newContinentRuler;
-    private boolean newTerritoryRuler;
+    private final int attackerLosses;
+    private final int defenderLosses;
+    private final boolean newContinentRuler;
+    private final boolean newTerritoryRuler;
 
     /**
      * Constructor for ActionEvent objects
@@ -31,7 +29,7 @@ public class RiskEvent extends EventObject {
     }
 
     public int getEventID() {
-        return eventID;
+        return (int)this.getSource();
     }
 
     public int getAttackerLosses() {

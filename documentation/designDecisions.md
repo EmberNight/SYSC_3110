@@ -12,7 +12,7 @@ The GameBoard is used to minimize the coupling between Actions, Continent, and t
 The GameBoard handles the management, creation, and usage of the Continents and Territories.
 It acts as an intermediate to simplify the code and interactions.
 
-Actions performs all the interactions between the player and the game board.
+GameActions performs all the interactions between the player and the game board.
 This allows the player to be decoupled from the system and to be used as a structure.
 
 Player stores basic information for example name and army count.
@@ -24,9 +24,13 @@ This data is only accessible to the GameBoard class.
 Continent stores information about each territory.
 This data is only accessible to the GameBoard class.
 
-Parser, Command, and CommandWords is used to manage the input from the player and pass it the Actions class.
+Risk is used for the GUI and handles all the interactions involving the GUI
 
-InitializeGame is used to store the game Activation.
+RiskView is used to update the GUI state after a GameAction occurs
+
+RiskEven is a storage class to handle passing events.
+
+InitializeGame is used to create the game.
 
 ### Reasoning
 
@@ -50,3 +54,5 @@ HashMap was used when there was a high access rate of the data.
 For example, when the data will need to be called upon often.
 HashMap is used to store territories because the O(1) access time with the key.
 Territories' are the most frequently accessed methods.
+
+Model is used to store information for JList in a way that updates the GUI.
