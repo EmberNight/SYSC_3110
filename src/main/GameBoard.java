@@ -548,12 +548,12 @@ public class GameBoard {
     /**
      * Prints a textual representation of the board state to the terminal
      */
-    public void printBoardStatus(){
+    public String printBoardStatus(){
         StringBuilder s = new StringBuilder("");
         for (String i : continentMap.keySet()){
             s.append(continentMap.get(i).getStatus()).append("\n");
         }
-        System.out.println(s);
+        return s.toString();
     }
 
     /**
