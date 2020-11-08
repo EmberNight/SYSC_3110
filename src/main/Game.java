@@ -13,28 +13,25 @@ public class Game extends JFrame {
     private JButton attackButton;
     private JTextArea statusText;
 
+    private ArrayList<Player> playersList;
+
     public Game(String label) {
         super(label);
 
-
+        playersList = initializeStatus();
+        gameBoard = new GameBoard();
+        actions = new Actions(playersList, gameBoard);
 
         createMenus();
         createButtons();
         createStatusArea();
-        gameBoard = new GameBoard();
-        actions = new Actions(initializeStatus(), gameBoard);
         createAttackLists();
-
+        assignFunctions();
         buildFrame();
 
-
-        assignFunctions();
-        attackerTerritories.setListData(gameBoard.getRulerTerritoryList(actions.getActivePlayer()));
-
-
+        updateStatusArea();
+        updateAttackerTerritories();
     }
-
-
 
     /**
      * Creates all the function events.
@@ -47,10 +44,16 @@ public class Game extends JFrame {
         startGame.addActionListener(e -> initializeStatus());
     }
 
-
-
     private void updateDefenderTerritories() {
         defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue()));
+    }
+
+    private void updateAttackerTerritories() {
+        attackerTerritories.setListData(gameBoard.getRulerTerritoryList(actions.getActivePlayer()));
+    }
+
+    private void updateStatusArea() {
+        statusText.setText(gameBoard.printBoardStatus());
     }
 
     private ArrayList<Player> initializeStatus() {
@@ -61,13 +64,11 @@ public class Game extends JFrame {
                 "Start Game",
                 JOptionPane.INFORMATION_MESSAGE));
         ArrayList<Player> playersList = new ArrayList<>();
+
         for (int i = 1; i <= numOfPlayers; i++){
             playersList.add(new Player("Player " + i));
         }
 
-
-        String string = gameBoard.printBoardStatus();
-        statusText.setText(string);
         return playersList;
     }
 
@@ -75,16 +76,11 @@ public class Game extends JFrame {
      * Takes all of the elements and creates the frame.
      */
     private void buildFrame() {
-        JPanel j = new JPanel();
-        j.setLayout(new BorderLayout());
         this.setLayout(new BorderLayout());
         this.add(menuBar, BorderLayout.PAGE_START);
-        this.add(j, BorderLayout.WEST);
-        j.add(attackerScroller, BorderLayout.CENTER);
-        j.add(attackButton, BorderLayout.PAGE_END);
+        this.add(attackerScroller, BorderLayout.WEST);
+        this.add(attackButton, BorderLayout.PAGE_END);
         this.add(defenderScroller, BorderLayout.CENTER);
-        statusScroller.add(statusText);
-        statusText.setEditable(false);
         this.add(statusScroller, BorderLayout.EAST);
 
         // Display Steps
@@ -98,7 +94,6 @@ public class Game extends JFrame {
      */
     private void createAttackLists() {
         attackerTerritories = new JList<>();
-        //attackerTerritories.setListData(gameBoard.getRulerTerritoryList(actions.getActivePlayer()));
         attackerTerritories.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         attackerTerritories.setLayoutOrientation(JList.VERTICAL);
         attackerTerritories.setVisibleRowCount(-1);
@@ -111,10 +106,10 @@ public class Game extends JFrame {
         attackerScroller = new JScrollPane(attackerTerritories);
         defenderScroller = new JScrollPane(defenderTerritories);
     }
+
     private void createStatusArea() {
-        statusScroller = new JScrollPane();
         statusText = new JTextArea();
-        statusText.setEditable(false);
+        statusScroller = new JScrollPane(statusText);
     }
 
     private void createButtons() {
