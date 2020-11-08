@@ -1,17 +1,18 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
 /**
  * @author Emmitt Luhning
- * @group 16
  *
  * Provides methods for manipulating the GameBoard class during runtime
  */
-import java.util.*;
-
 public class Actions {
         private final GameBoard gameBoard;
         private final ArrayList<Player> players;
         private Player activePlayer;
         private int activePlayerIndex;
-        private ActionsView actionView;
+        private final ActionsView actionView;
 
         /**
          * Constructor for Actions objects
@@ -19,11 +20,12 @@ public class Actions {
          * @param players   A list of players who will be playing the game
          * @param gameBoard The digital game board that will be used to play the game
          */
-        public Actions(ArrayList<Player> players, GameBoard gameBoard) {
+        public Actions(ActionsView actionView, ArrayList<Player> players, GameBoard gameBoard) {
                 this.players = players;
                 this.gameBoard = gameBoard;
                 this.activePlayerIndex = 0;
                 this.activePlayer = players.get(activePlayerIndex);
+                this.actionView = actionView;
 
                 initialArmyAllocation();
                 initialArmyPlacement();
@@ -139,16 +141,19 @@ public class Actions {
                 gameBoard.removeTerritoryArmy(attackerTerritory, attackerLosses);
                 gameBoard.removeTerritoryArmy(defenderTerritory, defenderLosses);
 
+                boolean newTerritoryRuler = false;
+                boolean newContinentRuler = false;
                 if (gameBoard.getArmy(defenderTerritory) == 0) {
                         String defender = gameBoard.getTerritoryRuler(defenderTerritory);
                         gameBoard.removeTerritoryArmy(attackerTerritory, 1);
                         gameBoard.addTerritoryArmy(defenderTerritory, 1);
                         gameBoard.setTerritoryRuler(defenderTerritory, currPlayer);
-                        gameBoard.setContinentRuler(defenderTerritory, currPlayer);
+                        newContinentRuler = gameBoard.newContinentRuler(defenderTerritory, currPlayer);
+                        newTerritoryRuler = true;
                         removeEliminatedPlayer(defender);
                 }
 
-                //new ActionEvent(this, gameBoard.getTerritory(defenderTerritory), gameBoard.getTerritoryRuler(defenderTerritory), result, activePlayer);
+                actionView.attackUpdate(new ActionEvent(ActionEvent.ATTACK, attackerLosses, defenderLosses, newContinentRuler, newTerritoryRuler));
                 actionView.updateStatus();
         }
 
@@ -169,13 +174,11 @@ public class Actions {
                 for(int i = 0; i < numAttackDie; i++) {
                         int roll = ran.nextInt(6) + 1;
                         attackerRolls.add(roll);
-                        System.out.print(roll + " ");
                 }
 
                 for(int i = 0; i < numDefendDie; i++) {
                         int roll = ran.nextInt(6) + 1;
                         defenderRolls.add(roll);
-                        System.out.print(roll + " ");
                 }
                 System.out.println();
 
@@ -188,11 +191,7 @@ public class Actions {
                 int diceToCheck = numAttackDie;
                 int diceLoss = numAttackDie - numDefendDie;
 
-                if (diceLoss < 0) {
-                        attackerLosses = Math.abs(diceLoss);
-                        diceToCheck = numAttackDie;
-                } else if (diceLoss > 0) {
-                        defenderLosses = diceLoss;
+                if (diceLoss > 0) {
                         diceToCheck = numDefendDie;
                 }
 
@@ -206,7 +205,6 @@ public class Actions {
 
                 result.add(attackerLosses);
                 result.add(defenderLosses);
-
 
                 return result;
         }
@@ -234,11 +232,12 @@ public class Actions {
         public void pass() {
                 activePlayerIndex++;
 
-
                 if (activePlayerIndex >= players.size()) {
                         activePlayerIndex = 0;
                 }
 
+                activePlayer = players.get(activePlayerIndex);
+                actionView.passUpdate();
         }
 
         public String getActivePlayer() {

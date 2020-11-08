@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-
 /**
  * Initializes the game of Risk
  *
@@ -13,8 +10,6 @@ public class InitializeGame {
      * @param argv Default
      */
     public static void main(String[] argv) {
-
         new Game("Risk");
-
     }
 }
