@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.BeforeEach;
+
 import java.util.*;
 
 /**
@@ -23,17 +25,68 @@ public class GameBoard {
         populateUnallocatedTerritories();
     }
 
-
+    /**
+     * Constructor for smaller, testable GameBoard objects
+     */
+    public GameBoard(Boolean isTest){
+        continentMap = new HashMap<>();
+        territoryMap = new HashMap<>();
+        randomTerritories = new ArrayList<>();
+        createTestBoard();
+        populateTerritoryMap();
+        populateUnallocatedTerritories();
+    }
     /**
      * Returns the Territory specified by a given string
      * @param territoryName The name of the Territory to be returned
      * @return The Territory specified by the given string
      */
-    private Territory getTerritory(String territoryName){
+    public Territory getTerritory(String territoryName){
         if (territoryMap.get(territoryName) == null){
             return null;
         }
         return territoryMap.get(territoryName);
+    }
+
+    /**
+     * Returns the List of Territories
+     * @return Territory List
+     */
+    public Territory[] getRulerTerritoryList(String ruler){
+        Territory[] arr;
+
+        // This ruler doesnt exist or has no territories
+        try {
+            ArrayList<Territory> list = new ArrayList<>(territoryMap.values());
+            list.removeIf(territory -> !territory.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Territory::getName));
+            arr = new Territory[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
+        return arr;
+    }
+
+    /**
+     * Returns the List of Attackable Territories
+     * @return Territory List
+     */
+    public Territory[] getAttackableTerritoryList(Territory territory, String ruler){
+        Territory[] arr;
+
+        // Used to handle a territory not having any evil adjacent territories
+        try {
+            ArrayList<Territory> list = new ArrayList<>(territory.getAdjacentTerritories());
+            list.removeIf(e -> e.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Territory::getName));
+            arr = new Territory[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
+
+        return arr;
     }
 
     /**
@@ -43,15 +96,6 @@ public class GameBoard {
      */
     public Continent getContinent(String continentName){
         return continentMap.get(continentName);
-    }
-
-    /**
-     * Returns all territories adjacent to the given territory
-     * @param territory The territory to be assessed
-     * @return A set<String> of all territories adjacent to the given territory
-     */
-    public Set<String> getAdjacentTerritories(String territory){
-        return Objects.requireNonNull(getTerritory(territory)).getAdjacentTerritories();
     }
 
     /**
@@ -101,17 +145,18 @@ public class GameBoard {
      * @param territory The Territory to be assessed
      * @param ruler The name of the Player who will be determined to be the rightful ruler or not
      */
-    public void setContinentRuler(String territory, String ruler){
+    public boolean newContinentRuler(String territory, String ruler){
         Continent continent = continentMap.get(Objects.requireNonNull(getTerritory(territory)).getContinentName());
         ArrayList<Territory> territories = continent.getTerritories();
 
         for (Territory t : territories) {
             if (!t.getRuler().equals(ruler)) {
-                return; // Don't update the ruler
+                return false; // Don't update the ruler
             }
         }
 
         continent.setRuler(ruler);
+        return true;
     }
 
     /**
@@ -498,6 +543,32 @@ public class GameBoard {
     }
 
     /**
+     * Creates a smaller, easier-to-test GameBoard
+     */
+    public void createTestBoard(){
+        Continent northAmerica = new Continent("North America", 3);
+
+        continentMap.put("North America", northAmerica);
+
+        Territory canada = new Territory("Canada", "North America");
+        Territory usa = new Territory("United States", "North America");
+        Territory mexico = new Territory("Mexico", "North America");
+
+        northAmerica.addTerritory(canada);
+        northAmerica.addTerritory(usa);
+        northAmerica.addTerritory(mexico);
+
+        canada.setAdjacentTerritory(usa, "east");
+        canada.setAdjacentTerritory(mexico, "south");
+
+        usa.setAdjacentTerritory(canada, "west");
+        usa.setAdjacentTerritory(mexico, "south");
+
+        mexico.setAdjacentTerritory(usa, "north");
+        mexico.setAdjacentTerritory(canada, "north-west");
+    }
+
+    /**
      * Fills the GameBoard's map of territories with all territories in the game
      */
     public void populateTerritoryMap() {
@@ -509,30 +580,14 @@ public class GameBoard {
     }
 
     /**
-     * Determines if two territories are adjacent
-     * @param territory One of the territories to be compared
-     * @param adjacent The other territory to be compared
-     * @return true if the territories are adjacent, false if they are not adjacent
-     */
-    public boolean isAdjacentTerritory(String territory, String adjacent){
-        return Objects.requireNonNull(getTerritory(territory)).isAdjacent(adjacent);
-    }
-
-    /**
      * Prints a textual representation of the board state to the terminal
      */
-    public void printBoardStatus(){
+    public String printBoardStatus(){
+        StringBuilder s = new StringBuilder();
         for (String i : continentMap.keySet()){
-            continentMap.get(i).printStatus();
+            s.append(continentMap.get(i).getStatus()).append("\n");
         }
-    }
-
-    /**
-     * Prints a textual representation of the given territory to the terminal
-     * @param territory territory to print status of
-     */
-    public void printTerritoryStatus(String territory){
-        Objects.requireNonNull(getTerritory(territory)).printStatus();
+        return s.toString();
     }
 
     /**
