@@ -3,7 +3,7 @@ import java.util.EventObject;
 /**
  * @author Ashwin Stoparczyk
  *
- * Helper class for use with
+ * Helper class for use with Risk
  */
 public class RiskEvent extends EventObject {
     public static final int ATTACK = 1;

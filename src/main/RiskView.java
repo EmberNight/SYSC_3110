@@ -1,7 +1,7 @@
 /**
  * @author Ashwin Stoparczyk
  *
- * Functional interface for use with
+ * Functional interface for use with Risk
  */
 public interface RiskView {
     void attackUpdate(RiskEvent ae);
