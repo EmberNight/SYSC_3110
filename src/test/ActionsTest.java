@@ -1,9 +1,12 @@
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
+/**
+ * @author Ashwin Stoparczyk
+ * @group 16
+ *
+ * Test suite for GameActions
+ */
 public class ActionsTest implements RiskView{
 
     private final ArrayList<Player> playersList = makePlayerList();
@@ -11,7 +14,7 @@ public class ActionsTest implements RiskView{
     private final GameActions gameActions = new GameActions(this, playersList, gameBoard);
 
 
-    public ArrayList<Player> makePlayerList(){
+    public ArrayList<Player> makePlayerList(){ //Helper function to instantiate playersList properly
         ArrayList<Player> playersList = new ArrayList<>();
 
         for (int i = 1; i <= 3; i++){
@@ -22,13 +25,12 @@ public class ActionsTest implements RiskView{
     }
 
     @Test
-    public void testAttack(){
+    public void testAttack(){ //Visual test, displays the outcome of a randomized attack event
         gameActions.attack("canada", "united states", 2, 2);
-
     }
 
     @Test
-    public void testPass(){
+    public void testPass(){ //Visual test, displays the game cycling through each player's turn then back to the first
         passUpdate();
         gameActions.pass();
         gameActions.pass();
