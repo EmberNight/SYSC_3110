@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.BeforeEach;
+
 import java.util.*;
 
 /**
@@ -23,7 +25,17 @@ public class GameBoard {
         populateUnallocatedTerritories();
     }
 
-
+    /**
+     * Constructor for smaller, testable GameBoard objects
+     */
+    public GameBoard(Boolean isTest){
+        continentMap = new HashMap<>();
+        territoryMap = new HashMap<>();
+        randomTerritories = new ArrayList<>();
+        createTestBoard();
+        populateTerritoryMap();
+        populateUnallocatedTerritories();
+    }
     /**
      * Returns the Territory specified by a given string
      * @param territoryName The name of the Territory to be returned
@@ -528,6 +540,32 @@ public class GameBoard {
 
         easternAustralia.setAdjacentTerritory(newGuinea, "New Guinea");
         easternAustralia.setAdjacentTerritory(westernAustralia, "Western Australia");
+    }
+
+    /**
+     * Creates a smaller, easier-to-test GameBoard
+     */
+    public void createTestBoard(){
+        Continent northAmerica = new Continent("North America", 3);
+
+        continentMap.put("North America", northAmerica);
+
+        Territory canada = new Territory("Canada", "North America");
+        Territory usa = new Territory("United States", "North America");
+        Territory mexico = new Territory("Mexico", "North America");
+
+        northAmerica.addTerritory(canada);
+        northAmerica.addTerritory(usa);
+        northAmerica.addTerritory(mexico);
+
+        canada.setAdjacentTerritory(usa, "east");
+        canada.setAdjacentTerritory(mexico, "south");
+
+        usa.setAdjacentTerritory(canada, "west");
+        usa.setAdjacentTerritory(mexico, "south");
+
+        mexico.setAdjacentTerritory(usa, "north");
+        mexico.setAdjacentTerritory(canada, "north-west");
     }
 
     /**
