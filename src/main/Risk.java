@@ -54,6 +54,9 @@ public class Risk extends JFrame implements RiskView {
         pass.addActionListener(e -> gameActions.pass());
     }
 
+    /**
+     * Performs an attack and checks the inputs for errors.
+     */
     private void performAttack() {
         if (attackerTerritory == null || defenderTerritory == null) {
             JOptionPane.showMessageDialog(this,"Must select attacking and defending territories","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -94,26 +97,43 @@ public class Risk extends JFrame implements RiskView {
         gameActions.attack(attackerTerritory.getName(), defenderTerritory.getName(), attackDice, defendDice);
     }
 
+    /**
+     * Updates the selected defender territory.
+     */
     private void updateDefenderTerritory() {
         defenderTerritory = defenderTerritories.getSelectedValue();
     }
 
+    /**
+     * Updates the defender territory list.
+     */
     private void updateDefenderTerritories() {
         defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
         defenderTerritory = null;
         attackerTerritory = attackerTerritories.getSelectedValue();
     }
 
+    /**
+     * Updates the attackers territory list.
+     */
     private void updateAttackerTerritories() {
         attackerTerritories.setListData(gameBoard.getRulerTerritoryList(gameActions.getActivePlayer()));
         attackerTerritory = null;
         defenderTerritory = null;
     }
 
+    /**
+     * Updates the status list.
+     */
     private void updateStatusArea() {
         statusText.setText(gameBoard.printBoardStatus());
     }
 
+    /**
+     * Creates the players.
+     *
+     * @return Players
+     */
     private ArrayList<Player> initializeStatus() {
         int numOfPlayers = 0;
         while (numOfPlayers < 2 || numOfPlayers > 6) {
@@ -217,6 +237,11 @@ public class Risk extends JFrame implements RiskView {
         menuBar.add(pass);
     }
 
+    /**
+     * Updates the GUI when a attack has finished.
+     *
+     * @param ae Event that occurred
+     */
     @Override
     public void attackUpdate(RiskEvent ae) {
         String outcome = "The attacker lost: " + ae.getAttackerLosses() + " armies\n" +
@@ -234,6 +259,9 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
     }
 
+    /**
+     * Updates the gui when there is a new player.
+     */
     @Override
     public void passUpdate() {
         JOptionPane.showMessageDialog(this,
@@ -243,6 +271,9 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
     }
 
+    /**
+     * Updates the gui when the status pages needs updating.
+     */
     @Override
     public void updateStatus() {
         updateStatusArea();
