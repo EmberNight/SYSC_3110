@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ActionsTest implements RiskView{
 
     private final ArrayList<Player> playersList = makePlayerList();
-    private final GameBoard gameBoard = new GameBoard();
+    private final GameBoard gameBoard = new GameBoard(true);
     private final GameActions gameActions = new GameActions(this, playersList, gameBoard);
 
 
@@ -15,7 +15,7 @@ public class ActionsTest implements RiskView{
         ArrayList<Player> playersList = new ArrayList<>();
 
         for (int i = 1; i <= 3; i++){
-            playersList.add(new Player("Player " + i));
+            playersList.add(new Player("player " + i));
         }
 
         return playersList;
@@ -23,7 +23,16 @@ public class ActionsTest implements RiskView{
 
     @Test
     public void testAttack(){
-        gameActions.attack("Canada", "United States", 2, 2);
+        gameActions.attack("canada", "united states", 2, 2);
+
+    }
+
+    @Test
+    public void testPass(){
+        passUpdate();
+        gameActions.pass();
+        gameActions.pass();
+        gameActions.pass();
     }
 
     @Override
@@ -43,7 +52,7 @@ public class ActionsTest implements RiskView{
     }
 
     @Override
-    public void passUpdate() { System.out.println("It is now " + gameActions.getActivePlayer() + " turn. New Turn!");
+    public void passUpdate() { System.out.println("It is now " + gameActions.getActivePlayer() + "'s turn.");
 
     }
 
