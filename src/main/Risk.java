@@ -2,19 +2,31 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * GUI implementation
+ *
+ * @author Tanner trautrim
+ * @author Jordan Peterkin
+ */
 public class Risk extends JFrame implements RiskView {
     private final GameBoard gameBoard;
     private final GameActions gameActions;
 
     private JMenuBar menuBar;
-    private JMenuItem quit, pass, startGame;
+    private JMenuItem quit, pass;
     private JList<Territory> attackerTerritories, defenderTerritories;
     private JScrollPane attackerScroller, defenderScroller, statusScroller;
     private JButton attackButton;
     private JTextArea statusText;
 
+    private Territory attackerTerritory;
+    private Territory defenderTerritory;
+
     public Risk(String label) {
         super(label);
+
+        attackerTerritory = null;
+        defenderTerritory = null;
 
         ArrayList<Player> playersList = initializeStatus();
         gameBoard = new GameBoard();
@@ -36,15 +48,17 @@ public class Risk extends JFrame implements RiskView {
      */
     private void assignFunctions() {
         attackerTerritories.addListSelectionListener(e -> updateDefenderTerritories());
+        defenderTerritories.addListSelectionListener(e -> updateDefenderTerritory());
         attackButton.addActionListener(e -> performAttack());
         quit.addActionListener(e -> System.exit(0));
         pass.addActionListener(e -> gameActions.pass());
-        startGame.addActionListener(e -> initializeStatus());
     }
 
     private void performAttack() {
-        Territory a = attackerTerritories.getSelectedValue();
-        Territory d = defenderTerritories.getSelectedValue();
+        if (attackerTerritory == null || defenderTerritory == null) {
+            JOptionPane.showMessageDialog(this,"Must select attacking and defending territories","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
 
         int attackDice = 0;
         while (attackDice > 3 || attackDice < 1) {
@@ -57,7 +71,7 @@ public class Risk extends JFrame implements RiskView {
             if (attackDice == 0) {
                 JOptionPane.showMessageDialog(this,"Attack Cancelled","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 return;
-            } else if (attackDice > a.getArmy()-1) {
+            } else if (attackDice > attackerTerritory.getArmy()-1) {
                 JOptionPane.showMessageDialog(this,"The attacker does not have enough armies for " + attackDice + "dice","Troop Warning", JOptionPane.INFORMATION_MESSAGE);
                 attackDice = 0;
             }
@@ -71,21 +85,29 @@ public class Risk extends JFrame implements RiskView {
                 JOptionPane.showMessageDialog(this,"Defender input bad value.","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            if (defendDice > d.getArmy()) {
+            if (defendDice > defenderTerritory.getArmy()) {
                 JOptionPane.showMessageDialog(this,"The defender does not have enough armies for " + attackDice + "dice","Troop Warning", JOptionPane.INFORMATION_MESSAGE);
                 defendDice = 0;
             }
         }
 
-        gameActions.attack(a.getName(), d.getName(), attackDice, defendDice);
+        gameActions.attack(attackerTerritory.getName(), defenderTerritory.getName(), attackDice, defendDice);
+    }
+
+    private void updateDefenderTerritory() {
+        defenderTerritory = defenderTerritories.getSelectedValue();
     }
 
     private void updateDefenderTerritories() {
         defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
+        defenderTerritory = null;
+        attackerTerritory = attackerTerritories.getSelectedValue();
     }
 
     private void updateAttackerTerritories() {
         attackerTerritories.setListData(gameBoard.getRulerTerritoryList(gameActions.getActivePlayer()));
+        attackerTerritory = null;
+        defenderTerritory = null;
     }
 
     private void updateStatusArea() {
@@ -186,12 +208,10 @@ public class Risk extends JFrame implements RiskView {
         menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        startGame = new JMenuItem("Play Game");
         quit = new JMenuItem("Quit");
         pass = new JMenuItem("Pass");
 
         fileMenu.add(quit);
-        fileMenu.add(startGame);
 
         menuBar.add(fileMenu);
         menuBar.add(pass);
