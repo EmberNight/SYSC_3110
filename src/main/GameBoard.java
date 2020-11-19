@@ -1,5 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
-
 import java.util.*;
 
 /**
@@ -89,6 +87,30 @@ public class GameBoard {
         return arr;
     }
 
+    public Territory[] getFriendlyTerritoryList(Territory territory, String ruler) {
+        Territory[] arr;
+
+
+        // Used to handle a territory not having any friendly adjacent territories
+        try {
+            ArrayList<Territory> array = new ArrayList<>(territory.getAdjacentTerritories());
+            array.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(territory));
+
+            for (int i = 0; i < array.size(); i++) {
+                ArrayList<Territory> list = new ArrayList<>(array.get(i).getAdjacentTerritories());
+                list.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(e));
+                array.addAll(list);
+                array.sort(Comparator.comparing(Territory::getName));
+            }
+            arr = new Territory[array.size()];
+            arr = array.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
+
+        return arr;
+    }
+
     /**
      * Returns the Continent specified by a given string
      * @param continentName The name of the Territory to be returned
@@ -160,7 +182,7 @@ public class GameBoard {
     }
 
     /**
-     * Sets the the strength of the given territory to a given value
+     * Adds armies to the territory
      * @param territoryName The name of the territory to have its army strength changed
      * @param army The new strength of the army
      */

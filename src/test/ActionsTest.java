@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 /**
  * @author Ashwin Stoparczyk
- * @group 16
  *
  * Test suite for GameActions
  */
@@ -61,6 +60,11 @@ public class ActionsTest implements RiskView{
     @Override
     public void updateStatus() {
         System.out.println(gameBoard.toString());
+    }
+
+    @Override
+    public void movementUpdate(RiskEvent ae) {
+
     }
 }
 
