@@ -13,20 +13,24 @@ public class Risk extends JFrame implements RiskView {
     private final GameActions gameActions;
 
     private JMenuBar menuBar;
-    private JMenuItem quit, pass;
-    private JList<Territory> attackerTerritories, defenderTerritories;
-    private JScrollPane attackerScroller, defenderScroller, statusScroller;
-    private JButton attackButton;
+    private JMenuItem quit, pass, nextPhase;
+    private JLabel titleAction;
+    private JList<Territory> attackerTerritories, adjacentTerritories;
+    private JScrollPane attackerScroller, adjacentScroller, statusScroller;
+    private JButton button;
     private JTextArea statusText;
 
     private Territory attackerTerritory;
-    private Territory defenderTerritory;
+    private Territory adjacentTerritory;
+
+    private int currentPhase;
 
     public Risk(String label) {
         super(label);
 
+        currentPhase = 0;
         attackerTerritory = null;
-        defenderTerritory = null;
+        adjacentTerritory = null;
 
         ArrayList<Player> playersList = initializeStatus();
         gameBoard = new GameBoard();
@@ -35,31 +39,97 @@ public class Risk extends JFrame implements RiskView {
         createMenus();
         createButtons();
         createStatusArea();
-        createAttackLists();
+        createLists();
         assignFunctions();
         buildFrame();
 
         updateStatusArea();
-        updateAttackerTerritories();
     }
 
     /**
      * Creates all the function events.
      */
     private void assignFunctions() {
-        attackerTerritories.addListSelectionListener(e -> updateDefenderTerritories());
-        defenderTerritories.addListSelectionListener(e -> updateDefenderTerritory());
-        attackButton.addActionListener(e -> performAttack());
+        attackerTerritories.addListSelectionListener(e -> updateTerritories());
+        adjacentTerritories.addListSelectionListener(e -> updateAdjacentTerritory());
         quit.addActionListener(e -> System.exit(0));
         pass.addActionListener(e -> gameActions.pass());
+        nextPhase.addActionListener(e -> updatePhase());
+    }
+
+    private void commitArmies() {
+        if (attackerTerritory == null || adjacentTerritory == null) {
+            JOptionPane.showMessageDialog(this, "Must select the origin territory and the destination territory", "Movement Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        int numArmies;
+        try {
+            numArmies = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number of units to move.", "Movement", JOptionPane.INFORMATION_MESSAGE));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Movement Cancelled", "Bad input.", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        gameActions.commitArmies(attackerTerritory.getName(), adjacentTerritory.getName(), numArmies);
+    }
+
+    /**
+     * Advances the state of the game.
+     */
+    private void updatePhase() {
+        updateAttackerTerritories();
+
+        switch (currentPhase) {
+            case 0:
+                startAttackPhase();
+                currentPhase = 1;
+                return;
+            case 1:
+                startMovementPhase();
+                currentPhase = 2;
+                return;
+            default:
+                gameActions.pass();
+                currentPhase = 0;
+        }
+    }
+
+    private void startMovementPhase() {
+        JOptionPane.showMessageDialog(this,
+                "The amy movement phase has started",
+                "Commit Troops!",
+                JOptionPane.INFORMATION_MESSAGE);
+        titleAction.setText("Move Armies");
+        button.setText("Move Armies");
+
+        if (button.getActionListeners().length != 0) {
+            button.removeActionListener(button.getActionListeners()[0]);
+        }
+        button.addActionListener(e -> commitArmies());
+    }
+
+    private void startAttackPhase() {
+        JOptionPane.showMessageDialog(this,
+                "The attack phase has started",
+                "Attack!",
+                JOptionPane.INFORMATION_MESSAGE);
+        titleAction.setText("Attack");
+        button.setText("Attack");
+
+        if (button.getActionListeners().length != 0) {
+            button.removeActionListener(button.getActionListeners()[0]);
+        }
+
+        button.addActionListener(e -> performAttack());
     }
 
     /**
      * Performs an attack and checks the inputs for errors.
      */
     private void performAttack() {
-        if (attackerTerritory == null || defenderTerritory == null) {
-            JOptionPane.showMessageDialog(this,"Must select attacking and defending territories","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+        if (attackerTerritory == null || adjacentTerritory == null) {
+            JOptionPane.showMessageDialog(this, "Must select attacking and defending territories", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -68,14 +138,14 @@ public class Risk extends JFrame implements RiskView {
             try {
                 attackDice = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number Dice (1-3) 0 To stop attack", "Attacker", JOptionPane.INFORMATION_MESSAGE));
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this,"Attack Cancelled","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Attack Cancelled", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
             if (attackDice == 0) {
-                JOptionPane.showMessageDialog(this,"Attack Cancelled","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Attack Cancelled", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 return;
-            } else if (attackDice > attackerTerritory.getArmy()-1) {
-                JOptionPane.showMessageDialog(this,"The attacker does not have enough armies for " + attackDice + "dice","Troop Warning", JOptionPane.INFORMATION_MESSAGE);
+            } else if (attackDice > attackerTerritory.getArmy() - 1) {
+                JOptionPane.showMessageDialog(this, "The attacker does not have enough armies for " + attackDice + "dice", "Troop Warning", JOptionPane.INFORMATION_MESSAGE);
                 attackDice = 0;
             }
         }
@@ -83,34 +153,39 @@ public class Risk extends JFrame implements RiskView {
         int defendDice = 0;
         while (defendDice > 2 || defendDice < 1) {
             try {
-                defendDice = Integer.parseInt(JOptionPane.showInputDialog(this,"Enter Number Dice (1-2)","Defender", JOptionPane.INFORMATION_MESSAGE));
+                defendDice = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number Dice (1-2)", "Defender", JOptionPane.INFORMATION_MESSAGE));
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(this,"Defender input bad value.","Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Defender input bad value.", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
-            if (defendDice > defenderTerritory.getArmy()) {
-                JOptionPane.showMessageDialog(this,"The defender does not have enough armies for " + attackDice + "dice","Troop Warning", JOptionPane.INFORMATION_MESSAGE);
+            if (defendDice > adjacentTerritory.getArmy()) {
+                JOptionPane.showMessageDialog(this, "The defender does not have enough armies for " + attackDice + "dice", "Troop Warning", JOptionPane.INFORMATION_MESSAGE);
                 defendDice = 0;
             }
         }
 
-        gameActions.attack(attackerTerritory.getName(), defenderTerritory.getName(), attackDice, defendDice);
+        gameActions.attack(attackerTerritory.getName(), adjacentTerritory.getName(), attackDice, defendDice);
     }
 
     /**
      * Updates the selected defender territory.
      */
-    private void updateDefenderTerritory() {
-        defenderTerritory = defenderTerritories.getSelectedValue();
+    private void updateAdjacentTerritory() {
+        adjacentTerritory = adjacentTerritories.getSelectedValue();
     }
 
     /**
-     * Updates the defender territory list.
+     * Updates the defender and friendly territory lists.
      */
-    private void updateDefenderTerritories() {
-        defenderTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
-        defenderTerritory = null;
+    private void updateTerritories() {
+        if (currentPhase == 1) {
+            adjacentTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
+        } else {
+            adjacentTerritories.setListData(gameBoard.getFriendlyTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
+        }
+
         attackerTerritory = attackerTerritories.getSelectedValue();
+        adjacentTerritory = null;
     }
 
     /**
@@ -118,9 +193,11 @@ public class Risk extends JFrame implements RiskView {
      */
     private void updateAttackerTerritories() {
         attackerTerritories.setListData(gameBoard.getRulerTerritoryList(gameActions.getActivePlayer()));
+
         attackerTerritory = null;
-        defenderTerritory = null;
+        adjacentTerritory = null;
     }
+
 
     /**
      * Updates the status list.
@@ -149,7 +226,7 @@ public class Risk extends JFrame implements RiskView {
         }
         ArrayList<Player> playersList = new ArrayList<>();
 
-        for (int i = 1; i <= numOfPlayers; i++){
+        for (int i = 1; i <= numOfPlayers; i++) {
             playersList.add(new Player("Player " + i));
         }
 
@@ -166,19 +243,13 @@ public class Risk extends JFrame implements RiskView {
         actionArea.setLayout(new BorderLayout());
         statusArea.setLayout(new BorderLayout());
 
-        JTextArea titleStatus = new JTextArea("Game Status");
-        JTextArea titleAction = new JTextArea("Attack");
-
-        titleStatus.setEditable(false);
-        titleStatus.setBackground(actionArea.getBackground());
-
-        titleAction.setEditable(false);
-        titleAction.setBackground(actionArea.getBackground());
+        JLabel titleStatus = new JLabel("Game Status");
+        titleAction = new JLabel();
 
         actionArea.add(titleAction, BorderLayout.PAGE_START);
         actionArea.add(attackerScroller, BorderLayout.WEST);
-        actionArea.add(defenderScroller, BorderLayout.EAST);
-        actionArea.add(attackButton, BorderLayout.PAGE_END);
+        actionArea.add(adjacentScroller, BorderLayout.EAST);
+        actionArea.add(button, BorderLayout.PAGE_END);
 
         statusArea.add(titleStatus, BorderLayout.PAGE_START);
         statusArea.add(statusScroller, BorderLayout.EAST);
@@ -197,19 +268,19 @@ public class Risk extends JFrame implements RiskView {
     /**
      * Initialize all of the controls
      */
-    private void createAttackLists() {
+    private void createLists() {
         attackerTerritories = new JList<>();
         attackerTerritories.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         attackerTerritories.setLayoutOrientation(JList.VERTICAL);
         attackerTerritories.setVisibleRowCount(-1);
 
-        defenderTerritories = new JList<>();
-        defenderTerritories.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        defenderTerritories.setLayoutOrientation(JList.VERTICAL);
-        defenderTerritories.setVisibleRowCount(-1);
+        adjacentTerritories = new JList<>();
+        adjacentTerritories.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        adjacentTerritories.setLayoutOrientation(JList.VERTICAL);
+        adjacentTerritories.setVisibleRowCount(-1);
 
         attackerScroller = new JScrollPane(attackerTerritories);
-        defenderScroller = new JScrollPane(defenderTerritories);
+        adjacentScroller = new JScrollPane(adjacentTerritories);
     }
 
     private void createStatusArea() {
@@ -218,7 +289,7 @@ public class Risk extends JFrame implements RiskView {
     }
 
     private void createButtons() {
-        attackButton = new JButton("Attack");
+        button = new JButton("Attack");
     }
 
     /**
@@ -230,11 +301,13 @@ public class Risk extends JFrame implements RiskView {
         JMenu fileMenu = new JMenu("File");
         quit = new JMenuItem("Quit");
         pass = new JMenuItem("Pass");
+        nextPhase = new JMenuItem("Next Phase");
 
         fileMenu.add(quit);
 
         menuBar.add(fileMenu);
         menuBar.add(pass);
+        menuBar.add(nextPhase);
     }
 
     /**
@@ -245,7 +318,7 @@ public class Risk extends JFrame implements RiskView {
     @Override
     public void attackUpdate(RiskEvent ae) {
         String outcome = "The attacker lost: " + ae.getAttackerLosses() + " armies\n" +
-                         "The defender lost: " + ae.getDefenderLosses() + " armies\n";
+                "The defender lost: " + ae.getDefenderLosses() + " armies\n";
 
         if (ae.isNewTerritoryRuler()) {
             outcome += "The attacker won the territory";
@@ -255,7 +328,7 @@ public class Risk extends JFrame implements RiskView {
             outcome += " and the Continent";
         }
 
-        JOptionPane.showMessageDialog(this,outcome,"Outcome", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, outcome, "Outcome", JOptionPane.INFORMATION_MESSAGE);
         updateAttackerTerritories();
     }
 
@@ -268,7 +341,6 @@ public class Risk extends JFrame implements RiskView {
                 "It is now " + gameActions.getActivePlayer() + " turn.",
                 "New Turn!",
                 JOptionPane.INFORMATION_MESSAGE);
-        updateAttackerTerritories();
     }
 
     /**
@@ -277,5 +349,15 @@ public class Risk extends JFrame implements RiskView {
     @Override
     public void updateStatus() {
         updateStatusArea();
+    }
+
+    @Override
+    public void movementUpdate(RiskEvent ae) {
+        if (ae.getEventID() == 0) {
+            JOptionPane.showMessageDialog(this, "Successful moved armies", "Movement", JOptionPane.INFORMATION_MESSAGE);
+            updateAttackerTerritories();
+        } else {
+            JOptionPane.showMessageDialog(this, "Not enough units", "Movement", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 }
