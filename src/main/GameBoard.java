@@ -36,6 +36,7 @@ public class GameBoard {
         populateTerritoryMap();
         populateUnallocatedTerritories();
     }
+
     /**
      * Returns the Territory specified by a given string
      * @param territoryName The name of the Territory to be returned
@@ -49,8 +50,9 @@ public class GameBoard {
     }
 
     /**
-     * Returns the List of Territories
-     * @return Territory List
+     * Returns the array of Territories owned by the specified Player
+     * @param ruler The name of the specified Player
+     * @return Territory[] the array of Territories owned by the specified Player
      */
     public Territory[] getRulerTerritoryList(String ruler){
         Territory[] arr;
