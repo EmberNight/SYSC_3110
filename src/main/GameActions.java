@@ -238,6 +238,10 @@ public class GameActions {
 
                 activePlayer = players.get(activePlayerIndex);
                 actionView.passUpdate();
+                if(activePlayer.isAI()){
+                        AITurn AI = new AITurn();
+                        AI.startTurn();
+                }
         }
 
         public String getActivePlayer() {
