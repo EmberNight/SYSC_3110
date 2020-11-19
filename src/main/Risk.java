@@ -136,6 +136,7 @@ public class Risk extends JFrame implements RiskView {
      */
     private ArrayList<Player> initializeStatus() {
         int numOfPlayers = 0;
+        int numOfAI = 0;
         while (numOfPlayers < 2 || numOfPlayers > 6) {
             try {
                 numOfPlayers = Integer.parseInt(JOptionPane.showInputDialog(this,
@@ -146,13 +147,27 @@ public class Risk extends JFrame implements RiskView {
                 JOptionPane.showMessageDialog(this, "Bad input value.", "Game Closing", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(-1);
             }
+            try {
+                numOfPlayers = Integer.parseInt(JOptionPane.showInputDialog(this,
+                        "Enter Number Of Players (max " + (6 - numOfPlayers) + ")",
+                        "Start Game",
+                        JOptionPane.INFORMATION_MESSAGE));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Bad input value.", "Game Closing", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(-1);
+            }
         }
         ArrayList<Player> playersList = new ArrayList<>();
 
+        int realPlayers = 0;
         for (int i = 1; i <= numOfPlayers; i++){
-            playersList.add(new Player("Player " + i));
+            playersList.add(new Player("Player " + i, false));
+            realPlayers = i;
         }
+        for (int i = realPlayers; i <= realPlayers + numOfAI; i++){
+            playersList.add(new Player("Player " + i, true));
 
+        }
         return playersList;
     }
 
