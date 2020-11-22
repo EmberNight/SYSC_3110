@@ -1,7 +1,7 @@
 /**
- * @author Ashwin Stoparczyk
- *
  * Functional interface for use with Risk
+ *
+ * @author Ashwin Stoparczyk
  */
 public interface RiskView {
     /**
