@@ -2,7 +2,7 @@ import java.util.EventObject;
 
 /**
  * @author Ashwin Stoparczyk
- *
+ * <p>
  * Helper class for use with Risk
  */
 public class RiskEvent extends EventObject {
@@ -15,8 +15,9 @@ public class RiskEvent extends EventObject {
 
     /**
      * Constructor for ActionEvent objects
-     * @param attackerLosses The attacker's losses
-     * @param defenderLosses The defender's losses
+     *
+     * @param attackerLosses    The attacker's losses
+     * @param defenderLosses    The defender's losses
      * @param newContinentRuler If the continent's ruler has been changed
      * @param newTerritoryRuler If the Territory's ruler has been changed
      */
@@ -29,7 +30,7 @@ public class RiskEvent extends EventObject {
     }
 
     public int getEventID() {
-        return (int)this.getSource();
+        return (int) this.getSource();
     }
 
     public int getAttackerLosses() {

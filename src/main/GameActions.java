@@ -13,7 +13,6 @@ public class GameActions {
     private Player activePlayer;
     private int activePlayerIndex;
     private final RiskView actionView;
-    private int addableArmies;
 
     /**
      * Constructor for Actions objects
@@ -31,6 +30,7 @@ public class GameActions {
         initialArmyAllocation();
         initialArmyPlacement();
         gameBoard.initializeContinentRulers();
+        getGivePlayerArmies();
     }
 
     /**
@@ -230,28 +230,20 @@ public class GameActions {
         }
     }
 
-
-    /**
-     * Passes the turn on from the current player to the next
-     */
-    public void pass() {
-        changeTurns();
-        actionView.passUpdate();
-    }
-
-
-    public void changeTurns(){
+    public void changeTurns() {
         activePlayerIndex++;
 
         if (activePlayerIndex >= players.size()) {
             activePlayerIndex = 0;
         }
-                activePlayer = players.get(activePlayerIndex);
-                actionView.passUpdate();
-                if(activePlayer.isAI()){
-                        AITurn AI = new AITurn(activePlayer, gameBoard, this, 0); //Need to calculate reinforcements for AI player; 0 as placeholder
-                        AI.startTurn();
-                }
+
+        activePlayer = players.get(activePlayerIndex);
+        getGivePlayerArmies();
+        actionView.passUpdate();
+        if (activePlayer.isAI()) {
+            AITurn AI = new AITurn(activePlayer, gameBoard, this, 0); //Need to calculate reinforcements for AI player; 0 as placeholder
+            AI.startTurn();
+        }
     }
 
 
@@ -263,48 +255,46 @@ public class GameActions {
      * Move armies to a territory.
      *
      * @param territoryDestination Where the units will go
-     * @param numArmies number of armies to place
+     * @param numArmies            number of armies to place
      */
     public void commitArmies(String territoryOrigin, String territoryDestination, int numArmies) {
         if (gameBoard.getArmy(territoryOrigin) > numArmies) {
             gameBoard.removeTerritoryArmy(territoryOrigin, numArmies);
             gameBoard.addTerritoryArmy(territoryDestination, numArmies);
-            actionView.movementUpdate(new RiskEvent(0, 0,0,false, false));
+            actionView.movementUpdate(new RiskEvent(0, 0, 0, false, false));
         } else {
-            actionView.movementUpdate(new RiskEvent(1, 0,0,false, false));
+            actionView.movementUpdate(new RiskEvent(1, 0, 0, false, false));
         }
     }
 
-    public int getStartAddableArmies(){
-        String player = this.getActivePlayer();
-        int continentBonus = 0;
+    /**
+     * Current player is given armies based on the board presence.
+     */
+    private void getGivePlayerArmies() {
+        String player = activePlayer.getName();
+        int continentArmies = 0;
         if (gameBoard.getRulerContinentList(player).length != 0) {
             for (int i = 0; i < gameBoard.getRulerContinentList(player).length; i++) {
-                continentBonus += gameBoard.getRulerContinentList(player)[i].getValue();
+                continentArmies += gameBoard.getRulerContinentList(player)[i].getValue();
             }
-
         }
-        setAddableArmies((gameBoard.getRulerTerritoryList(player).length / 3) + continentBonus);
-        return addableArmies;
+        activePlayer.addArmies(continentArmies + (gameBoard.getRulerTerritoryList(player).length / 3));
     }
 
-    public int getCurrentAddableArmies(){
-        return addableArmies;
+    public int getCurrentPlayersArmies() {
+        return activePlayer.getArmies();
     }
 
-    public void setAddableArmies(int addableArmies) {
-        this.addableArmies = addableArmies;
-    }
-
-    public void addArmies(String addToTerritory, int numArmies){
-        if (addableArmies >= numArmies){
-            setAddableArmies(addableArmies - numArmies);
-            gameBoard.addTerritoryArmy(addToTerritory, numArmies);
-            actionView.addArmyUpdate(new RiskEvent(0,0,0,false,false));
-        }
-        else {
-            actionView.addArmyUpdate(new RiskEvent(1,0,0,false,false));
+    /**
+     * Adds armies to a territory
+     */
+    public void addArmies(String territory, int numArmies) {
+        int armies = activePlayer.getArmies();
+        if (armies >= numArmies) {
+            gameBoard.addTerritoryArmy(territory, activePlayer.removeArmies(numArmies));
+            actionView.addArmyUpdate(new RiskEvent(0, 0, 0, false, false));
+        } else {
+            actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false));
         }
     }
-
 }
