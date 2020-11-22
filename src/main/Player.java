@@ -6,14 +6,16 @@
 public class Player {
     private final String name;
     private int armies;
+    private Boolean isAI;
 
     /**
      * Constructor for Player objects
      * @param name The name of the Player
      */
-    public Player(String name) {
+    public Player(String name, Boolean isAI) {
         this.name = name;
         this.armies = 0;
+        this.isAI = isAI;
     }
 
     /**
@@ -53,5 +55,9 @@ public class Player {
         }
         return num;
     }
+    public boolean isAI() {
+        return isAI;
+    }
+
 }
 
