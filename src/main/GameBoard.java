@@ -1,5 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
-
 import java.util.*;
 
 /**
@@ -70,6 +68,22 @@ public class GameBoard {
         return arr;
     }
 
+    public Continent[] getRulerContinentList(String ruler){
+        Continent[] arr;
+
+        // This ruler doesnt exist or has no continents
+        try {
+            ArrayList<Continent> list = new ArrayList<>(continentMap.values());
+            list.removeIf(continent -> !continent.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Continent::getName));
+            arr = new Continent[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Continent[0];
+        }
+        return arr;
+    }
+
     /**
      * Returns an array containing the list of Territories that the given Player can attack from the given Territory
      * @param territory The given Territory
@@ -86,6 +100,30 @@ public class GameBoard {
             list.sort(Comparator.comparing(Territory::getName));
             arr = new Territory[list.size()];
             arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
+
+        return arr;
+    }
+
+    public Territory[] getFriendlyTerritoryList(Territory territory, String ruler) {
+        Territory[] arr;
+
+
+        // Used to handle a territory not having any friendly adjacent territories
+        try {
+            ArrayList<Territory> array = new ArrayList<>(territory.getAdjacentTerritories());
+            array.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(territory));
+
+            for (int i = 0; i < array.size(); i++) {
+                ArrayList<Territory> list = new ArrayList<>(array.get(i).getAdjacentTerritories());
+                list.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(e));
+                array.addAll(list);
+                array.sort(Comparator.comparing(Territory::getName));
+            }
+            arr = new Territory[array.size()];
+            arr = array.toArray(arr);
         } catch (Exception e) {
             arr = new Territory[0];
         }
@@ -164,7 +202,7 @@ public class GameBoard {
     }
 
     /**
-     * Sets the the strength of the given territory to a given value
+     * Adds armies to the territory
      * @param territoryName The name of the territory to have its army strength changed
      * @param army The new strength of the army
      */
@@ -611,19 +649,14 @@ public class GameBoard {
             Continent continent = getContinent(c);
             ArrayList<Territory> territories = continent.getTerritories();
             String ruler = territories.get(0).getRuler();
-            int rulerCount = 0;
 
             for (Territory t : territories) {
-                if (t.getRuler().equals(ruler)) {
-                    rulerCount++;
-                } else {
-                    if (rulerCount > 0) {
-                        break;
-                    } else {
-                        ruler = t.getRuler();
-                    }
+                if (!t.getRuler().equals(ruler)) {
+                    ruler = "No One";
+                    break;
                 }
             }
+            continent.setRuler(ruler);
         }
     }
 
