@@ -1,25 +1,25 @@
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * @author Ashwin Stoparczyk
- * @group 16
- *
  * Test suite for GameBoard
+ *
+ * @author Ashwin Stoparczyk
  */
 public class GameBoardTest {
     private final GameBoard gameBoard = new GameBoard(true);
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         gameBoard.setTerritoryRuler("canada", "P1");
         gameBoard.setTerritoryRuler("united states", "P1");
         gameBoard.setTerritoryRuler("mexico", "P2");
     }
 
     @Test
-    public void testRulers(){
+    public void testRulers() {
         assertEquals("P1", gameBoard.getTerritoryRuler("canada")); //Test for initial rulers
         assertEquals("P1", gameBoard.getTerritoryRuler("united states"));
         assertEquals("P2", gameBoard.getTerritoryRuler("mexico"));
@@ -38,7 +38,7 @@ public class GameBoardTest {
     }
 
     @Test
-    public void testRemoval(){
+    public void testRemoval() {
         assertFalse(gameBoard.isPlayerEliminated("P2")); //Make sure P2 is still in the game
 
         gameBoard.setTerritoryRuler("mexico", "P1"); //Remove P2 from the game
@@ -46,7 +46,7 @@ public class GameBoardTest {
     }
 
     @Test
-    public void printStatus(){
+    public void printStatus() {
         System.out.println(gameBoard.printBoardStatus());
     } //Visual test
 

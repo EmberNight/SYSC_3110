@@ -1,6 +1,8 @@
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 /**
@@ -65,10 +67,12 @@ public class ContinentTest {
         expected.add(usa);
         expected.add(mexico);
 
-        ArrayList<Territory>  actual = north_america.getTerritories();
+        ArrayList<Territory> actual = north_america.getTerritories();
 
         // Initial Setup
-        if (expected.size() != actual.size()) { fail(); }
+        if (expected.size() != actual.size()) {
+            fail();
+        }
 
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i), actual.get(i));
@@ -79,7 +83,9 @@ public class ContinentTest {
         expected.add(baha);
         north_america.addTerritory(baha);
 
-        if (expected.size() != actual.size()) { fail(); }
+        if (expected.size() != actual.size()) {
+            fail();
+        }
 
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i), actual.get(i));

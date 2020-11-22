@@ -3,22 +3,21 @@ import java.util.Random;
 
 /**
  * @author Ashwin Stoparczyk
- * @group 16
- *
+ * <p>
  * Completes the actions a normal Player would take during their turn for any AI players in the game
  */
 public class AITurn {
 
     public enum OUTCOMES { //Enum containing every possible attack combination, along with the AI's corresponding behaviour
-        ZERO_ZERO (false),
-        ZERO_ONE (false),
-        ZERO_TWO (false),
-        ONE_ZERO (true),
-        ONE_ONE (true),
-        ONE_TWO (false),
-        TWO_ZERO (true),
-        TWO_ONE (true),
-        TWO_TWO (true),
+        ZERO_ZERO(false),
+        ZERO_ONE(false),
+        ZERO_TWO(false),
+        ONE_ZERO(true),
+        ONE_ONE(true),
+        ONE_TWO(false),
+        TWO_ZERO(true),
+        TWO_ONE(true),
+        TWO_TWO(true),
         ;
 
         private final boolean outcome;
@@ -27,20 +26,23 @@ public class AITurn {
             this.outcome = outcome;
         }
 
-        private boolean outcome() {return outcome;}
+        private boolean outcome() {
+            return outcome;
+        }
     }
 
-    private Player player;
-    private GameBoard gameBoard;
-    private GameActions gameActions;
+    private final Player player;
+    private final GameBoard gameBoard;
+    private final GameActions gameActions;
     private ArrayList<Territory> safeTerritories;
     private int reinforcements;
 
     /**
      * Constructor for AITurn objects
-     * @param player The AI Player
-     * @param gameBoard The current GameBoard
-     * @param gameActions The current GameActions
+     *
+     * @param player         The AI Player
+     * @param gameBoard      The current GameBoard
+     * @param gameActions    The current GameActions
      * @param reinforcements The amount of reinforcements that can be placed by the AI
      */
     public AITurn(Player player, GameBoard gameBoard, GameActions gameActions, int reinforcements) {
@@ -54,11 +56,11 @@ public class AITurn {
     /**
      * Sequentially goes through each phase of the AI Player's turn
      */
-    public void startTurn(){
+    public void startTurn() {
         reinforceTroops();
         attack();
         fortifyTroops();
-        pass();
+        gameActions.changeTurns();
     }
 
     /**
@@ -66,9 +68,9 @@ public class AITurn {
      */
     private void reinforceTroops() {
         safeTerritories = determineSafeTerritories();
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())){
+        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) {
             if (reinforcements == 0) break;
-            if (!safeTerritories.contains(t)){
+            if (!safeTerritories.contains(t)) {
                 Random r = new Random();
                 int armies = r.nextInt(reinforcements);
                 t.addArmy(armies);
@@ -85,15 +87,15 @@ public class AITurn {
 
         int attackerDice, defenderDice;
 
-        for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(player.getName())){
-            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, player.getName())){
-                attackerDice = Math.min(attackerTerritory.getArmy()-1, 2);
+        for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(player.getName())) {
+            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, player.getName())) {
+                attackerDice = Math.min(attackerTerritory.getArmy() - 1, 2);
                 defenderDice = Math.min(defenderTerritory.getArmy(), 2);
 
-                while (expectedOutcome(attackerDice,defenderDice) && !defenderTerritory.getRuler().equals(player.getName())) { //Attack same Territory until undesirable outcome or Territory is conquered
+                while (expectedOutcome(attackerDice, defenderDice) && !defenderTerritory.getRuler().equals(player.getName())) { //Attack same Territory until undesirable outcome or Territory is conquered
                     gameActions.attack(attackerTerritory.getName(), defenderTerritory.getName(), attackerDice, defenderDice);
 
-                    attackerDice = Math.min(attackerTerritory.getArmy()-1, 2);
+                    attackerDice = Math.min(attackerTerritory.getArmy() - 1, 2);
                     defenderDice = Math.min(defenderTerritory.getArmy(), 2);
                 }
             }
@@ -106,21 +108,21 @@ public class AITurn {
     private void fortifyTroops() {
         safeTerritories = determineSafeTerritories();
 
-        for (Territory st : safeTerritories){//Moves all but one army into an adjacent safe Territory. This prevents a safe Territory, surrounded by safe Territories, from keeping hold of its armies forever
-            for (Territory at : st.getAdjacentTerritories()){
-                if (safeTerritories.contains(at)){
-                    int armies = st.getArmy()-1;
+        for (Territory st : safeTerritories) {//Moves all but one army into an adjacent safe Territory. This prevents a safe Territory, surrounded by safe Territories, from keeping hold of its armies forever
+            for (Territory at : st.getAdjacentTerritories()) {
+                if (safeTerritories.contains(at)) {
+                    int armies = st.getArmy() - 1;
                     at.addArmy(armies);
                     st.removeArmy(armies);
                 }
             }
         }
 
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())){ //If there is an adjacent safe Territory, send all possible reinforcements from that Territory to the weak Territory
-            if(isWeakTerritory(t)){
-                for (Territory st : safeTerritories){
-                    if (t.getAdjacentTerritories().contains(st)){
-                        int armies = st.getArmy()-1;
+        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) { //If there is an adjacent safe Territory, send all possible reinforcements from that Territory to the weak Territory
+            if (isWeakTerritory(t)) {
+                for (Territory st : safeTerritories) {
+                    if (t.getAdjacentTerritories().contains(st)) {
+                        int armies = st.getArmy() - 1;
                         t.addArmy(armies);
                         st.removeArmy(armies);
                     }
@@ -132,11 +134,12 @@ public class AITurn {
     /**
      * Determines if an attack will, on average, have a desirable outcome.
      * If it does, there is a chance that the AI won't make the attack anyways
-     * @param attackDice The number of dice the AI is attacking with
+     *
+     * @param attackDice  The number of dice the AI is attacking with
      * @param defenseDice The number of dice the defender is defending with
      * @return true if the outcome is determined to be desirable, false if the outcome is not determined to be desirable
      */
-    private boolean expectedOutcome(int attackDice, int defenseDice){
+    private boolean expectedOutcome(int attackDice, int defenseDice) {
         boolean outcome = false;
 
         if (attackDice == 0 && defenseDice == 0) return OUTCOMES.ZERO_ZERO.outcome();
@@ -150,7 +153,8 @@ public class AITurn {
         if (attackDice == 2 && defenseDice == 2) outcome = OUTCOMES.TWO_TWO.outcome();
 
         Random r = new Random();
-        if (r.nextInt(10) > 3) outcome = !outcome; // 40% chance that the AI deviates from the "correct" play. Makes life interesting. Sometimes.
+        if (r.nextInt(10) > 3)
+            outcome = !outcome; // 40% chance that the AI deviates from the "correct" play. Makes life interesting. Sometimes.
 
         return outcome;
     }
@@ -158,16 +162,17 @@ public class AITurn {
     /**
      * Determines the list of the AI's "safe" Territories.
      * "Safe" Territories are completely surrounded by friendly Territories
+     *
      * @return An ArrayList containing all of the AU's "safe" territories
      */
-    private ArrayList<Territory> determineSafeTerritories(){
+    private ArrayList<Territory> determineSafeTerritories() {
         ArrayList<Territory> safeTerritories = new ArrayList<>();
         boolean safe;
 
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())){
+        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) {
             safe = true;
-            for (Territory at : t.getAdjacentTerritories()){
-                if (!at.getRuler().equals(player.getName())){
+            for (Territory at : t.getAdjacentTerritories()) {
+                if (!at.getRuler().equals(player.getName())) {
                     safe = false;
                     break;
                 }
@@ -181,18 +186,15 @@ public class AITurn {
     /**
      * Determines if a given Territory is "weak"
      * "Weak" Territories have at least one adjacent enemy Territory that has a superior amount of armies
+     *
      * @param t The Territory to be assessed
      * @return true if the Territory is "weak", false if the Territory is not "weak"
      */
-    private boolean isWeakTerritory(Territory t){
-        for (Territory at : gameBoard.getAttackableTerritoryList(t, player.getName())){
+    private boolean isWeakTerritory(Territory t) {
+        for (Territory at : gameBoard.getAttackableTerritoryList(t, player.getName())) {
             if (at.getArmy() > t.getArmy()) return true;
         }
 
         return false;
-    }
-    private void pass(){
-
-        gameActions.pass();
     }
 }

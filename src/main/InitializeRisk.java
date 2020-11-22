@@ -7,6 +7,7 @@ public class InitializeRisk {
 
     /**
      * Main function of project
+     *
      * @param argv Default
      */
     public static void main(String[] argv) {

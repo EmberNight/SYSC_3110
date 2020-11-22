@@ -1,6 +1,6 @@
 /**
  * @author Emmitt Luhning
- *
+ * <p>
  * An implementation of the people playing the game of Risk
  */
 public class Player {
@@ -10,6 +10,7 @@ public class Player {
 
     /**
      * Constructor for Player objects
+     *
      * @param name The name of the Player
      */
     public Player(String name, Boolean isAI) {
@@ -20,6 +21,7 @@ public class Player {
 
     /**
      * Returns the Player's name
+     *
      * @return the Player's name
      */
     public String getName() {
@@ -28,6 +30,7 @@ public class Player {
 
     /**
      * Returns the number of the Player's armies
+     *
      * @return the number of the Player's armies
      */
     public int getArmies() {
@@ -36,6 +39,7 @@ public class Player {
 
     /**
      * Sets the Player's number of armies to the given value
+     *
      * @param num The Player's new number of armies
      */
     public void setArmies(int num) {
@@ -43,7 +47,17 @@ public class Player {
     }
 
     /**
+     * Sets the Player's number of armies to the given value
+     *
+     * @param num The Player's new number of armies
+     */
+    public void addArmies(int num) {
+        armies += Math.abs(num);
+    }
+
+    /**
      * Removes a given amount of armies from the Player
+     *
      * @param num The number of armies to be removed from the Player
      * @return 0 if the Player has no remaining armies, else the number of armies that were removed from the Player
      */
@@ -55,6 +69,7 @@ public class Player {
         }
         return num;
     }
+
     public boolean isAI() {
         return isAI;
     }
