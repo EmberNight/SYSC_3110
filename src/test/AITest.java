@@ -12,7 +12,7 @@ public class AITest implements RiskView {
     private final ArrayList<Player> playersList = makePlayerList();
     private final GameBoard gameBoard = new GameBoard(true);
     private final GameActions gameActions = new GameActions(this, playersList, gameBoard);
-    private final AITurn aiTurn = new AITurn(playersList.get(0), gameBoard, gameActions, 0);
+    private final AITurn aiTurn = new AITurn(playersList.get(0), gameBoard, gameActions);
 
     public ArrayList<Player> makePlayerList() {
         ArrayList<Player> playersList = new ArrayList<>();

@@ -112,12 +112,10 @@ public class GameBoard {
 
     public Territory[] getFriendlyTerritoryList(Territory territory, String ruler) {
         Territory[] arr;
-
-
         // Used to handle a territory not having any friendly adjacent territories
         try {
             ArrayList<Territory> array = new ArrayList<>(territory.getAdjacentTerritories());
-            array.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(territory));
+            array.removeIf(e -> !e.getRuler().equals(ruler));
 
             for (int i = 0; i < array.size(); i++) {
                 ArrayList<Territory> list = new ArrayList<>(array.get(i).getAdjacentTerritories());
@@ -125,6 +123,9 @@ public class GameBoard {
                 array.addAll(list);
                 array.sort(Comparator.comparing(Territory::getName));
             }
+
+            array.remove(territory);
+
             arr = new Territory[array.size()];
             arr = array.toArray(arr);
         } catch (Exception e) {

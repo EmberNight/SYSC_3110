@@ -241,7 +241,7 @@ public class GameActions {
         getGivePlayerArmies();
         actionView.passUpdate();
         if (activePlayer.isAI()) {
-            AITurn AI = new AITurn(activePlayer, gameBoard, this, 0); //Need to calculate reinforcements for AI player; 0 as placeholder
+            AITurn AI = new AITurn(activePlayer, gameBoard, this); //Need to calculate reinforcements for AI player; 0 as placeholder
             AI.startTurn();
         }
     }

@@ -30,7 +30,7 @@ public class Risk extends JFrame implements RiskView {
     public Risk(String label) {
         super(label);
 
-        currentPhase = 0;
+        currentPhase = -1; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
 
@@ -111,21 +111,18 @@ public class Risk extends JFrame implements RiskView {
 
         switch (currentPhase) {
             case 0:
-                allocateTroopPhase();
+                startAttackPhase();
                 currentPhase = 1;
                 break;
             case 1:
-                startAttackPhase();
+                startMovementPhase();
                 currentPhase = 2;
                 break;
             case 2:
-                startMovementPhase();
-                currentPhase = 3;
-                break;
+                gameActions.changeTurns(); // Without the break it will immediately go to default after.
             default:
-                gameActions.changeTurns();
+                allocateTroopPhase();
                 currentPhase = 0;
-                break;
         }
     }
 
@@ -388,8 +385,8 @@ public class Risk extends JFrame implements RiskView {
                 "It is now " + gameActions.getActivePlayer() + " turn.",
                 "New Turn!",
                 JOptionPane.INFORMATION_MESSAGE);
-        currentPhase = 0;
-        updatePhase();
+        currentPhase = -1;
+        updateAttackerTerritories();
     }
 
     /**

@@ -35,7 +35,6 @@ public class AITurn {
     private final GameBoard gameBoard;
     private final GameActions gameActions;
     private ArrayList<Territory> safeTerritories;
-    private int reinforcements;
 
     /**
      * Constructor for AITurn objects
@@ -43,13 +42,11 @@ public class AITurn {
      * @param player         The AI Player
      * @param gameBoard      The current GameBoard
      * @param gameActions    The current GameActions
-     * @param reinforcements The amount of reinforcements that can be placed by the AI
      */
-    public AITurn(Player player, GameBoard gameBoard, GameActions gameActions, int reinforcements) {
+    public AITurn(Player player, GameBoard gameBoard, GameActions gameActions) {
         this.player = player;
         this.gameBoard = gameBoard;
         this.gameActions = gameActions;
-        this.reinforcements = reinforcements;
         safeTerritories = new ArrayList<>();
     }
 
@@ -69,12 +66,12 @@ public class AITurn {
     private void reinforceTroops() {
         safeTerritories = determineSafeTerritories();
         for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) {
-            if (reinforcements == 0) break;
+            if (player.getArmies() == 0) break;
             if (!safeTerritories.contains(t)) {
                 Random r = new Random();
-                int armies = r.nextInt(reinforcements);
+                int armies = r.nextInt(player.getArmies());
                 t.addArmy(armies);
-                reinforcements -= armies;
+                player.removeArmies(armies);
             }
         }
     }
