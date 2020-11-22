@@ -83,8 +83,6 @@ public class Territory {
         adjacentTerritories.put(key.toLowerCase(), territory);
     }
 
-
-
     /**
      * Sets the ruler of the territory to the given Player
      * @param newRuler The new ruler of the territory
