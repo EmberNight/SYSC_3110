@@ -10,6 +10,12 @@ import java.util.ArrayList;
  * @author Emmitt Luhning
  */
 public class Risk extends JFrame implements RiskView {
+    private static final int  ALLOCATION_PHASE = -1;
+    private static final int  ATTACK_PHASE = 0;
+    private static final int  MOVEMENT_PHASE = 1;
+    private static final int  CHANGE_TURN_PHASE = 2;
+
+
     private final GameBoard gameBoard;
     private final GameActions gameActions;
 
@@ -110,19 +116,19 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
 
         switch (currentPhase) {
-            case 0:
+            case ATTACK_PHASE:
                 startAttackPhase();
-                currentPhase = 1;
+                currentPhase = MOVEMENT_PHASE;
                 break;
-            case 1:
+            case MOVEMENT_PHASE:
                 startMovementPhase();
-                currentPhase = 2;
+                currentPhase = CHANGE_TURN_PHASE;
                 break;
-            case 2:
+            case CHANGE_TURN_PHASE:
                 gameActions.changeTurns(); // Without the break it will immediately go to default after.
             default:
                 allocateTroopPhase();
-                currentPhase = 0;
+                currentPhase = ATTACK_PHASE;
         }
     }
 
@@ -209,7 +215,7 @@ public class Risk extends JFrame implements RiskView {
      * Updates the defender and friendly territory lists.
      */
     private void updateTerritories() {
-        if (currentPhase == 3) {
+        if (currentPhase == MOVEMENT_PHASE + 1) {
             adjacentTerritories.setListData(gameBoard.getFriendlyTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
         } else {
             adjacentTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
