@@ -14,7 +14,7 @@ public class Risk extends JFrame implements RiskView {
     private final GameActions gameActions;
 
     private JMenuBar menuBar;
-    private JMenuItem quit, pass, nextPhase;
+    private JMenuItem quit, nextPhase;
     private JLabel titleAction;
     private JList<Territory> attackerTerritories, adjacentTerritories;
     private JScrollPane attackerScroller, adjacentScroller, statusScroller;
@@ -25,13 +25,12 @@ public class Risk extends JFrame implements RiskView {
     private Territory adjacentTerritory;
 
 
-
     private int currentPhase;
 
     public Risk(String label) {
         super(label);
 
-        currentPhase = 0;
+        currentPhase = -1; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
 
@@ -44,9 +43,9 @@ public class Risk extends JFrame implements RiskView {
         createStatusArea();
         createLists();
         assignFunctions();
-        buildFrame();
-
         updateStatusArea();
+
+        buildFrame();
         beginGame();
     }
 
@@ -57,9 +56,7 @@ public class Risk extends JFrame implements RiskView {
         attackerTerritories.addListSelectionListener(e -> updateTerritories());
         adjacentTerritories.addListSelectionListener(e -> updateAdjacentTerritory());
         quit.addActionListener(e -> System.exit(0));
-        pass.addActionListener(e -> gameActions.pass());
         nextPhase.addActionListener(e -> updatePhase());
-        button.addActionListener(e -> updatePhase());
     }
 
     private void commitArmies() {
@@ -79,31 +76,31 @@ public class Risk extends JFrame implements RiskView {
         gameActions.commitArmies(attackerTerritory.getName(), adjacentTerritory.getName(), numArmies);
     }
 
-    private void addArmies(){
-
+    private void addArmies() {
         if (attackerTerritory == null) {
             JOptionPane.showMessageDialog(this, "Must select the territory you want to add to", "Addition Cancelled", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
         int numArmies;
         try {
-            numArmies = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number of units to add. You have " + gameActions.getCurrentAddableArmies() + " armies to add.", "Add Armies", JOptionPane.INFORMATION_MESSAGE));
+            numArmies = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number of units to add. You have " + gameActions.getCurrentPlayersArmies() + " armies to add.", "Add Armies", JOptionPane.INFORMATION_MESSAGE));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Addition Cancelled", "Bad input.", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         gameActions.addArmies(attackerTerritory.getName(), numArmies);
-        if (gameActions.getCurrentAddableArmies() == 1) {
-            titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " army left to add)");
-        }
-        else{
-            titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " armies left to add)");
+        if (gameActions.getCurrentPlayersArmies() > 0) {
+            titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentPlayersArmies() + " Remaining)");
+        } else {
+            updatePhase();
         }
     }
 
-    public void beginGame(){
-        JOptionPane.showMessageDialog(this, "Press the Start Game button at the bottom left to begin", "The game is about to begin!", JOptionPane.INFORMATION_MESSAGE);
+    public void beginGame() {
+        updateAttackerTerritories();
+        JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + "'s Turn", "Starting Game", JOptionPane.INFORMATION_MESSAGE);
+        updatePhase();
     }
 
     /**
@@ -113,30 +110,32 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
 
         switch (currentPhase) {
-
             case 0:
-                allocateTroopPhase();
-                currentPhase = 1;
-                return;
-
-            case 1:
                 startAttackPhase();
-                currentPhase = 2;
-                return;
-
-            case 2:
+                currentPhase = 1;
+                break;
+            case 1:
                 startMovementPhase();
+                currentPhase = 2;
+                break;
+            case 2:
+                gameActions.changeTurns(); // Without the break it will immediately go to default after.
+            default:
+                allocateTroopPhase();
                 currentPhase = 0;
-                gameActions.changeTurns();
         }
     }
 
-    private void allocateTroopPhase(){
+    /**
+     * Notifies the player that it is now the allocation phase.
+     * Sets up the gui for the allocation phase.
+     */
+    private void allocateTroopPhase() {
         JOptionPane.showMessageDialog(this,
-                "The army allocation phase has started, you have " + gameActions.getStartAddableArmies() + " armies to add",
+                "The army allocation phase has started, you have " + gameActions.getCurrentPlayersArmies() + " armies to add",
                 "Add Troops!",
                 JOptionPane.INFORMATION_MESSAGE);
-        titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " armies left to add)");
+        titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentPlayersArmies() + " Remaining)");
         button.setText("Add Armies");
 
         if (button.getActionListeners().length != 0) {
@@ -145,6 +144,10 @@ public class Risk extends JFrame implements RiskView {
         button.addActionListener(e -> addArmies());
     }
 
+    /**
+     * Notifies the player that it is now the movement phase.
+     * Sets up the gui for the movement phase.
+     */
     private void startMovementPhase() {
         JOptionPane.showMessageDialog(this,
                 "The army movement phase has started",
@@ -159,6 +162,10 @@ public class Risk extends JFrame implements RiskView {
         button.addActionListener(e -> commitArmies());
     }
 
+    /**
+     * Notifies the player that it is now the attack phase.
+     * Sets up the gui for the attack phase.
+     */
     private void startAttackPhase() {
         JOptionPane.showMessageDialog(this,
                 "The attack phase has started",
@@ -183,38 +190,12 @@ public class Risk extends JFrame implements RiskView {
             return;
         }
 
-        int attackDice = 0;
-        while (attackDice > 3 || attackDice < 1) {
-            try {
-                attackDice = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number Dice (1-3) 0 To stop attack", "Attacker", JOptionPane.INFORMATION_MESSAGE));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Attack Cancelled", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            if (attackDice == 0) {
-                JOptionPane.showMessageDialog(this, "Attack Cancelled", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            } else if (attackDice > attackerTerritory.getArmy() - 1) {
-                JOptionPane.showMessageDialog(this, "The attacker does not have enough armies for " + attackDice + "dice", "Troop Warning", JOptionPane.INFORMATION_MESSAGE);
-                attackDice = 0;
-            }
+        if (attackerTerritory.getArmy() == 1) {
+            JOptionPane.showMessageDialog(this, "Attacker does not have enough units", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
 
-        int defendDice = 0;
-        while (defendDice > 2 || defendDice < 1) {
-            try {
-                defendDice = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number Dice (1-2)", "Defender", JOptionPane.INFORMATION_MESSAGE));
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(this, "Defender input bad value.", "Attack Cancelled", JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            if (defendDice > adjacentTerritory.getArmy()) {
-                JOptionPane.showMessageDialog(this, "The defender does not have enough armies for " + attackDice + "dice", "Troop Warning", JOptionPane.INFORMATION_MESSAGE);
-                defendDice = 0;
-            }
-        }
-
-        gameActions.attack(attackerTerritory.getName(), adjacentTerritory.getName(), attackDice, defendDice);
+        gameActions.attack(attackerTerritory.getName(), adjacentTerritory.getName(), attackerTerritory.getArmy() - 1, adjacentTerritory.getArmy());
     }
 
     /**
@@ -228,10 +209,10 @@ public class Risk extends JFrame implements RiskView {
      * Updates the defender and friendly territory lists.
      */
     private void updateTerritories() {
-        if (currentPhase == 2) {
-            adjacentTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
-        } else {
+        if (currentPhase == 3) {
             adjacentTerritories.setListData(gameBoard.getFriendlyTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
+        } else {
+            adjacentTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
         }
 
         attackerTerritory = attackerTerritories.getSelectedValue();
@@ -287,11 +268,11 @@ public class Risk extends JFrame implements RiskView {
         ArrayList<Player> playersList = new ArrayList<>();
 
         int realPlayers = 0;
-        for (int i = 1; i <= numOfPlayers; i++){
+        for (int i = 1; i <= numOfPlayers; i++) {
             playersList.add(new Player("Player " + i, false));
             realPlayers = i;
         }
-        for (int i = realPlayers + 1; i <= realPlayers + numOfAI; i++){
+        for (int i = realPlayers + 1; i <= realPlayers + numOfAI; i++) {
             playersList.add(new Player("Player " + i, true));
         }
 
@@ -354,7 +335,7 @@ public class Risk extends JFrame implements RiskView {
     }
 
     private void createButtons() {
-        button = new JButton("Start Game");
+        button = new JButton(" ");
     }
 
     /**
@@ -365,13 +346,11 @@ public class Risk extends JFrame implements RiskView {
 
         JMenu fileMenu = new JMenu("File");
         quit = new JMenuItem("Quit");
-        pass = new JMenuItem("Pass");
         nextPhase = new JMenuItem("Next Phase");
 
         fileMenu.add(quit);
 
         menuBar.add(fileMenu);
-        menuBar.add(pass);
         menuBar.add(nextPhase);
     }
 
@@ -406,8 +385,8 @@ public class Risk extends JFrame implements RiskView {
                 "It is now " + gameActions.getActivePlayer() + " turn.",
                 "New Turn!",
                 JOptionPane.INFORMATION_MESSAGE);
-        currentPhase = 0;
-        updatePhase();
+        currentPhase = -1;
+        updateAttackerTerritories();
     }
 
     /**
@@ -436,9 +415,7 @@ public class Risk extends JFrame implements RiskView {
             updateAttackerTerritories();
             updateStatus();
         } else {
-            JOptionPane.showMessageDialog(this, "Try adding less units. You have " + gameActions.getCurrentAddableArmies() + " armies left to add", "Add Army", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Try adding less units. You have " + gameActions.getCurrentPlayersArmies() + " armies left to add", "Add Army", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-
 }
