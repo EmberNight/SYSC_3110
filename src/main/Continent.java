@@ -76,7 +76,7 @@ public class Continent {
      * @return A string containing a textual representation of the Continent to the terminal
      */
     public String getStatus(){
-        StringBuilder s = new StringBuilder("");
+        StringBuilder s = new StringBuilder();
         s.append("Continent: ").append(getName()).append("    Ruler: ");
         if (this.getRuler().equals("")) s.append("no current ruler\n");
         else s.append(this.getRuler()).append("\n");
@@ -85,4 +85,5 @@ public class Continent {
         }
         return s.toString();
     }
+
 }

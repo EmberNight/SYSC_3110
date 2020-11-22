@@ -66,5 +66,9 @@ public class ActionsTest implements RiskView{
     public void movementUpdate(RiskEvent ae) {
 
     }
+    @Override
+    public void addArmyUpdate(RiskEvent ae) {
+
+    }
 }
 

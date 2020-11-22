@@ -23,6 +23,8 @@ public class Risk extends JFrame implements RiskView {
     private Territory attackerTerritory;
     private Territory adjacentTerritory;
 
+
+
     private int currentPhase;
 
     public Risk(String label) {
@@ -44,6 +46,7 @@ public class Risk extends JFrame implements RiskView {
         buildFrame();
 
         updateStatusArea();
+        beginGame();
     }
 
     /**
@@ -55,6 +58,7 @@ public class Risk extends JFrame implements RiskView {
         quit.addActionListener(e -> System.exit(0));
         pass.addActionListener(e -> gameActions.pass());
         nextPhase.addActionListener(e -> updatePhase());
+        button.addActionListener(e -> updatePhase());
     }
 
     private void commitArmies() {
@@ -74,6 +78,33 @@ public class Risk extends JFrame implements RiskView {
         gameActions.commitArmies(attackerTerritory.getName(), adjacentTerritory.getName(), numArmies);
     }
 
+    private void addArmies(){
+
+        if (attackerTerritory == null) {
+            JOptionPane.showMessageDialog(this, "Must select the territory you want to add to", "Addition Cancelled", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        int numArmies;
+        try {
+            numArmies = Integer.parseInt(JOptionPane.showInputDialog(this, "Enter Number of units to add. You have " + gameActions.getCurrentAddableArmies() + " armies to add.", "Add Armies", JOptionPane.INFORMATION_MESSAGE));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Addition Cancelled", "Bad input.", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        gameActions.addArmies(attackerTerritory.getName(), numArmies);
+        if (gameActions.getCurrentAddableArmies() == 1) {
+            titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " army left to add)");
+        }
+        else{
+            titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " armies left to add)");
+        }
+    }
+
+    public void beginGame(){
+        JOptionPane.showMessageDialog(this, "Press the Start Game button at the bottom left to begin", "The game is about to begin!", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     /**
      * Advances the state of the game.
      */
@@ -81,26 +112,44 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
 
         switch (currentPhase) {
+
             case 0:
-                startAttackPhase();
+                allocateTroopPhase();
                 currentPhase = 1;
                 return;
+
             case 1:
-                startMovementPhase();
+                startAttackPhase();
                 currentPhase = 2;
                 return;
-            default:
-                gameActions.pass();
+
+            case 2:
+                startMovementPhase();
                 currentPhase = 0;
+                gameActions.changeTurns();
         }
+    }
+
+    private void allocateTroopPhase(){
+        JOptionPane.showMessageDialog(this,
+                "The army allocation phase has started, you have " + gameActions.getStartAddableArmies() + " armies to add",
+                "Add Troops!",
+                JOptionPane.INFORMATION_MESSAGE);
+        titleAction.setText("Phase: Add Armies (" + gameActions.getCurrentAddableArmies() + " armies left to add)");
+        button.setText("Add Armies");
+
+        if (button.getActionListeners().length != 0) {
+            button.removeActionListener(button.getActionListeners()[0]);
+        }
+        button.addActionListener(e -> addArmies());
     }
 
     private void startMovementPhase() {
         JOptionPane.showMessageDialog(this,
-                "The amy movement phase has started",
+                "The army movement phase has started",
                 "Commit Troops!",
                 JOptionPane.INFORMATION_MESSAGE);
-        titleAction.setText("Move Armies");
+        titleAction.setText("Phase: Move Armies");
         button.setText("Move Armies");
 
         if (button.getActionListeners().length != 0) {
@@ -114,7 +163,7 @@ public class Risk extends JFrame implements RiskView {
                 "The attack phase has started",
                 "Attack!",
                 JOptionPane.INFORMATION_MESSAGE);
-        titleAction.setText("Attack");
+        titleAction.setText("Phase: Attack");
         button.setText("Attack");
 
         if (button.getActionListeners().length != 0) {
@@ -178,7 +227,7 @@ public class Risk extends JFrame implements RiskView {
      * Updates the defender and friendly territory lists.
      */
     private void updateTerritories() {
-        if (currentPhase == 1) {
+        if (currentPhase == 2) {
             adjacentTerritories.setListData(gameBoard.getAttackableTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
         } else {
             adjacentTerritories.setListData(gameBoard.getFriendlyTerritoryList(attackerTerritories.getSelectedValue(), gameActions.getActivePlayer()));
@@ -244,7 +293,7 @@ public class Risk extends JFrame implements RiskView {
         statusArea.setLayout(new BorderLayout());
 
         JLabel titleStatus = new JLabel("Game Status");
-        titleAction = new JLabel();
+        titleAction = new JLabel("Phase:");
 
         actionArea.add(titleAction, BorderLayout.PAGE_START);
         actionArea.add(attackerScroller, BorderLayout.WEST);
@@ -289,7 +338,7 @@ public class Risk extends JFrame implements RiskView {
     }
 
     private void createButtons() {
-        button = new JButton("Attack");
+        button = new JButton("Start Game");
     }
 
     /**
@@ -341,6 +390,8 @@ public class Risk extends JFrame implements RiskView {
                 "It is now " + gameActions.getActivePlayer() + " turn.",
                 "New Turn!",
                 JOptionPane.INFORMATION_MESSAGE);
+        currentPhase = 0;
+        updatePhase();
     }
 
     /**
@@ -356,8 +407,22 @@ public class Risk extends JFrame implements RiskView {
         if (ae.getEventID() == 0) {
             JOptionPane.showMessageDialog(this, "Successful moved armies", "Movement", JOptionPane.INFORMATION_MESSAGE);
             updateAttackerTerritories();
+            updateStatus();
         } else {
             JOptionPane.showMessageDialog(this, "Not enough units", "Movement", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+
+    @Override
+    public void addArmyUpdate(RiskEvent ae) {
+        if (ae.getEventID() == 0) {
+            JOptionPane.showMessageDialog(this, "Successfully added armies", "Add Army", JOptionPane.INFORMATION_MESSAGE);
+            updateAttackerTerritories();
+            updateStatus();
+        } else {
+            JOptionPane.showMessageDialog(this, "Try adding less units. You have " + gameActions.getCurrentAddableArmies() + " armies left to add", "Add Army", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+
 }

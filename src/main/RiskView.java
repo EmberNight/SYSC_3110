@@ -27,4 +27,8 @@ public interface RiskView {
      * @param ae Event that occurred
      */
     void movementUpdate(RiskEvent ae);
+
+    void addArmyUpdate(RiskEvent ae);
+
+
 }
