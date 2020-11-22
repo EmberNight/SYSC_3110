@@ -7,6 +7,7 @@ import java.util.ArrayList;
  *
  * @author Tanner trautrim
  * @author Jordan Peterkin
+ * @author Emmitt Luhning
  */
 public class Risk extends JFrame implements RiskView {
     private final GameBoard gameBoard;
@@ -148,8 +149,8 @@ public class Risk extends JFrame implements RiskView {
                 System.exit(-1);
             }
             try {
-                numOfPlayers = Integer.parseInt(JOptionPane.showInputDialog(this,
-                        "Enter Number Of Players (max " + (6 - numOfPlayers) + ")",
+                numOfAI = Integer.parseInt(JOptionPane.showInputDialog(this,
+                        "Enter Number Of AI Players (max " + (6 - numOfPlayers) + ")",
                         "Start Game",
                         JOptionPane.INFORMATION_MESSAGE));
             } catch (Exception e) {
@@ -164,10 +165,11 @@ public class Risk extends JFrame implements RiskView {
             playersList.add(new Player("Player " + i, false));
             realPlayers = i;
         }
-        for (int i = realPlayers; i <= realPlayers + numOfAI; i++){
+        for (int i = realPlayers + 1; i <= realPlayers + numOfAI; i++){
             playersList.add(new Player("Player " + i, true));
 
         }
+
         return playersList;
     }
 

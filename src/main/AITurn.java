@@ -58,6 +58,7 @@ public class AITurn {
         reinforceTroops();
         attack();
         fortifyTroops();
+        pass();
     }
 
     /**
@@ -65,7 +66,6 @@ public class AITurn {
      */
     private void reinforceTroops() {
         safeTerritories = determineSafeTerritories();
-
         for (Territory t : gameBoard.getRulerTerritoryList(player.getName())){
             if (reinforcements == 0) break;
             if (!safeTerritories.contains(t)){
@@ -82,6 +82,7 @@ public class AITurn {
      * AI Player will always attack with the maximum possible dice, up to 2, and the defender will defend with the maximum possible dice, up to 2.
      */
     private void attack() {
+
         int attackerDice, defenderDice;
 
         for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(player.getName())){
@@ -189,5 +190,9 @@ public class AITurn {
         }
 
         return false;
+    }
+    private void pass(){
+
+        gameActions.pass();
     }
 }
