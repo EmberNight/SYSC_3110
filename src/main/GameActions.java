@@ -13,6 +13,7 @@ public class GameActions {
     private Player activePlayer;
     private int activePlayerIndex;
     private final RiskView actionView;
+    private int addableArmies;
 
     /**
      * Constructor for Actions objects
@@ -234,6 +235,12 @@ public class GameActions {
      * Passes the turn on from the current player to the next
      */
     public void pass() {
+        changeTurns();
+        actionView.passUpdate();
+    }
+
+
+    public void changeTurns(){
         activePlayerIndex++;
 
         if (activePlayerIndex >= players.size()) {
@@ -241,8 +248,8 @@ public class GameActions {
         }
 
         activePlayer = players.get(activePlayerIndex);
-        actionView.passUpdate();
     }
+
 
     public String getActivePlayer() {
         return activePlayer.getName();
@@ -263,4 +270,37 @@ public class GameActions {
             actionView.movementUpdate(new RiskEvent(1, 0,0,false, false));
         }
     }
+
+    public int getStartAddableArmies(){
+        String player = this.getActivePlayer();
+        int continentBonus = 0;
+        if (gameBoard.getRulerContinentList(player).length != 0) {
+            for (int i = 0; i < gameBoard.getRulerContinentList(player).length; i++) {
+                continentBonus += gameBoard.getRulerContinentList(player)[i].getValue();
+            }
+
+        }
+        setAddableArmies((gameBoard.getRulerTerritoryList(player).length / 3) + continentBonus);
+        return addableArmies;
+    }
+
+    public int getCurrentAddableArmies(){
+        return addableArmies;
+    }
+
+    public void setAddableArmies(int addableArmies) {
+        this.addableArmies = addableArmies;
+    }
+
+    public void addArmies(String addToTerritory, int numArmies){
+        if (addableArmies >= numArmies){
+            setAddableArmies(addableArmies - numArmies);
+            gameBoard.addTerritoryArmy(addToTerritory, numArmies);
+            actionView.addArmyUpdate(new RiskEvent(0,0,0,false,false));
+        }
+        else {
+            actionView.addArmyUpdate(new RiskEvent(1,0,0,false,false));
+        }
+    }
+
 }

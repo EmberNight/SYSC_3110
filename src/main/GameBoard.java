@@ -66,6 +66,22 @@ public class GameBoard {
         return arr;
     }
 
+    public Continent[] getRulerContinentList(String ruler){
+        Continent[] arr;
+
+        // This ruler doesnt exist or has no continents
+        try {
+            ArrayList<Continent> list = new ArrayList<>(continentMap.values());
+            list.removeIf(continent -> !continent.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Continent::getName));
+            arr = new Continent[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Continent[0];
+        }
+        return arr;
+    }
+
     /**
      * Returns the List of Attackable Territories
      * @return Territory List
@@ -629,19 +645,14 @@ public class GameBoard {
             Continent continent = getContinent(c);
             ArrayList<Territory> territories = continent.getTerritories();
             String ruler = territories.get(0).getRuler();
-            int rulerCount = 0;
 
             for (Territory t : territories) {
-                if (t.getRuler().equals(ruler)) {
-                    rulerCount++;
-                } else {
-                    if (rulerCount > 0) {
-                        break;
-                    } else {
-                        ruler = t.getRuler();
-                    }
+                if (!t.getRuler().equals(ruler)) {
+                    ruler = "No One";
+                    break;
                 }
             }
+            continent.setRuler(ruler);
         }
     }
 
