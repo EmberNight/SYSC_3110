@@ -3,9 +3,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 /**
- * @author Ashwin Stoparczyk
- * <p>
  * Test suite for GameActions
+ *
+ * @author Ashwin Stoparczyk
  */
 public class ActionsTest implements RiskView {
 

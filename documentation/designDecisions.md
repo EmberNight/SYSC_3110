@@ -30,6 +30,8 @@ RiskView is used to update the GUI state after a GameAction occurs
 
 RiskEven is a storage class to handle passing events.
 
+AITurn is used to perform the functions of the AI.
+
 InitializeGame is used to create the game.
 
 ### Reasoning

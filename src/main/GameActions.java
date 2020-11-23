@@ -30,7 +30,7 @@ public class GameActions {
         initialArmyAllocation();
         initialArmyPlacement();
         gameBoard.initializeContinentRulers();
-        getGivePlayerArmies();
+        giveCurrentPlayerArmies();
     }
 
     /**
@@ -156,7 +156,7 @@ public class GameActions {
             removeEliminatedPlayer(defender);
         }
 
-        actionView.attackUpdate(new RiskEvent(RiskEvent.ATTACK, attackerLosses, defenderLosses, newContinentRuler, newTerritoryRuler));
+        actionView.attackUpdate(new RiskEvent(RiskEvent.ATTACK, attackerLosses, defenderLosses, newContinentRuler, newTerritoryRuler, players.size()));
         actionView.updateStatus();
     }
 
@@ -222,7 +222,6 @@ public class GameActions {
         if (gameBoard.isPlayerEliminated(player)) {
             for (int i = 0; i < players.size(); i++) {
                 if (players.get(i).getName().equals(player)) {
-                    System.out.println(player + " was eliminated from the game.");
                     players.remove(i);
                     break;
                 }
@@ -238,10 +237,10 @@ public class GameActions {
         }
 
         activePlayer = players.get(activePlayerIndex);
-        getGivePlayerArmies();
+        giveCurrentPlayerArmies();
         actionView.passUpdate();
         if (activePlayer.isAI()) {
-            AITurn AI = new AITurn(activePlayer, gameBoard, this); //Need to calculate reinforcements for AI player; 0 as placeholder
+            AITurn AI = new AITurn(gameBoard, this); //Need to calculate reinforcements for AI player; 0 as placeholder
             AI.startTurn();
         }
     }
@@ -261,16 +260,16 @@ public class GameActions {
         if (gameBoard.getArmy(territoryOrigin) > numArmies) {
             gameBoard.removeTerritoryArmy(territoryOrigin, numArmies);
             gameBoard.addTerritoryArmy(territoryDestination, numArmies);
-            actionView.movementUpdate(new RiskEvent(0, 0, 0, false, false));
+            actionView.movementUpdate(new RiskEvent(0, 0, 0, false, false, players.size()));
         } else {
-            actionView.movementUpdate(new RiskEvent(1, 0, 0, false, false));
+            actionView.movementUpdate(new RiskEvent(1, 0, 0, false, false, players.size()));
         }
     }
 
     /**
      * Current player is given armies based on the board presence.
      */
-    private void getGivePlayerArmies() {
+    private void giveCurrentPlayerArmies() {
         String player = activePlayer.getName();
         int continentArmies = 0;
         if (gameBoard.getRulerContinentList(player).length != 0) {
@@ -285,6 +284,10 @@ public class GameActions {
         return activePlayer.getArmies();
     }
 
+    public void removeCurrentPlayersArmies(int numArmies) {
+        activePlayer.removeArmies(numArmies);
+    }
+
     /**
      * Adds armies to a territory
      */
@@ -292,9 +295,9 @@ public class GameActions {
         int armies = activePlayer.getArmies();
         if (armies >= numArmies) {
             gameBoard.addTerritoryArmy(territory, activePlayer.removeArmies(numArmies));
-            actionView.addArmyUpdate(new RiskEvent(0, 0, 0, false, false));
+            actionView.addArmyUpdate(new RiskEvent(0, 0, 0, false, false, players.size()));
         } else {
-            actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false));
+            actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false, players.size()));
         }
     }
 }
