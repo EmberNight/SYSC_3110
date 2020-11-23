@@ -165,7 +165,7 @@ public class GameActions {
      *
      * @param numAttackDie The amount of dice the attacker is fighting with
      * @param numDefendDie The amount of dice the defender is fighting with
-     * @return The outcome of the battle: < 0 for defensive victory, > 0 for offensive victory and 0 for tie
+     * @return The outcome of the battle: less than 0 for defensive victory, greater than 0 for offensive victory and 0 for tie
      */
     private ArrayList<Integer> rollDie(int numAttackDie, int numDefendDie) {
         ArrayList<Integer> result = new ArrayList<>();
