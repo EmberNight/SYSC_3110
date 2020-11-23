@@ -36,7 +36,7 @@ public class Risk extends JFrame implements RiskView {
     public Risk(String label) {
         super(label);
 
-        currentPhase = -1; // So allocation happen right away
+        currentPhase = ALLOCATION_PHASE; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
 
@@ -379,6 +379,11 @@ public class Risk extends JFrame implements RiskView {
 
         if (ae.isNewContinentRuler()) {
             outcome += " and the Continent";
+        }
+
+        if (ae.getRemainingPlayers() == 1) {
+            JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + " won the game!", "Winner", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
         }
 
         JOptionPane.showMessageDialog(this, outcome, "Outcome", JOptionPane.INFORMATION_MESSAGE);

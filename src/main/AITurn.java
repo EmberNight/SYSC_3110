@@ -31,7 +31,6 @@ public class AITurn {
         }
     }
 
-    private final Player player;
     private final GameBoard gameBoard;
     private final GameActions gameActions;
     private ArrayList<Territory> safeTerritories;
@@ -39,12 +38,10 @@ public class AITurn {
     /**
      * Constructor for AITurn objects
      *
-     * @param player         The AI Player
      * @param gameBoard      The current GameBoard
      * @param gameActions    The current GameActions
      */
-    public AITurn(Player player, GameBoard gameBoard, GameActions gameActions) {
-        this.player = player;
+    public AITurn(GameBoard gameBoard, GameActions gameActions) {
         this.gameBoard = gameBoard;
         this.gameActions = gameActions;
         safeTerritories = new ArrayList<>();
@@ -65,13 +62,13 @@ public class AITurn {
      */
     private void reinforceTroops() {
         safeTerritories = determineSafeTerritories();
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) {
-            if (player.getArmies() == 0) break;
+        for (Territory t : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) {
+            if (gameActions.getCurrentPlayersArmies() == 0) break;
             if (!safeTerritories.contains(t)) {
                 Random r = new Random();
-                int armies = r.nextInt(player.getArmies());
+                int armies = r.nextInt(gameActions.getCurrentPlayersArmies());
                 t.addArmy(armies);
-                player.removeArmies(armies);
+                gameActions.removeCurrentPlayersArmies(armies);
             }
         }
     }
@@ -84,12 +81,12 @@ public class AITurn {
 
         int attackerDice, defenderDice;
 
-        for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(player.getName())) {
-            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, player.getName())) {
+        for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) {
+            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, gameActions.getActivePlayer())) {
                 attackerDice = Math.min(attackerTerritory.getArmy() - 1, 2);
                 defenderDice = Math.min(defenderTerritory.getArmy(), 2);
 
-                while (expectedOutcome(attackerDice, defenderDice) && !defenderTerritory.getRuler().equals(player.getName())) { //Attack same Territory until undesirable outcome or Territory is conquered
+                while (expectedOutcome(attackerDice, defenderDice) && !defenderTerritory.getRuler().equals(gameActions.getActivePlayer())) { //Attack same Territory until undesirable outcome or Territory is conquered
                     gameActions.attack(attackerTerritory.getName(), defenderTerritory.getName(), attackerDice, defenderDice);
 
                     attackerDice = Math.min(attackerTerritory.getArmy() - 1, 2);
@@ -115,7 +112,7 @@ public class AITurn {
             }
         }
 
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) { //If there is an adjacent safe Territory, send all possible reinforcements from that Territory to the weak Territory
+        for (Territory t : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) { //If there is an adjacent safe Territory, send all possible reinforcements from that Territory to the weak Territory
             if (isWeakTerritory(t)) {
                 for (Territory st : safeTerritories) {
                     if (t.getAdjacentTerritories().contains(st)) {
@@ -166,10 +163,10 @@ public class AITurn {
         ArrayList<Territory> safeTerritories = new ArrayList<>();
         boolean safe;
 
-        for (Territory t : gameBoard.getRulerTerritoryList(player.getName())) {
+        for (Territory t : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) {
             safe = true;
             for (Territory at : t.getAdjacentTerritories()) {
-                if (!at.getRuler().equals(player.getName())) {
+                if (!at.getRuler().equals(gameActions.getActivePlayer())) {
                     safe = false;
                     break;
                 }
@@ -188,7 +185,7 @@ public class AITurn {
      * @return true if the Territory is "weak", false if the Territory is not "weak"
      */
     private boolean isWeakTerritory(Territory t) {
-        for (Territory at : gameBoard.getAttackableTerritoryList(t, player.getName())) {
+        for (Territory at : gameBoard.getAttackableTerritoryList(t, gameActions.getActivePlayer())) {
             if (at.getArmy() > t.getArmy()) return true;
         }
 

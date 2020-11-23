@@ -42,10 +42,10 @@ Implement AI player, troop placement phase and troop movement phase
 ## Authors and work contributed
 
 * Ashwin Stoparczyk - [stopash](https://github.com/stopash)
-  - added toString() method within Territory, changed status methods in Continent and GameBoard, created RiskEvent and RiskView, and test classes
+  - AI
 * Emmitt Luhning - [Em-kale](https://github.com/Em-kale)
-  - updated GameActions to reflect GUI implementation, removed unnecesary code and implemented GameActions as a model
+  - Testing, GUI updates
 * Jordan Peterkin - [jordanpeterkin](https://github.com/jordanpeterkin)
-  - helped with framework for GUI, readMe, debugging
+  - Allocate Armies, GUI updates
 * Tanner Trautrim - [EmberNight](https://github.com/EmberNight)
-  - framework for GUI, UML and sequeance diagrams, user guide, added functionality to GUI implementation, debugging, edited multiple classes to implement GUI, and test classes
+  - Move Armies, GUI updates, UML
