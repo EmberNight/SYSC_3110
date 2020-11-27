@@ -15,15 +15,32 @@ Author: Tanner Trautrim
 
 ## Modes
 
+### Allocate Armies
+
+1. Select a territory on the left
+2. Click add units
+3. Enter the number of units you want to place
+4. repeat until done
+
 ### Attack
 
 1. Select a territory on the left
 2. Select a territory on the right
 3. Click the attack button
-4. Enter the number of dice for the attack
-5. Enter the number of dice for the defender
-6. View the results
+4. View the results
+5. repeat until done
 
-### Pass
+### Attack
 
-1. Click pass at the top to end your turn
+1. Select a territory on the left
+2. Select a territory on the right
+3. Click the move units button
+4. repeat until done
+
+### Next Phase
+
+1. Click "Next Phase" to switch phases
+2. Phase 1 is allocate armies
+3. Phase 2 is attack
+4. Phase 3 is move armies
+5. Phase 4 is next players turn

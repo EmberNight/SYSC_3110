@@ -1,40 +1,32 @@
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
 /**
- * @author Ashwin Stoparczyk
- * @group 16
- *
  * Test suite for GameActions
+ *
+ * @author Ashwin Stoparczyk
  */
-public class ActionsTest implements RiskView{
+public class ActionsTest implements RiskView {
 
     private final ArrayList<Player> playersList = makePlayerList();
     private final GameBoard gameBoard = new GameBoard(true);
     private final GameActions gameActions = new GameActions(this, playersList, gameBoard);
 
 
-    public ArrayList<Player> makePlayerList(){ //Helper function to instantiate playersList properly
+    public ArrayList<Player> makePlayerList() { //Helper function to instantiate playersList properly
         ArrayList<Player> playersList = new ArrayList<>();
 
-        for (int i = 1; i <= 3; i++){
-            playersList.add(new Player("player " + i));
+        for (int i = 1; i <= 3; i++) {
+            playersList.add(new Player("player " + i, true));
         }
 
         return playersList;
     }
 
     @Test
-    public void testAttack(){ //Visual test, displays the outcome of a randomized attack event
+    public void testAttack() { //Visual test, displays the outcome of a randomized attack event
         gameActions.attack("canada", "united states", 2, 2);
-    }
-
-    @Test
-    public void testPass(){ //Visual test, displays the game cycling through each player's turn then back to the first
-        passUpdate();
-        gameActions.pass();
-        gameActions.pass();
-        gameActions.pass();
     }
 
     @Override
@@ -54,13 +46,24 @@ public class ActionsTest implements RiskView{
     }
 
     @Override
-    public void passUpdate() { System.out.println("It is now " + gameActions.getActivePlayer() + "'s turn.");
+    public void passUpdate() {
+        System.out.println("It is now " + gameActions.getActivePlayer() + "'s turn.");
 
     }
 
     @Override
     public void updateStatus() {
         System.out.println(gameBoard.toString());
+    }
+
+    @Override
+    public void movementUpdate(RiskEvent ae) {
+
+    }
+
+    @Override
+    public void addArmyUpdate(RiskEvent ae) {
+
     }
 }
 

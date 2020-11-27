@@ -1,5 +1,3 @@
-import org.junit.jupiter.api.BeforeEach;
-
 import java.util.*;
 
 /**
@@ -16,7 +14,7 @@ public class GameBoard {
     /**
      * Constructor for GameBoard objects
      */
-    public GameBoard(){
+    public GameBoard() {
         continentMap = new HashMap<>();
         territoryMap = new HashMap<>();
         randomTerritories = new ArrayList<>();
@@ -28,7 +26,7 @@ public class GameBoard {
     /**
      * Constructor for smaller, testable GameBoard objects
      */
-    public GameBoard(Boolean isTest){
+    public GameBoard(Boolean isTest) {
         continentMap = new HashMap<>();
         territoryMap = new HashMap<>();
         randomTerritories = new ArrayList<>();
@@ -36,23 +34,27 @@ public class GameBoard {
         populateTerritoryMap();
         populateUnallocatedTerritories();
     }
+
     /**
      * Returns the Territory specified by a given string
+     *
      * @param territoryName The name of the Territory to be returned
      * @return The Territory specified by the given string
      */
-    public Territory getTerritory(String territoryName){
-        if (territoryMap.get(territoryName) == null){
+    public Territory getTerritory(String territoryName) {
+        if (territoryMap.get(territoryName) == null) {
             return null;
         }
         return territoryMap.get(territoryName);
     }
 
     /**
-     * Returns the List of Territories
-     * @return Territory List
+     * Returns the array of Territories owned by the given Player
+     *
+     * @param ruler The name of the specified Player
+     * @return Territory[] the array of Territories owned by the specified Player
      */
-    public Territory[] getRulerTerritoryList(String ruler){
+    public Territory[] getRulerTerritoryList(String ruler) {
         Territory[] arr;
 
         // This ruler doesnt exist or has no territories
@@ -68,11 +70,30 @@ public class GameBoard {
         return arr;
     }
 
+    public Continent[] getRulerContinentList(String ruler) {
+        Continent[] arr;
+
+        // This ruler doesnt exist or has no continents
+        try {
+            ArrayList<Continent> list = new ArrayList<>(continentMap.values());
+            list.removeIf(continent -> !continent.getRuler().equals(ruler));
+            list.sort(Comparator.comparing(Continent::getName));
+            arr = new Continent[list.size()];
+            arr = list.toArray(arr);
+        } catch (Exception e) {
+            arr = new Continent[0];
+        }
+        return arr;
+    }
+
     /**
-     * Returns the List of Attackable Territories
-     * @return Territory List
+     * Returns an array containing the list of Territories that the given Player can attack from the given Territory
+     *
+     * @param territory The given Territory
+     * @param ruler     The name of the given Player
+     * @return Territory An array containing the list of Territories that the given Player can attack from the given Territory
      */
-    public Territory[] getAttackableTerritoryList(Territory territory, String ruler){
+    public Territory[] getAttackableTerritoryList(Territory territory, String ruler) {
         Territory[] arr;
 
         // Used to handle a territory not having any evil adjacent territories
@@ -89,20 +110,47 @@ public class GameBoard {
         return arr;
     }
 
+    public Territory[] getFriendlyTerritoryList(Territory territory, String ruler) {
+        Territory[] arr;
+        // Used to handle a territory not having any friendly adjacent territories
+        try {
+            ArrayList<Territory> array = new ArrayList<>(territory.getAdjacentTerritories());
+            array.removeIf(e -> !e.getRuler().equals(ruler));
+
+            for (int i = 0; i < array.size(); i++) {
+                ArrayList<Territory> list = new ArrayList<>(array.get(i).getAdjacentTerritories());
+                list.removeIf(e -> !e.getRuler().equals(ruler) || array.contains(e));
+                array.addAll(list);
+                array.sort(Comparator.comparing(Territory::getName));
+            }
+
+            array.remove(territory);
+
+            arr = new Territory[array.size()];
+            arr = array.toArray(arr);
+        } catch (Exception e) {
+            arr = new Territory[0];
+        }
+
+        return arr;
+    }
+
     /**
      * Returns the Continent specified by a given string
+     *
      * @param continentName The name of the Territory to be returned
      * @return The Continent specified by the given string
      */
-    public Continent getContinent(String continentName){
+    public Continent getContinent(String continentName) {
         return continentMap.get(continentName);
     }
 
     /**
      * Returns the next territory to be populated with armies during the initial distribution of armies
+     *
      * @return The name of the next territory to be populated with armies
      */
-    public String getUnallocatedTerritory(){
+    public String getUnallocatedTerritory() {
         String territory = null;
         if (!randomTerritories.isEmpty()) territory = randomTerritories.remove(0);
         return territory;
@@ -110,19 +158,21 @@ public class GameBoard {
 
     /**
      * Returns the strength of the army currently occupying the given territory
+     *
      * @param territoryName The name of the territory to be assessed
      * @return The strength of the army currently occupying the given territory
      */
-    public int getArmy(String territoryName){
+    public int getArmy(String territoryName) {
         return Objects.requireNonNull(getTerritory(territoryName)).getArmy();
     }
 
     /**
      * Returns the Player currently occupying the given territory
+     *
      * @param territoryName The name of the territory to be assessed
      * @return The Player currently occupying the given territory
      */
-    public String getTerritoryRuler(String territoryName){
+    public String getTerritoryRuler(String territoryName) {
         Territory t = getTerritory(territoryName);
         if (t == null) {
             return null;
@@ -133,19 +183,21 @@ public class GameBoard {
 
     /**
      * Sets the given territory's ruler to the given Player
+     *
      * @param territoryName The name of the territory to have its ruler changed
-     * @param ruler The new ruler of the territory
+     * @param ruler         The new ruler of the territory
      */
-    public void setTerritoryRuler(String territoryName , String ruler){
+    public void setTerritoryRuler(String territoryName, String ruler) {
         Objects.requireNonNull(getTerritory(territoryName)).setRuler(ruler);
     }
 
     /**
      * Checks if the ruler of the given Territory's Continent should be the given Player
+     *
      * @param territory The Territory to be assessed
-     * @param ruler The name of the Player who will be determined to be the rightful ruler or not
+     * @param ruler     The name of the Player who will be determined to be the rightful ruler or not
      */
-    public boolean newContinentRuler(String territory, String ruler){
+    public boolean newContinentRuler(String territory, String ruler) {
         Continent continent = continentMap.get(Objects.requireNonNull(getTerritory(territory)).getContinentName());
         ArrayList<Territory> territories = continent.getTerritories();
 
@@ -160,26 +212,28 @@ public class GameBoard {
     }
 
     /**
-     * Sets the the strength of the given territory to a given value
+     * Adds armies to the territory
+     *
      * @param territoryName The name of the territory to have its army strength changed
-     * @param army The new strength of the army
+     * @param army          The new strength of the army
      */
-    public void addTerritoryArmy(String territoryName, int army){
+    public void addTerritoryArmy(String territoryName, int army) {
         Objects.requireNonNull(getTerritory(territoryName)).addArmy(army);
     }
 
     /**
      * Removes all strength of the army occupying the given territory
+     *
      * @param territoryName The name of the territory to have its army strength set to 0
      */
-    public void removeTerritoryArmy(String territoryName, int armies){
+    public void removeTerritoryArmy(String territoryName, int armies) {
         Objects.requireNonNull(getTerritory(territoryName)).removeArmy(armies);
     }
 
     /**
      * Creates a new default board state
      */
-    public void createBoard(){
+    public void createBoard() {
         // create continents
         Continent northAmerica = new Continent("North America", 5);
         Continent southAmerica = new Continent("South America", 2);
@@ -374,7 +428,7 @@ public class GameBoard {
         centralAmerica.setAdjacentTerritory(venezuela, "Venezuela");
 
         // set adjacency for South America Territories
-        venezuela.setAdjacentTerritory(centralAmerica,"Central America");
+        venezuela.setAdjacentTerritory(centralAmerica, "Central America");
         venezuela.setAdjacentTerritory(brazil, "Brazil");
         venezuela.setAdjacentTerritory(peru, "Peru");
 
@@ -440,7 +494,7 @@ public class GameBoard {
         southernEurope.setAdjacentTerritory(northernEurope, "Northern Europe");
         southernEurope.setAdjacentTerritory(russia, "Russia");
         southernEurope.setAdjacentTerritory(middleEast, "Middle East");
-        southernEurope.setAdjacentTerritory(egypt,"Egypt");
+        southernEurope.setAdjacentTerritory(egypt, "Egypt");
         southernEurope.setAdjacentTerritory(northAfrica, "North Africa");
 
         northernEurope.setAdjacentTerritory(greatBritain, "Great Britain");
@@ -496,7 +550,7 @@ public class GameBoard {
         yakutsk.setAdjacentTerritory(kamchatka, "Kamchatka");
 
         kamchatka.setAdjacentTerritory(yakutsk, "Yakutsk");
-        kamchatka.setAdjacentTerritory(irkutsk,"Irkutsk");
+        kamchatka.setAdjacentTerritory(irkutsk, "Irkutsk");
         kamchatka.setAdjacentTerritory(mongolia, "Mongolia");
         kamchatka.setAdjacentTerritory(japan, "Japan");
 
@@ -545,7 +599,7 @@ public class GameBoard {
     /**
      * Creates a smaller, easier-to-test GameBoard
      */
-    public void createTestBoard(){
+    public void createTestBoard() {
         Continent northAmerica = new Continent("North America", 3);
 
         continentMap.put("North America", northAmerica);
@@ -572,7 +626,7 @@ public class GameBoard {
      * Fills the GameBoard's map of territories with all territories in the game
      */
     public void populateTerritoryMap() {
-        for (String i : continentMap.keySet()){
+        for (String i : continentMap.keySet()) {
             for (Territory t : continentMap.get(i).getTerritories()) {
                 territoryMap.put(t.getName(), t);
             }
@@ -582,9 +636,9 @@ public class GameBoard {
     /**
      * Prints a textual representation of the board state to the terminal
      */
-    public String printBoardStatus(){
+    public String printBoardStatus() {
         StringBuilder s = new StringBuilder();
-        for (String i : continentMap.keySet()){
+        for (String i : continentMap.keySet()) {
             s.append(continentMap.get(i).getStatus()).append("\n");
         }
         return s.toString();
@@ -594,7 +648,7 @@ public class GameBoard {
      * Fills a map with all territories in a random permutation
      * For use with the initial distribution of armies
      */
-    private void populateUnallocatedTerritories(){
+    private void populateUnallocatedTerritories() {
         randomTerritories.addAll(territoryMap.keySet());
         Collections.shuffle(randomTerritories);
     }
@@ -607,30 +661,26 @@ public class GameBoard {
             Continent continent = getContinent(c);
             ArrayList<Territory> territories = continent.getTerritories();
             String ruler = territories.get(0).getRuler();
-            int rulerCount = 0;
 
             for (Territory t : territories) {
-                if (t.getRuler().equals(ruler)) {
-                    rulerCount++;
-                } else {
-                    if (rulerCount > 0) {
-                        break;
-                    } else {
-                        ruler = t.getRuler();
-                    }
+                if (!t.getRuler().equals(ruler)) {
+                    ruler = "No One";
+                    break;
                 }
             }
+            continent.setRuler(ruler);
         }
     }
 
     /**
      * Determines if the given Player should be eliminated from the game
+     *
      * @param name The name of the Player to be assessed
      * @return true if the Player should be eliminated
      */
-    public boolean isPlayerEliminated(String name){
-        for (String i : territoryMap.keySet()){
-            if (territoryMap.get(i).getRuler().equals(name)){
+    public boolean isPlayerEliminated(String name) {
+        for (String i : territoryMap.keySet()) {
+            if (territoryMap.get(i).getRuler().equals(name)) {
                 return false;
             }
         }
