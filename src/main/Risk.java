@@ -32,7 +32,7 @@ public class Risk extends JFrame implements RiskView {
 
 
     private int currentPhase;
-
+    ArrayList<Player> playersList;
     public Risk(String label) {
         super(label);
 
@@ -59,11 +59,16 @@ public class Risk extends JFrame implements RiskView {
         adjacentTerritories.addListSelectionListener(e -> updateAdjacentTerritory());
         quit.addActionListener(e -> System.exit(0));
         nextPhase.addActionListener(e -> updatePhase());
-        //save.addActionListener(e -> saveGame());
-        //load.addActionListener(e -> loadGame());
+        save.addActionListener(e -> saveGame());
+        load.addActionListener(e -> loadGame());
         newGame.addActionListener(e -> beginGame());
     }
-
+    private void saveGame(){
+        ImportExport.saveGame(this);
+    }
+    private void loadGame(){
+        ImportExport.loadGame(this);
+    }
     private void commitArmies() {
         if (attackerTerritory == null || adjacentTerritory == null) {
             JOptionPane.showMessageDialog(this, "Must select the origin territory and the destination territory", "Movement Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -106,13 +111,25 @@ public class Risk extends JFrame implements RiskView {
         currentPhase = ALLOCATION_PHASE; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
-        ArrayList<Player> playersList = initializeStatus();
+        playersList = initializeStatus();
         gameBoard = new GameBoard();
         gameActions = new GameActions(this, playersList, gameBoard);
         updateAttackerTerritories();
         updateStatusArea();
         JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + "'s Turn", "Starting Game", JOptionPane.INFORMATION_MESSAGE);
         updatePhase();
+    }
+    public void loadGame(int Phase, GameBoard Board, GameActions actions, ArrayList<Player> players, Territory adjacent, Territory attacker){
+        gameBoard = Board;
+        gameActions = actions;
+        currentPhase = Phase - 1;
+        playersList = players;
+        adjacentTerritory = adjacent;
+        attackerTerritory = attacker;
+        updateAttackerTerritories();
+        updateStatusArea();
+        updatePhase();
+
     }
 
     /**
@@ -403,6 +420,24 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
     }
 
+    public int getPhase(){
+        return currentPhase;
+    }
+    public GameBoard getGameBoard(){
+        return gameBoard;
+    }
+    public GameActions getGameActions(){
+        return gameActions;
+    }
+    public ArrayList<Player> getPlayerList(){
+        return playersList;
+    }
+    public Territory getAdjacentTerritory(){
+        return adjacentTerritory;
+    }
+    public Territory getAttackerTerritory(){
+        return attackerTerritory;
+    }
     /**
      * Updates the gui when there is a new player.
      */
