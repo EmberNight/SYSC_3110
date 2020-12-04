@@ -36,6 +36,18 @@ public class GameBoard {
     }
 
     /**
+     * Constructor for Import
+     */
+    public GameBoard(Map<String, Continent> continents, Map<String, Territory> Territories) {
+        continentMap = continents;
+        territoryMap = Territories;
+        randomTerritories = new ArrayList<>();
+
+        populateTerritoryMap();
+        populateUnallocatedTerritories();
+    }
+
+    /**
      * Returns the Territory specified by a given string
      *
      * @param territoryName The name of the Territory to be returned
