@@ -122,7 +122,7 @@ public class Risk extends JFrame implements RiskView {
     public void loadGame(int Phase, GameBoard Board, GameActions actions, ArrayList<Player> players, Territory adjacent, Territory attacker){
         gameBoard = Board;
         gameActions = actions;
-        currentPhase = Phase;
+        currentPhase = Phase - 1;
         playersList = players;
         adjacentTerritory = adjacent;
         attackerTerritory = attacker;
