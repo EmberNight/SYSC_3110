@@ -7,7 +7,7 @@ import java.util.Random;
  * @author Tanner Trautrim
  * Provides methods for manipulating the GameBoard class during runtime
  */
-public class GameActions {
+public class GameActions implements java.io.Serializable{
     private final GameBoard gameBoard;
     private final ArrayList<Player> players;
     private Player activePlayer;
