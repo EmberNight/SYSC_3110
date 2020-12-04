@@ -5,7 +5,7 @@ import java.util.*;
  *
  * @author Jordan Peterkin
  */
-public class GameBoard {
+public class GameBoard implements java.io.Serializable{
 
     private final Map<String, Continent> continentMap;
     private final Map<String, Territory> territoryMap;

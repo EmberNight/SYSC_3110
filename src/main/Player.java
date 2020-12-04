@@ -3,7 +3,7 @@
  * <p>
  * An implementation of the people playing the game of Risk
  */
-public class Player {
+public class Player implements java.io.Serializable{
     private final String name;
     private int armies;
     private Boolean isAI;
