@@ -8,9 +8,19 @@ import java.util.*;
 public class Continent {
 
     private final ArrayList<Territory> territories;
-    private final String name;
-    private final int value;
+    private String name;
+    private int value;
     private String ruler;
+
+    /**
+     * Default constructor for Continent objects
+     */
+    public Continent() {
+        territories = new ArrayList<>();
+        this.value = 0;
+        ruler = "";
+        this.name = "";
+    }
 
     /**
      * Constructor for Continent objects
@@ -59,6 +69,24 @@ public class Continent {
      */
     public ArrayList<Territory> getTerritories() {
         return territories;
+    }
+
+    /**
+     * Sets the name of the continent
+     *
+     * @param name Name of the continent
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the value of the continent
+     *
+     * @param value Value of the continent
+     */
+    public void setValue(int value) {
+        this.value = value;
     }
 
     /**
