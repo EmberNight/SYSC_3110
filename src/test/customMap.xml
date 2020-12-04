@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gameboard>
+    <continent>
+        <continentName>North America</continentName>
+        <continentValue>3</continentValue>
+        <territory>
+            <territoryName>Canada</territoryName>
+            <adjacentName>United States</adjacentName>
+            <adjacentName>Mexico</adjacentName>
+        </territory>
+        <territory>
+            <territoryName>United States</territoryName>
+            <adjacentName>Canada</adjacentName>
+            <adjacentName>Mexico</adjacentName>
+        </territory>
+        <territory>
+            <territoryName>Mexico</territoryName>
+            <adjacentName>Canada</adjacentName>
+            <adjacentName>United States</adjacentName>
+        </territory>
+    </continent>
+</gameboard>
