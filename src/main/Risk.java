@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * @author Tanner trautrim
  * @author Jordan Peterkin
  * @author Emmitt Luhning
+ * @author Ashwin Stoparczyk
  */
 public class Risk extends JFrame implements RiskView {
     private static final int  ALLOCATION_PHASE = -1;
@@ -33,6 +34,7 @@ public class Risk extends JFrame implements RiskView {
 
     private int currentPhase;
     ArrayList<Player> playersList;
+
     public Risk(String label) {
         super(label);
 
@@ -49,6 +51,36 @@ public class Risk extends JFrame implements RiskView {
 
         buildFrame();
 
+    }
+
+    public Risk(String label, boolean isTest) {
+        super(label);
+
+        gameBoard = new GameBoard(true);
+
+        playersList = new ArrayList<>();
+        playersList.add(new Player("John", false));
+        playersList.add(new Player("Bobbi", false));
+
+        gameBoard.getContinent("North America").setRuler("John");
+        gameBoard.setTerritoryRuler("canada", "John");
+        gameBoard.getTerritory("canada").setArmy(15);
+        gameBoard.setTerritoryRuler("united states", "Bobbi");
+        gameBoard.getTerritory("united states").setArmy(20);
+
+        adjacentTerritory = gameBoard.getTerritory("canada");
+        attackerTerritory = gameBoard.getTerritory("united states");
+        gameActions = new GameActions(this, playersList, gameBoard);
+
+        statusText = new JTextArea("This is a test");
+        titleAction = new JLabel("This is still a test");
+        button = new JButton("Test??");
+
+        attackerTerritories = new JList<>();
+        adjacentTerritories = new JList<>();
+
+        updateAttackerTerritories();
+        updateAdjacentTerritory();
     }
 
     /**
