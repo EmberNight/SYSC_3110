@@ -10,10 +10,10 @@ import java.util.ArrayList;
  * @author Emmitt Luhning
  */
 public class Risk extends JFrame implements RiskView {
-    private static final int  ALLOCATION_PHASE = -1;
-    private static final int  ATTACK_PHASE = 0;
-    private static final int  MOVEMENT_PHASE = 1;
-    private static final int  CHANGE_TURN_PHASE = 2;
+    private transient final int  ALLOCATION_PHASE = -1;
+    private transient final int  ATTACK_PHASE = 0;
+    private transient final int  MOVEMENT_PHASE = 1;
+    private transient final int  CHANGE_TURN_PHASE = 2;
 
 
     private GameBoard gameBoard;
@@ -32,7 +32,6 @@ public class Risk extends JFrame implements RiskView {
 
 
     private int currentPhase;
-    ArrayList<Player> playersList;
     public Risk(String label) {
         super(label);
 
@@ -111,25 +110,19 @@ public class Risk extends JFrame implements RiskView {
         currentPhase = ALLOCATION_PHASE; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
-        playersList = initializeStatus();
         gameBoard = new GameBoard();
-        gameActions = new GameActions(this, playersList, gameBoard);
+        gameActions = new GameActions(this, initializeStatus(), gameBoard);
         updateAttackerTerritories();
         updateStatusArea();
         JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + "'s Turn", "Starting Game", JOptionPane.INFORMATION_MESSAGE);
         updatePhase();
     }
-    public void loadGame(int Phase, GameBoard Board, GameActions actions, ArrayList<Player> players, Territory adjacent, Territory attacker){
+    public void loadGame(int Phase, GameBoard Board, GameActions actions){
         gameBoard = Board;
         gameActions = actions;
         currentPhase = Phase - 1;
-        playersList = players;
-        adjacentTerritory = adjacent;
-        attackerTerritory = attacker;
-        updateAttackerTerritories();
         updateStatusArea();
         updatePhase();
-
     }
 
     /**
@@ -149,6 +142,7 @@ public class Risk extends JFrame implements RiskView {
                 break;
             case CHANGE_TURN_PHASE:
                 gameActions.changeTurns();
+                updateAttackerTerritories();
                 currentPhase = ALLOCATION_PHASE; // Without the break it will immediately go to default after.
             default:
                 allocateTroopPhase();
@@ -428,9 +422,6 @@ public class Risk extends JFrame implements RiskView {
     }
     public GameActions getGameActions(){
         return gameActions;
-    }
-    public ArrayList<Player> getPlayerList(){
-        return playersList;
     }
     public Territory getAdjacentTerritory(){
         return adjacentTerritory;

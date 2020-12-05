@@ -46,11 +46,10 @@ public class ImportExport {
             c.printStackTrace();
             return;
         }
-        baseGame.loadGame(loadedGame.getPhase(), loadedGame.getGameBoard(), loadedGame.getGameActions(), loadedGame.getPlayerList(),
-                loadedGame.getAdjacentTerritory(), loadedGame.getAttackerTerritory());
+        baseGame.loadGame(loadedGame.getPhase(), loadedGame.getGameBoard(), loadedGame.getGameActions());
     }
 
-    public GameBoard importCustomMap(File fileName) {
+    public static GameBoard importCustomMap(File fileName) {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         SAXParser sp;
 
