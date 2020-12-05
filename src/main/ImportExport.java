@@ -13,12 +13,19 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-
+/**
+ * Provides methods for saved games and custom maps
+ * @author Tanner trautrim
+ * @author Emmitt Luhning
+ * @author Ashwin Stoparczyk
+ */
 public class ImportExport {
+    /**
+     * Saves the current board state as a file
+     * Copy of normal method, exists so that save file won't be overwritten when test is run
+     * @param baseGame The Risk game to be saved
+     */
     public static void saveGame(Risk baseGame) {
-        // Emmitt
-        // Serialization
-        //Step One. Serialize Risk object
         try {
             FileOutputStream fileOut = new FileOutputStream("gameSave.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
@@ -30,6 +37,12 @@ public class ImportExport {
         }
     }
 
+
+    /**
+     * Loads a board state from a file
+     * Copy of normal method, exists so that save file won't be overwritten when test is run
+     * @param baseGame The Risk game to be overwritten by the saved game
+     */
     public static void loadGame(Risk baseGame) {
         Risk loadedGame;
         try {
@@ -49,6 +62,10 @@ public class ImportExport {
         baseGame.loadGame(loadedGame.getPhase(), loadedGame.getGameBoard(), loadedGame.getGameActions());
     }
 
+    /**
+     * Imports a custom map, in XML format, to be used as a new GameBoard
+     * @param fileName The file containing the custom map
+     */
     public static GameBoard importCustomMap(File fileName) {
         SAXParserFactory spf = SAXParserFactory.newInstance();
         SAXParser sp;
