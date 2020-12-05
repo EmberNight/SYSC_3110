@@ -36,17 +36,11 @@ public class Risk extends JFrame implements RiskView {
     public Risk(String label) {
         super(label);
 
-
-
-
-
         createMenus();
         createButtons();
         createStatusArea();
         createLists();
         assignFunctions();
-
-
         buildFrame();
 
     }
@@ -56,7 +50,7 @@ public class Risk extends JFrame implements RiskView {
 
         gameBoard = new GameBoard(true);
 
-        playersList = new ArrayList<>();
+        ArrayList<Player>  playersList= new ArrayList<>();
         playersList.add(new Player("John", false));
         playersList.add(new Player("Bobbi", false));
 
@@ -93,12 +87,15 @@ public class Risk extends JFrame implements RiskView {
         load.addActionListener(e -> loadGame());
         newGame.addActionListener(e -> beginGame());
     }
+
     private void saveGame(){
         ImportExport.saveGame(this);
     }
+
     private void loadGame(){
         ImportExport.loadGame(this);
     }
+
     private void commitArmies() {
         if (attackerTerritory == null || adjacentTerritory == null) {
             JOptionPane.showMessageDialog(this, "Must select the origin territory and the destination territory", "Movement Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -173,7 +170,6 @@ public class Risk extends JFrame implements RiskView {
                 break;
             case CHANGE_TURN_PHASE:
                 gameActions.changeTurns();
-                updateAttackerTerritories();
                 currentPhase = ALLOCATION_PHASE; // Without the break it will immediately go to default after.
             default:
                 allocateTroopPhase();
