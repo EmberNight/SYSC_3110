@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.*;
 import java.io.File;
 
@@ -59,6 +58,8 @@ public class ImportExport {
             c.printStackTrace();
             return;
         }
+
+        loadedGame.getGameActions().setActionView(baseGame);
         baseGame.loadGame(loadedGame.getPhase(), loadedGame.getGameBoard(), loadedGame.getGameActions());
     }
 
@@ -89,14 +90,25 @@ public class ImportExport {
             // Sets how the other functions should behave
             public void startElement(String u, String ln, String qName, Attributes a) {
                 if ("continent".equals(qName)) {
+                    // If the xml tag is equal to continent it creates a continent
                     continent = new Continent();
                 } else if ("continentName".equals(qName)) {
+                    // If the xml tag is equal to continentName if set the mode so that in the
+                    // characters function it will set the last added continent's name
                     mode = 1;
                 } else if ("continentValue".equals(qName)) {
+                    // If the xml tag is equal to continentValue if set the mode so that in the
+                    // characters function it will set the last added continent's value
                     mode = 2;
                 } else if ("territoryName".equals(qName)) {
+                    // If the xml tag is equal to territoryName if set the mode so that in the
+                    // characters function it will create a territory and added it to the last
+                    // added continent.
                     mode = 3;
                 } else if ("adjacentName".equals(qName)) {
+                    // If the xml tag is equal to adjacentName if set the mode so that in the
+                    // characters function it will add a adjacent territory to the last
+                    // added territory.
                     mode = 4;
                 }
 
@@ -113,20 +125,21 @@ public class ImportExport {
             // Handles attributes
             public void characters(char[] ch, int start, int length) {
                 switch (mode) {
-                    case 1:
+                    case 1: // Sets the last added continent's name
                         continent.setName(new String(ch, start, length));
                         break;
-                    case 2:
+                    case 2: // Sets the last added continent's value
                         String num = new String(ch, start, length);
                         continent.setValue(Integer.parseInt(num));
                         break;
-                    case 3:
+                    case 3: // Creates a territory and adds it to the last continent added.
                         territory = new Territory(new String(ch, start, length), continent.getName());
                         continent.addTerritory(territory);
                         territoryMap.put(territory.getName(), territory);
+                        // Used to store territories temporarily, so that a real territory can be made later
                         adjacentTerritories.put(territory.getName(), new ArrayList<>());
                         break;
-                    case 4:
+                    case 4: // Adds an adjacent territory to the last added territory.
                         adjacentTerritories.get(territory.getName()).add(new String(ch, start, length));
                 }
             }
@@ -139,7 +152,7 @@ public class ImportExport {
         }
 
 
-        // Add adjacent territories
+        // After all territories have been created by the XML sort out the adjacent territories
         ArrayList<String> list = new ArrayList<>();
         for (String key : territoryMap.keySet()) {
             while (!adjacentTerritories.get(key).isEmpty()) {

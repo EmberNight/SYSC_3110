@@ -12,7 +12,7 @@ public class GameActions implements java.io.Serializable{
     private final ArrayList<Player> players;
     private Player activePlayer;
     private int activePlayerIndex;
-    private final RiskView actionView;
+    private RiskView actionView;
 
     /**
      * Constructor for Actions objects
@@ -299,5 +299,9 @@ public class GameActions implements java.io.Serializable{
         } else {
             actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false, players.size()));
         }
+    }
+
+    public void setActionView(RiskView actionView) {
+        this.actionView = actionView;
     }
 }
