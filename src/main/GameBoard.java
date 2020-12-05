@@ -4,6 +4,7 @@ import java.util.*;
  * An implementation of the game board used in the game of Risk
  *
  * @author Jordan Peterkin
+ * @author Ashwin Stoparczyk
  */
 public class GameBoard implements java.io.Serializable{
 
