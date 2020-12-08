@@ -15,7 +15,7 @@ public class GameActions implements java.io.Serializable{
     private RiskView actionView;
 
     /**
-     * Constructor for Actions objects
+     * Constructor for gameActions objects
      *
      * @param players   A list of players who will be playing the game
      * @param gameBoard The digital game board that will be used to play the game
@@ -33,6 +33,52 @@ public class GameActions implements java.io.Serializable{
         giveCurrentPlayerArmies();
     }
 
+    /**
+     * Returns the current active Player
+     * @return the current active Player
+     */
+    public String getActivePlayer() {
+        return activePlayer.getName();
+    }
+
+    /**
+     * Returns the current active Player's number of armies
+     * @return the current active Player's number of armies
+     */
+    public int getCurrentPlayersArmies() {
+        return activePlayer.getArmies();
+    }
+
+    /**
+     * Removes a given amount of armies from the current active Player
+     * @param numArmies The number of armies to be removed
+     */
+    public void removeCurrentPlayersArmies(int numArmies) {
+        activePlayer.removeArmies(numArmies);
+    }
+
+    /**
+     * Adds a given amount of armies to a given Territory
+     * @param numArmies The number of armies to be added
+     * @param territory The Territory that the armies will be added to
+     */
+    public void addArmies(String territory, int numArmies) {
+        int armies = activePlayer.getArmies();
+        if (armies >= numArmies) {
+            gameBoard.addTerritoryArmy(territory, activePlayer.removeArmies(numArmies));
+            actionView.addArmyUpdate(new RiskEvent(0, 0, 0, false, false, players.size()));
+        } else {
+            actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false, players.size()));
+        }
+    }
+
+    /**
+     * Sets the current actionView to the given actionView
+     * @param actionView The actionView that will become the current actionView
+     */
+    public void setActionView(RiskView actionView) {
+        this.actionView = actionView;
+    }
     /**
      * Calculates and distributes the initial amount of armies to all players
      *
@@ -131,7 +177,10 @@ public class GameActions implements java.io.Serializable{
     /**
      * Attacks an enemy territory from an adjacent owned territory, and resolves the outcome of the attack.
      *
-     * @param defenderTerritory The territory being attacked
+     * @param attackerTerritory The Territory being attacked from
+     * @param defenderTerritory The Territory being attacked
+     * @param attackersDice The number of dice the attacker is attacking with
+     * @param defendersDice The number of dice the defender is defending with
      */
     public void attack(String attackerTerritory, String defenderTerritory, int attackersDice, int defendersDice) {
         String currPlayer = activePlayer.getName();
@@ -146,7 +195,7 @@ public class GameActions implements java.io.Serializable{
 
         boolean newTerritoryRuler = false;
         boolean newContinentRuler = false;
-        if (gameBoard.getArmy(defenderTerritory) == 0) {
+        if (gameBoard.getArmy(defenderTerritory) == 0) { //Defender is defeated
             String defender = gameBoard.getTerritoryRuler(defenderTerritory);
             gameBoard.removeTerritoryArmy(attackerTerritory, 1);
             gameBoard.addTerritoryArmy(defenderTerritory, 1);
@@ -165,7 +214,7 @@ public class GameActions implements java.io.Serializable{
      *
      * @param numAttackDie The amount of dice the attacker is fighting with
      * @param numDefendDie The amount of dice the defender is fighting with
-     * @return The outcome of the battle: less than 0 for defensive victory, greater than 0 for offensive victory and 0 for tie
+     * @return The outcome of the battle represented by the number of attacker and defender losses
      */
     private ArrayList<Integer> rollDie(int numAttackDie, int numDefendDie) {
         ArrayList<Integer> result = new ArrayList<>();
@@ -229,6 +278,9 @@ public class GameActions implements java.io.Serializable{
         }
     }
 
+    /**
+     * Passes the turn onto the next Player
+     */
     public void changeTurns() {
         activePlayerIndex++;
 
@@ -240,21 +292,16 @@ public class GameActions implements java.io.Serializable{
         giveCurrentPlayerArmies();
         actionView.passUpdate();
         if (activePlayer.isAI()) {
-            AITurn AI = new AITurn(gameBoard, this); //Need to calculate reinforcements for AI player; 0 as placeholder
+            AITurn AI = new AITurn(gameBoard, this); //Performs the AI's turn
             AI.startTurn();
         }
-    }
-
-
-    public String getActivePlayer() {
-        return activePlayer.getName();
     }
 
     /**
      * Move armies to a territory.
      *
-     * @param territoryDestination Where the units will go
-     * @param numArmies            number of armies to place
+     * @param territoryDestination The Territory where the armies will go
+     * @param numArmies The number of armies to place
      */
     public void commitArmies(String territoryOrigin, String territoryDestination, int numArmies) {
         if (gameBoard.getArmy(territoryOrigin) > numArmies) {
@@ -267,7 +314,7 @@ public class GameActions implements java.io.Serializable{
     }
 
     /**
-     * Current player is given armies based on the board presence.
+     * Gives current active Player armies based on the board state.
      */
     private void giveCurrentPlayerArmies() {
         String player = activePlayer.getName();
@@ -280,28 +327,5 @@ public class GameActions implements java.io.Serializable{
         activePlayer.addArmies(continentArmies + (gameBoard.getRulerTerritoryList(player).length / 3));
     }
 
-    public int getCurrentPlayersArmies() {
-        return activePlayer.getArmies();
-    }
 
-    public void removeCurrentPlayersArmies(int numArmies) {
-        activePlayer.removeArmies(numArmies);
-    }
-
-    /**
-     * Adds armies to a territory
-     */
-    public void addArmies(String territory, int numArmies) {
-        int armies = activePlayer.getArmies();
-        if (armies >= numArmies) {
-            gameBoard.addTerritoryArmy(territory, activePlayer.removeArmies(numArmies));
-            actionView.addArmyUpdate(new RiskEvent(0, 0, 0, false, false, players.size()));
-        } else {
-            actionView.addArmyUpdate(new RiskEvent(1, 0, 0, false, false, players.size()));
-        }
-    }
-
-    public void setActionView(RiskView actionView) {
-        this.actionView = actionView;
-    }
 }

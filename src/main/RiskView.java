@@ -4,30 +4,34 @@
  * @author Ashwin Stoparczyk
  */
 public interface RiskView {
+
     /**
      * Updates the GUI when a attack has finished.
      *
-     * @param ae Event that occurred
+     * @param ae The event that occurred
      */
     void attackUpdate(RiskEvent ae);
 
     /**
-     * Updates the gui when there is a new player.
+     * Updates the GUI when there is a new player.
      */
     void passUpdate();
 
     /**
-     * Updates the gui when the status pages needs updating.
+     * Updates the GUI when the status pages needs updating.
      */
     void updateStatus();
 
     /**
-     * Updates the gui after a allocation has occurred.
-     *
-     * @param ae Event that occurred
+     * Updates the GUI when a Player moves their armies
+     * @param ae The event that occurred
      */
     void movementUpdate(RiskEvent ae);
 
+    /**
+     * Updates the GUI when a Player adds to their armies
+     * @param ae The event that occurred
+     */
     void addArmyUpdate(RiskEvent ae);
 
 

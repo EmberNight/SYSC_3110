@@ -70,6 +70,10 @@ public class Player implements java.io.Serializable{
         return num;
     }
 
+    /**
+     * Determines if the Player is an AI
+     * @return true if the Player is an AI, false if the Player is not an AI
+     */
     public boolean isAI() {
         return isAI;
     }

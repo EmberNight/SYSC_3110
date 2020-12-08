@@ -29,27 +29,21 @@ public class AITest implements RiskView {
     }
 
     @Override
-    public void attackUpdate(RiskEvent ae) {
-    }
+    public void attackUpdate(RiskEvent ae) {} //Unused
 
     @Override
-    public void passUpdate() {
+    public void passUpdate() { //Outputs text to the terminal instead of a GUI
         System.out.println("It is now " + gameActions.getActivePlayer() + "'s turn.");
     }
 
     @Override
-    public void updateStatus() {
-    }
+    public void updateStatus() {} //Unused
 
     @Override
-    public void movementUpdate(RiskEvent ae) {
-
-    }
+    public void movementUpdate(RiskEvent ae) {} //Unused
 
     @Override
-    public void addArmyUpdate(RiskEvent ae) {
-
-    }
+    public void addArmyUpdate(RiskEvent ae) {} //Unused
 
 
 }
