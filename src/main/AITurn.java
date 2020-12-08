@@ -3,7 +3,6 @@ import java.util.Random;
 
 /**
  * @author Ashwin Stoparczyk
- * <p>
  * Completes the actions a normal Player would take during their turn for any AI players in the game
  */
 public class AITurn {
@@ -82,7 +81,7 @@ public class AITurn {
         int attackerDice, defenderDice;
 
         for (Territory attackerTerritory : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) {
-            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, gameActions.getActivePlayer())) {
+            for (Territory defenderTerritory : gameBoard.getAttackableTerritoryList(attackerTerritory, gameActions.getActivePlayer())) { //Iterates through every attackable Territory
                 attackerDice = Math.min(attackerTerritory.getArmy() - 1, 2);
                 defenderDice = Math.min(defenderTerritory.getArmy(), 2);
 
@@ -166,7 +165,7 @@ public class AITurn {
         for (Territory t : gameBoard.getRulerTerritoryList(gameActions.getActivePlayer())) {
             safe = true;
             for (Territory at : t.getAdjacentTerritories()) {
-                if (!at.getRuler().equals(gameActions.getActivePlayer())) {
+                if (!at.getRuler().equals(gameActions.getActivePlayer())) { //If there is an enemy Territory adjacent to this Territory, it is not "safe"
                     safe = false;
                     break;
                 }

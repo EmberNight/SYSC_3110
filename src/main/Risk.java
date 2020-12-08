@@ -31,8 +31,12 @@ public class Risk extends JFrame implements RiskView {
     private Territory attackerTerritory;
     private Territory adjacentTerritory;
 
-
     private int currentPhase;
+
+    /**
+     * Constructor for Risk objects
+     * @param label The name of the Risk window
+     */
     public Risk(String label) {
         super(label);
 
@@ -45,6 +49,11 @@ public class Risk extends JFrame implements RiskView {
 
     }
 
+    /**
+     * Constructor for Risk objects
+     * @param label The name of the Risk window
+     * @param isTest Allows for multiple constructors
+     */
     public Risk(String label, boolean isTest) {
         super(label);
 
@@ -76,6 +85,46 @@ public class Risk extends JFrame implements RiskView {
     }
 
     /**
+     * Returns the phase of the current active Player's turn
+     * @return the phase of the current active Player's turn
+     */
+    public int getPhase(){
+        return currentPhase;
+    }
+
+    /**
+     * Returns the current board state
+     * @return the current board state
+     */
+    public GameBoard getGameBoard(){
+        return gameBoard;
+    }
+
+    /**
+     * Returns the current gameActions
+     * @return the current gameActions
+     */
+    public GameActions getGameActions(){
+        return gameActions;
+    }
+
+    /**
+     * Returns the currently selected adjacent Territory
+     * @return the currently selected adjacent Territory
+     */
+    public Territory getAdjacentTerritory(){
+        return adjacentTerritory;
+    }
+
+    /**
+     * Returns the currently selected attacker Territory
+     * @return the currently selected attacker Territory
+     */
+    public Territory getAttackerTerritory(){
+        return attackerTerritory;
+    }
+
+    /**
      * Creates all the function events.
      */
     private void assignFunctions() {
@@ -88,14 +137,23 @@ public class Risk extends JFrame implements RiskView {
         newGame.addActionListener(e -> beginGame());
     }
 
+    /**
+     * Saves the current game into a File
+     */
     private void saveGame(){
         ImportExport.saveGame(this);
     }
 
+    /**
+     * Loads a game from a File
+     */
     private void loadGame(){
         ImportExport.loadGame(this);
     }
 
+    /**
+     * Moves armies into a Territory
+     */
     private void commitArmies() {
         if (attackerTerritory == null || adjacentTerritory == null) {
             JOptionPane.showMessageDialog(this, "Must select the origin territory and the destination territory", "Movement Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -113,6 +171,9 @@ public class Risk extends JFrame implements RiskView {
         gameActions.commitArmies(attackerTerritory.getName(), adjacentTerritory.getName(), numArmies);
     }
 
+    /**
+     * Adds armies to a Territory
+     */
     private void addArmies() {
         if (attackerTerritory == null) {
             JOptionPane.showMessageDialog(this, "Must select the territory you want to add to", "Addition Cancelled", JOptionPane.INFORMATION_MESSAGE);
@@ -134,6 +195,9 @@ public class Risk extends JFrame implements RiskView {
         }
     }
 
+    /**
+     * Starts the current game
+     */
     public void beginGame() {
         currentPhase = ALLOCATION_PHASE; // So allocation happen right away
         attackerTerritory = null;
@@ -145,6 +209,13 @@ public class Risk extends JFrame implements RiskView {
         JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + "'s Turn", "Starting Game", JOptionPane.INFORMATION_MESSAGE);
         updatePhase();
     }
+
+    /**
+     * Starts the current game from a File
+     * @param Phase The phase of the current active Player's turn
+     * @param Board The board state of the game
+     * @param actions The gameActions of the game
+     */
     public void loadGame(int Phase, GameBoard Board, GameActions actions){
         gameBoard = Board;
         gameActions = actions;
@@ -291,7 +362,7 @@ public class Risk extends JFrame implements RiskView {
     /**
      * Creates the players.
      *
-     * @return Players
+     * @return An ArrayList containing all created Players
      */
     private ArrayList<Player> initializeStatus() {
         int numOfPlayers = 0;
@@ -383,11 +454,17 @@ public class Risk extends JFrame implements RiskView {
         adjacentScroller = new JScrollPane(adjacentTerritories);
     }
 
+    /**
+     * Creates a new JStatusArea
+     */
     private void createStatusArea() {
         statusText = new JTextArea();
         statusScroller = new JScrollPane(statusText);
     }
 
+    /**
+     * Creates a new JButton
+     */
     private void createButtons() {
         button = new JButton(" ");
     }
@@ -417,11 +494,11 @@ public class Risk extends JFrame implements RiskView {
     /**
      * Updates the GUI when a attack has finished.
      *
-     * @param ae Event that occurred
+     * @param ae The event that occurred
      */
     @Override
     public void attackUpdate(RiskEvent ae) {
-        String outcome = "The attacker lost: " + ae.getAttackerLosses() + " armies\n" +
+        String outcome = "The  attacker lost: " + ae.getAttackerLosses() + " armies\n" +
                 "The defender lost: " + ae.getDefenderLosses() + " armies\n";
 
         if (ae.isNewTerritoryRuler()) {
@@ -441,23 +518,8 @@ public class Risk extends JFrame implements RiskView {
         updateAttackerTerritories();
     }
 
-    public int getPhase(){
-        return currentPhase;
-    }
-    public GameBoard getGameBoard(){
-        return gameBoard;
-    }
-    public GameActions getGameActions(){
-        return gameActions;
-    }
-    public Territory getAdjacentTerritory(){
-        return adjacentTerritory;
-    }
-    public Territory getAttackerTerritory(){
-        return attackerTerritory;
-    }
     /**
-     * Updates the gui when there is a new player.
+     * Updates the GUI when there is a new player.
      */
     @Override
     public void passUpdate() {
@@ -470,13 +532,17 @@ public class Risk extends JFrame implements RiskView {
     }
 
     /**
-     * Updates the gui when the status pages needs updating.
+     * Updates the GUI when the status pages needs updating.
      */
     @Override
     public void updateStatus() {
         updateStatusArea();
     }
 
+    /**
+     * Updates the GUI when a Player moves their armies
+     * @param ae The event that occurred
+     */
     @Override
     public void movementUpdate(RiskEvent ae) {
         if (ae.getEventID() == 0) {
@@ -488,6 +554,10 @@ public class Risk extends JFrame implements RiskView {
         }
     }
 
+    /**
+     * Updates the GUI when a Player adds to their armies
+     * @param ae The event that occurred
+     */
     @Override
     public void addArmyUpdate(RiskEvent ae) {
         if (ae.getEventID() == 0) {
