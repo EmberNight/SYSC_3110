@@ -15,7 +15,8 @@ public class RiskEvent extends EventObject {
 
     /**
      * Constructor for ActionEvent objects
-     *  @param attackerLosses    The attacker's losses
+     *
+     * @param attackerLosses    The attacker's losses
      * @param defenderLosses    The defender's losses
      * @param newContinentRuler If the continent's ruler has been changed
      * @param newTerritoryRuler If the Territory's ruler has been changed
@@ -32,6 +33,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Returns this RiskEvent's eventID
+     *
      * @return this RiskEvent's eventID
      */
     public int getEventID() {
@@ -40,6 +42,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Returns this RiskEvent's attackerLosses
+     *
      * @return this RiskEvent's attackerLosses
      */
     public int getAttackerLosses() {
@@ -48,6 +51,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Returns this RiskEvent's defenderLosses
+     *
      * @return this RiskEvent's defenderLosses
      */
     public int getDefenderLosses() {
@@ -56,6 +60,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Returns this RiskEvent's remainingPlayers
+     *
      * @return this RiskEvent's remainingPlayers
      */
     public int getRemainingPlayers() {
@@ -64,6 +69,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Determines if this RiskEvent causes a change in a Continent's ruler
+     *
      * @return true if this RiskEvent causes a change in a Continent's ruler, false if this RiskEvent does not cause a change in a Continent's ruler
      */
     public boolean isNewContinentRuler() {
@@ -72,6 +78,7 @@ public class RiskEvent extends EventObject {
 
     /**
      * Determines if this RiskEvent causes a change in a Territory's ruler
+     *
      * @return true if this RiskEvent causes a change in a Territory's ruler, false if this RiskEvent does not cause a change in a Territory's ruler
      */
     public boolean isNewTerritoryRuler() {
