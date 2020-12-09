@@ -37,15 +37,23 @@ Additional software for test suite:
 
 ## Road Map
 
-Implement AI player, troop placement phase and troop movement phase
+Completed
+
+## Changelog
+
+* Added ability to load a custom map
+* Added ability to save a load games
+* Added GUI popups for the save, load, and custom map locations functions.
+* Added GUI menus for new game, save, and load
+* Changed how the game starts (must select new game) 
 
 ## Authors and work contributed
 
 * Ashwin Stoparczyk - [stopash](https://github.com/stopash)
-  - AI
+  - Code Documentation and Testing
 * Emmitt Luhning - [Em-kale](https://github.com/Em-kale)
-  - Testing, GUI updates
+  - Save and Load Game
 * Jordan Peterkin - [jordanpeterkin](https://github.com/jordanpeterkin)
-  - Allocate Armies, GUI updates
+  - GUI
 * Tanner Trautrim - [EmberNight](https://github.com/EmberNight)
-  - Move Armies, GUI updates, UML
+  - Import Custom Map, Small GUI changes for importing a map.
