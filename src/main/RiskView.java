@@ -24,12 +24,14 @@ public interface RiskView {
 
     /**
      * Updates the GUI when a Player moves their armies
+     *
      * @param ae The event that occurred
      */
     void movementUpdate(RiskEvent ae);
 
     /**
      * Updates the GUI when a Player adds to their armies
+     *
      * @param ae The event that occurred
      */
     void addArmyUpdate(RiskEvent ae);

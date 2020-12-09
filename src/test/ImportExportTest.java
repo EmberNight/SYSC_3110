@@ -6,15 +6,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test suite for ImportExport
@@ -22,15 +20,14 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Ashwin Stoparczyk
  */
 public class ImportExportTest {
-
     @Test
     public void testSaveLoad(){ //Some dialogue box shows up stating that the attack phase started, click the button on it to advance the test. It does nothing to affect the test
         Risk baseGame = new Risk("Base game", true);
 
-        ImportExport.saveGame(baseGame);
+        ImportExport.saveGame(baseGame, new File("./src/test/testSave.ser"));
 
         Risk savedGame = new Risk("Saved game", true);
-        ImportExport.loadGame(savedGame);
+        ImportExport.loadGame(savedGame, new File("./src/test/testSave.ser"));
 
         //phase tests
         assertEquals(baseGame.getPhase(), savedGame.getPhase());
@@ -56,10 +53,11 @@ public class ImportExportTest {
     @Test
     public void testCustomMap() {
         createTestMap();
-        File testMapFile = new File("testMap.xml");
+        File testMapFile = new File("./src/test/testMap.xml");
         GameBoard testBoard = ImportExport.importCustomMap(testMapFile);
 
         //Continent tests
+        assert testBoard != null;
         assertEquals(testBoard.getContinent("North America").getName(), "North America");
         assertEquals(testBoard.getContinent("North America").getValue(), 3);
 
@@ -147,18 +145,12 @@ public class ImportExportTest {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource domSource = new DOMSource(document);
-            StreamResult streamResult = new StreamResult(new File("testMap.xml"));
+            StreamResult streamResult = new StreamResult(new File("./src/test/testMap.xml"));
 
             transformer.transform(domSource, streamResult);
 
-            System.out.println("Done creating XML File");
-
-        } catch (ParserConfigurationException p){
+        } catch (ParserConfigurationException | TransformerException p){
             p.printStackTrace();
-        } catch (TransformerConfigurationException tc){
-            tc.printStackTrace();
-        } catch (TransformerException te){
-            te.printStackTrace();
         }
     }
 }

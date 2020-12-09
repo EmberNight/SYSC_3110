@@ -37,8 +37,8 @@ public class AITurn {
     /**
      * Constructor for AITurn objects
      *
-     * @param gameBoard      The current GameBoard
-     * @param gameActions    The current GameActions
+     * @param gameBoard   The current GameBoard
+     * @param gameActions The current GameActions
      */
     public AITurn(GameBoard gameBoard, GameActions gameActions) {
         this.gameBoard = gameBoard;
