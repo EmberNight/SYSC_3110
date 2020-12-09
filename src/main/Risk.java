@@ -412,7 +412,7 @@ public class Risk extends JFrame implements RiskView {
         while (numOfPlayers + numOfAI < 2 || numOfPlayers + numOfAI > 6) {
             try {
                 numOfPlayers = Integer.parseInt(JOptionPane.showInputDialog(this,
-                        "Enter Number Of Players (1-6)",
+                        "Enter Number Of non AI Players (1-6)",
                         "Start Game",
                         JOptionPane.INFORMATION_MESSAGE));
             } catch (Exception e) {
@@ -420,14 +420,8 @@ public class Risk extends JFrame implements RiskView {
                 System.exit(-1);
             }
             try {
-                int min;
-                if (numOfPlayers == 6) {
-                    min = 0;
-                } else {
-                    min = 1;
-                }
                 numOfAI = Integer.parseInt(JOptionPane.showInputDialog(this,
-                        "Enter Number Of AI Players (" + min + "-" + (6 - numOfPlayers) + ")",
+                        "Enter Number Of AI Players (" + (numOfPlayers == 1? 1:0) + "-" + (6 - numOfPlayers) + ")",
                         "Start Game",
                         JOptionPane.INFORMATION_MESSAGE));
             } catch (Exception e) {
