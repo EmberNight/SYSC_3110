@@ -7,7 +7,7 @@ import java.util.Random;
  * @author Tanner Trautrim
  * Provides methods for manipulating the GameBoard class during runtime
  */
-public class GameActions implements java.io.Serializable{
+public class GameActions implements java.io.Serializable {
     private final GameBoard gameBoard;
     private final ArrayList<Player> players;
     private Player activePlayer;
@@ -35,6 +35,7 @@ public class GameActions implements java.io.Serializable{
 
     /**
      * Returns the current active Player
+     *
      * @return the current active Player
      */
     public String getActivePlayer() {
@@ -43,6 +44,7 @@ public class GameActions implements java.io.Serializable{
 
     /**
      * Returns the current active Player's number of armies
+     *
      * @return the current active Player's number of armies
      */
     public int getCurrentPlayersArmies() {
@@ -51,6 +53,7 @@ public class GameActions implements java.io.Serializable{
 
     /**
      * Removes a given amount of armies from the current active Player
+     *
      * @param numArmies The number of armies to be removed
      */
     public void removeCurrentPlayersArmies(int numArmies) {
@@ -59,6 +62,7 @@ public class GameActions implements java.io.Serializable{
 
     /**
      * Adds a given amount of armies to a given Territory
+     *
      * @param numArmies The number of armies to be added
      * @param territory The Territory that the armies will be added to
      */
@@ -74,11 +78,13 @@ public class GameActions implements java.io.Serializable{
 
     /**
      * Sets the current actionView to the given actionView
+     *
      * @param actionView The actionView that will become the current actionView
      */
     public void setActionView(RiskView actionView) {
         this.actionView = actionView;
     }
+
     /**
      * Calculates and distributes the initial amount of armies to all players
      *
@@ -179,8 +185,8 @@ public class GameActions implements java.io.Serializable{
      *
      * @param attackerTerritory The Territory being attacked from
      * @param defenderTerritory The Territory being attacked
-     * @param attackersDice The number of dice the attacker is attacking with
-     * @param defendersDice The number of dice the defender is defending with
+     * @param attackersDice     The number of dice the attacker is attacking with
+     * @param defendersDice     The number of dice the defender is defending with
      */
     public void attack(String attackerTerritory, String defenderTerritory, int attackersDice, int defendersDice) {
         String currPlayer = activePlayer.getName();
@@ -301,7 +307,7 @@ public class GameActions implements java.io.Serializable{
      * Move armies to a territory.
      *
      * @param territoryDestination The Territory where the armies will go
-     * @param numArmies The number of armies to place
+     * @param numArmies            The number of armies to place
      */
     public void commitArmies(String territoryOrigin, String territoryDestination, int numArmies) {
         if (gameBoard.getArmy(territoryOrigin) > numArmies) {
@@ -326,6 +332,4 @@ public class GameActions implements java.io.Serializable{
         }
         activePlayer.addArmies(continentArmies + (gameBoard.getRulerTerritoryList(player).length / 3));
     }
-
-
 }

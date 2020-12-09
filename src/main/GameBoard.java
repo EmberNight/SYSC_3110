@@ -6,7 +6,7 @@ import java.util.*;
  * @author Jordan Peterkin
  * @author Ashwin Stoparczyk
  */
-public class GameBoard implements java.io.Serializable{
+public class GameBoard implements java.io.Serializable {
 
     private final Map<String, Continent> continentMap;
     private final Map<String, Territory> territoryMap;
@@ -26,6 +26,7 @@ public class GameBoard implements java.io.Serializable{
 
     /**
      * Constructor for smaller, testable GameBoard objects
+     *
      * @param isTest Allows for multiple constructors
      */
     public GameBoard(Boolean isTest) {
@@ -86,6 +87,7 @@ public class GameBoard implements java.io.Serializable{
 
     /**
      * Returns all the Continents that the given Player is the ruler of
+     *
      * @param ruler The name of the Player to be assessed
      * @return An Array containing all the Continents that the given Player is the ruler of
      */
@@ -109,7 +111,7 @@ public class GameBoard implements java.io.Serializable{
      * Returns an array containing the list of Territories that the given Player can attack from the given Territory
      *
      * @param territory The Territory to be assessed
-     * @param ruler The name of the Player to be assessed
+     * @param ruler     The name of the Player to be assessed
      * @return An array containing the list of Territories that the given Player can attack from the given Territory
      */
     public Territory[] getAttackableTerritoryList(Territory territory, String ruler) {
@@ -131,8 +133,9 @@ public class GameBoard implements java.io.Serializable{
 
     /**
      * Returns an array containing the list of Territories that are ruled by the given Player and are adjacent to the given Territory
+     *
      * @param territory The Territory to be assessed
-     * @param ruler The name of the Player to be assessed
+     * @param ruler     The name of the Player to be assessed
      * @return An array containing the list of Territories that are ruled by the given Player and are adjacent to the given Territory
      */
     public Territory[] getFriendlyTerritoryList(Territory territory, String ruler) {

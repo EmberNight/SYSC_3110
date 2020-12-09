@@ -3,10 +3,10 @@
  * <p>
  * An implementation of the people playing the game of Risk
  */
-public class Player implements java.io.Serializable{
+public class Player implements java.io.Serializable {
     private final String name;
     private int armies;
-    private Boolean isAI;
+    private final Boolean isAI;
 
     /**
      * Constructor for Player objects
@@ -43,7 +43,7 @@ public class Player implements java.io.Serializable{
      * @param num The Player's new number of armies
      */
     public void setArmies(int num) {
-        armies = num;
+        armies = Math.max(num, 0);
     }
 
     /**
@@ -62,16 +62,19 @@ public class Player implements java.io.Serializable{
      * @return 0 if the Player has no remaining armies, else the number of armies that were removed from the Player
      */
     public int removeArmies(int num) {
-        armies -= num;
-
-        if (armies < 0) {
+        if (armies - num < 0) {
+            armies = 0;
             return 0;
+        } else {
+            armies -= num;
         }
+
         return num;
     }
 
     /**
      * Determines if the Player is an AI
+     *
      * @return true if the Player is an AI, false if the Player is not an AI
      */
     public boolean isAI() {
