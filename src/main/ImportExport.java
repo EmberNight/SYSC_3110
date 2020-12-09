@@ -14,6 +14,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 /**
  * Provides methods for saved games and custom maps
+ *
  * @author Tanner trautrim
  * @author Emmitt Luhning
  * @author Ashwin Stoparczyk
@@ -22,11 +23,12 @@ public class ImportExport {
     /**
      * Saves the current board state as a file
      * Copy of normal method, exists so that save file won't be overwritten when test is run
+     *
      * @param baseGame The Risk game to be saved
      */
-    public static void saveGame(Risk baseGame) {
+    public static void saveGame(Risk baseGame, File fileName) {
         try {
-            FileOutputStream fileOut = new FileOutputStream("gameSave.ser");
+            FileOutputStream fileOut = new FileOutputStream(fileName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(baseGame);
             out.close();
@@ -40,12 +42,13 @@ public class ImportExport {
     /**
      * Loads a board state from a file
      * Copy of normal method, exists so that save file won't be overwritten when test is run
+     *
      * @param baseGame The Risk game to be overwritten by the saved game
      */
-    public static void loadGame(Risk baseGame) {
+    public static void loadGame(Risk baseGame, File fileName) {
         Risk loadedGame;
         try {
-            FileInputStream fileIn = new FileInputStream("gameSave.ser");
+            FileInputStream fileIn = new FileInputStream(fileName);
             ObjectInputStream in = new ObjectInputStream(fileIn);
             loadedGame = (Risk) in.readObject();
             in.close();
@@ -65,6 +68,7 @@ public class ImportExport {
 
     /**
      * Imports a custom map, in XML format, to be used as a new GameBoard
+     *
      * @param fileName The file containing the custom map
      */
     public static GameBoard importCustomMap(File fileName) {
@@ -153,10 +157,10 @@ public class ImportExport {
 
 
         // After all territories have been created by the XML sort out the adjacent territories
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> territoryList = new ArrayList<>();
         for (String key : territoryMap.keySet()) {
             while (!adjacentTerritories.get(key).isEmpty()) {
-                list.add(adjacentTerritories.get(key).get(0).toLowerCase()); // Used to Check if all territories can be reached!
+                territoryList.add(adjacentTerritories.get(key).get(0).toLowerCase()); // Used to Check if all territories can be reached!
                 String t = adjacentTerritories.get(key).remove(0).toLowerCase();
                 Territory adjacent = territoryMap.get(t);
 
@@ -167,17 +171,32 @@ public class ImportExport {
         }
 
         // Check if all territories can be reached.
-        for (int i = 0; i < list.size(); i++) {
-            if (Collections.frequency(list, list.get(i)) > 1) {
-                list.remove(i);
+        for (int i = 0; i < territoryList.size(); i++) {
+            if (Collections.frequency(territoryList, territoryList.get(i)) > 1) {
+                territoryList.remove(i);
                 i--;
             }
         }
 
-        if (list.size() == territoryMap.keySet().size()) {
-            return new GameBoard(continentMap, territoryMap);
-        } else {
+        if (territoryList.size() != territoryMap.keySet().size()) {
             return null;
         }
+
+        // Check if all Continents can be reached.
+        for (String s : continentMap.keySet()) {
+            boolean isIsland = true;
+            Continent continent = continentMap.get(s);
+            for (Territory t : continent.getTerritories()) {
+                if (continent.getName().equals(t.getContinentName())) {
+                    isIsland = false;
+                    break;
+                }
+            }
+            if (isIsland) {
+                return null;
+            }
+        }
+
+        return new GameBoard(continentMap, territoryMap);
     }
 }
