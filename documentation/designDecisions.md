@@ -24,13 +24,15 @@ This data is only accessible to the GameBoard class.
 Continent stores information about each territory.
 This data is only accessible to the GameBoard class.
 
-Risk is used for the GUI and handles all the interactions involving the GUI
+Risk handles the GUI and all the interactions involving the GUI
 
 RiskView is used to update the GUI state after a GameAction occurs
 
 RiskEven is a storage class to handle passing events.
 
 AITurn is used to perform the functions of the AI.
+
+ImportExport is used to store the static methods for save/load games and custom map loading 
 
 InitializeGame is used to create the game.
 
@@ -57,4 +59,4 @@ For example, when the data will need to be called upon often.
 HashMap is used to store territories because the O(1) access time with the key.
 Territories' are the most frequently accessed methods.
 
-Model is used to store information for JList in a way that updates the GUI.
+Model stores information for JList in a way that updates the GUI.

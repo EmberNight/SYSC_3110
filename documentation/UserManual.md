@@ -9,9 +9,11 @@ Author: Tanner Trautrim
 1. Open your desired terminal
 2. Navigate to the jar location
 3. Run the jar file (replace the contents in the quotations). ```java -jar "name of jar file"```
-4. Enter the number of players
-5. Start playing
-6. View Game Status on the right
+4. Click file
+5. Click new game
+6. If you want a custom map enter its location
+7. Enter the number of players (Total players is 6)
+8. Enter the number of AI players (Total players + AI is 6)
 
 ## Modes
 
@@ -44,3 +46,19 @@ Author: Tanner Trautrim
 3. Phase 2 is attack
 4. Phase 3 is move armies
 5. Phase 4 is next players turn
+
+## Import and Exporting Games
+
+### Save
+
+1. Click on file
+2. Click on save
+3. Enter a save file name
+4. Press ok to save the file, it will be stored in the folder as the program
+
+### Load
+
+1. Click on file
+2. Click on load
+3. Enter a save location
+4. Press okay and it will take you to where you left off
