@@ -47,7 +47,7 @@ Completed
 * Added ability to save a load games
 * Added GUI popups for the save, load, and custom map locations functions.
 * Added GUI menus for new game, save, and load
-* Changed how the game starts (must select new game) 
+* Changed how the game starts (must select new game)
 
 ## Authors and work contributed
 
@@ -58,5 +58,5 @@ Completed
 * Jordan Peterkin - [jordanpeterkin](https://github.com/jordanpeterkin)
   - GUI
 * Tanner Trautrim - [EmberNight](https://github.com/EmberNight)
-  - Import Custom Map, Small GUI changes for importing a map, Updated general Documentation
+  - Import Custom Map, GUI changes for importing a map, Updated general Documentation, UML
   
