@@ -58,5 +58,5 @@ Completed
 * Jordan Peterkin - [jordanpeterkin](https://github.com/jordanpeterkin)
   - GUI
 * Tanner Trautrim - [EmberNight](https://github.com/EmberNight)
-  - Import Custom Map, Small GUI changes for importing a map.
+  - Import Custom Map, Small GUI changes for importing a map, Updated general Documentation
   
