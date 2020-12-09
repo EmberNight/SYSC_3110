@@ -44,10 +44,6 @@ public class ImportExportTest {
         //gameActions tests
         assertEquals(baseGame.getGameActions().getActivePlayer(), savedGame.getGameActions().getActivePlayer()); //Test active players
         assertEquals(baseGame.getGameActions().getCurrentPlayersArmies(), savedGame.getGameActions().getCurrentPlayersArmies()); //Test active player's armies
-
-        //Territory tests
-        assertEquals(baseGame.getAdjacentTerritory(), savedGame.getAdjacentTerritory()); //Test adjacent Territory
-        assertEquals(baseGame.getAttackerTerritory(), savedGame.getAttackerTerritory()); //Test attacker Territory
     }
 
     @Test

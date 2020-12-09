@@ -115,21 +115,18 @@ public class Risk extends JFrame implements RiskView {
     }
 
     /**
-     * Returns the currently selected adjacent Territory
+     * Starts the current game from a File
      *
-     * @return the currently selected adjacent Territory
+     * @param phase   The phase of the current active Player's turn
+     * @param board   The board state of the game
+     * @param actions The gameActions of the game
      */
-    public Territory getAdjacentTerritory() {
-        return adjacentTerritory;
-    }
-
-    /**
-     * Returns the currently selected attacker Territory
-     *
-     * @return the currently selected attacker Territory
-     */
-    public Territory getAttackerTerritory() {
-        return attackerTerritory;
+    public void loadGame(int phase, GameBoard board, GameActions actions) {
+        gameBoard = board;
+        gameActions = actions;
+        currentPhase = phase - 1;
+        updateStatusArea();
+        updatePhase();
     }
 
     /**
@@ -223,7 +220,7 @@ public class Risk extends JFrame implements RiskView {
     /**
      * Starts the current game
      */
-    public void beginGame() {
+    private void beginGame() {
         currentPhase = ALLOCATION_PHASE; // So allocation happen right away
         attackerTerritory = null;
         adjacentTerritory = null;
@@ -248,21 +245,6 @@ public class Risk extends JFrame implements RiskView {
         updateStatusArea();
         JOptionPane.showMessageDialog(this, gameActions.getActivePlayer() + "'s Turn", "Starting Game", JOptionPane.INFORMATION_MESSAGE);
         nextPhase.setVisible(true);
-        updatePhase();
-    }
-
-    /**
-     * Starts the current game from a File
-     *
-     * @param Phase   The phase of the current active Player's turn
-     * @param Board   The board state of the game
-     * @param actions The gameActions of the game
-     */
-    public void loadGame(int Phase, GameBoard Board, GameActions actions) {
-        gameBoard = Board;
-        gameActions = actions;
-        currentPhase = Phase - 1;
-        updateStatusArea();
         updatePhase();
     }
 
