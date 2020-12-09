@@ -149,9 +149,9 @@ public class Risk extends JFrame implements RiskView {
         String saveGame = JOptionPane.showInputDialog(this,
                 "If you would like save a game enter the file name here\nIt will save the file in the same location the game was ran from.\nLeave the field blank if you don't.",
                 "Save Game?",
-                JOptionPane.INFORMATION_MESSAGE) + ".ser";
-        if (!"null.ser".equals(saveGame) && !saveGame.isBlank()) {
-            ImportExport.saveGame(this, new File(saveGame));
+                JOptionPane.INFORMATION_MESSAGE);
+        if (saveGame != null && !saveGame.isBlank()) {
+            ImportExport.saveGame(this, new File(saveGame + ".ser"));
         }
     }
 
