@@ -2,23 +2,25 @@
 
 SYSC 3110 - Software Development Project - Term Project
 
-Author: Jordan Peterkin
-
 ## Deliverables
 
 Located in the documentation folder:
 
-* milestone2_seq_attack.png
+* allocate_sequence.png
+  * Sequence diagram of the allocation sequence
+* attack_sequence.png
   * Sequence diagram of the attack sequence
-* milestone2_uml.png
+* class_diagram.png
   * Class UML diagram
-* JavaDocs
-  * Located are in the JavaDoc folder
-* UserManual
-  * How to use the program
 * designDecisions.md
   * Contains design decisions (class functions and the reasoning behind it)
   * Types of storage used for variables and reasoning
+* JavaDocs
+  * Located are in the JavaDoc folder
+* move_sequence.png
+  * Sequence diagram of the movement sequence
+* UserManual
+  * How to use the program
 
 ## Important notes
 
@@ -57,3 +59,4 @@ Completed
   - GUI
 * Tanner Trautrim - [EmberNight](https://github.com/EmberNight)
   - Import Custom Map, Small GUI changes for importing a map.
+  
