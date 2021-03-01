@@ -48,4 +48,5 @@ Completed
 * Added GUI popups for the save, load, and custom map locations functions.
 * Added GUI menus for new game, save, and load
 * Changed how the game starts (must select new game)
+* Fix Author
   
